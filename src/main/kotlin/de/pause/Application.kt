@@ -1,5 +1,6 @@
 package de.pause
 
+import de.pause.model.DatabaseFactory
 import de.pause.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -11,9 +12,10 @@ fun main() {
 }
 
 fun Application.module() {
+    DatabaseFactory.init()
     configureHTTP()
     configureTemplating()
     configureSerialization()
-    configureDatabases()
     configureRouting()
+    configureValidation()
 }
