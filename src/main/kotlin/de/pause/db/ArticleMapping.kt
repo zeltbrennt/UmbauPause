@@ -25,6 +25,6 @@ class ArticleDAO(id: EntityID<Int>) : IntEntity(id) {
 fun daoToModel(dao: ArticleDAO) = Article(
     name = dao.name,
     available = dao.available,
-    scheduled = dao.scheduled,
+    scheduled = enumValueOf(dao.scheduled.uppercase()),
     price = dao.price
 )

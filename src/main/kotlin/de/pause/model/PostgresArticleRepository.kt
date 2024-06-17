@@ -16,7 +16,7 @@ class PostgresArticleRepository : ArticleRepository {
         ArticleDAO.new {
             name = article.name
             available = article.available
-            scheduled = article.scheduled
+            scheduled = article.scheduled.toString()
             price = article.price
         }
     }

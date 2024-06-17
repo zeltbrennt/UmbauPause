@@ -2,6 +2,7 @@ package de.pause.plugins
 
 import de.pause.model.Article
 import de.pause.model.ArticleRepository
+import de.pause.model.Weekday
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -16,9 +17,9 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
                 call.respond(ThymeleafContent("landingpage", emptyMap()))
             }
         }
-        route("/article") {
-            get("/all") {
-                val articles = articleRepository.getCurrentArticles().sortedBy { it.sortOrder }
+        route("/weekly") {
+            get {
+                val articles = articleRepository.getCurrentArticles().sortedBy { it.scheduled.ordinal }
                 call.respond(ThymeleafContent("allArticles", mapOf("articles" to articles)))
             }
         }
@@ -27,12 +28,13 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
                 call.respond(ThymeleafContent("newArticle", emptyMap()))
             }
             post {
+                // TODO: fix this!
                 val formParams = call.receiveParameters()
                 val name = formParams["name"].toString()
                 val available = formParams["available"].toBoolean()
-                val scheduled = formParams["scheduled"].toString()
+                val scheduled = formParams["scheduled"]!!.toInt()
                 val price = formParams["price"]!!.toDouble()
-                articleRepository.addArticle(Article(name, available, scheduled, price))
+                articleRepository.addArticle(Article(name, available, Weekday.MONTAG, price))
                 call.respondRedirect("/article/all")
             }
         }
