@@ -1,7 +1,11 @@
 package de.pause
 
-import de.pause.model.DatabaseFactory
-import de.pause.plugins.*
+import de.pause.db.configureDatabase
+import de.pause.model.PostgresArticleRepository
+import de.pause.plugins.configureHTTP
+import de.pause.plugins.configureRouting
+import de.pause.plugins.configureSerialization
+import de.pause.plugins.configureTemplating
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -12,10 +16,11 @@ fun main() {
 }
 
 fun Application.module() {
-    DatabaseFactory.init()
+    val articleRepository = PostgresArticleRepository()
+    configureDatabase()
     configureHTTP()
     configureTemplating()
-    configureSerialization()
+    configureSerialization(articleRepository)
     configureRouting()
-    configureValidation()
+    //configureValidation()
 }
