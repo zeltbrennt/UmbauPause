@@ -12,7 +12,12 @@ import java.io.File
 
 fun Application.configureRouting(articleRepository: ArticleRepository) {
     routing {
-        staticResources("/", "static/files", index = "index.html")
+        //staticResources("/", "static/files", index = "index.html")
+        route("/") {
+            get {
+                call.respond(ThymeleafContent("landingpage", emptyMap()))
+            }
+        }
         route("/article") {
             get("/all") {
                 val articles = articleRepository.allArticles()
