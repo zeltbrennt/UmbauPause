@@ -8,20 +8,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.json.Json
 
-fun Application.configureSerialization(articleRepository: ArticleRepository) {
+fun Application.configureSerialization() {
     install(ContentNegotiation) {
         json(Json {
             prettyPrint = true
             isLenient = true
         })
     }
-    routing {
-        route("/article") {
-            get("/all") {
-                val articles = articleRepository.allArticles()
-                call.respond(articles)
-            }
-        }
-    }
+
 }
 

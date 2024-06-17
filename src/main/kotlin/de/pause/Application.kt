@@ -20,7 +20,7 @@ fun Application.module() {
     configureDatabase()
     configureHTTP()
     configureTemplating()
-    configureSerialization(articleRepository)
-    configureRouting()
+    configureSerialization()
+    configureRouting(articleRepository)
     //configureValidation()
 }

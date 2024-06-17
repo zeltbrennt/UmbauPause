@@ -1,11 +1,13 @@
 <!DOCTYPE html >
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="DE-de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<span th:text="${user.name}"></span>
+<ul>
+    <li th:each="article : ${articles}" th:text="${article.name}"></li>
+</ul>
 </body>
 </html>
 
