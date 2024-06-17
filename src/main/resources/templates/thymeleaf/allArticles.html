@@ -9,11 +9,12 @@
 <div th:replace="landingpage :: navbar"></div>
 <!-- TODO: Hier könnte man überlegen HTMX einzusetzen, um nur die <main> neu zu rendern / zu ersetzen -->
 <main class="responsive small">
-<h1>Menü</h1>
-<article class="boarder fill" th:each="article : ${articles}">
-    <h5 th:text="${article.type}"></h5>
-    <p th:text="${article.description}"></p>
-</article>
+    <h1>Menü</h1>
+    <article class="boarder fill" th:each="article : ${articles}">
+        <h5 th:text="${article.scheduled}"></h5>
+        <p th:text="${article.name}"></p>
+        <button>Bestellen</button>
+    </article>
 </main>
 </body>
 </html>

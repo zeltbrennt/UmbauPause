@@ -6,7 +6,6 @@ import de.pause.db.daoToModel
 import de.pause.db.suspendTransaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
-import java.math.BigDecimal
 
 class PostgresArticleRepository : ArticleRepository {
     override suspend fun allArticles(): List<Article> = suspendTransaction {
@@ -15,10 +14,10 @@ class PostgresArticleRepository : ArticleRepository {
 
     override suspend fun addArticle(article: Article): Unit = suspendTransaction {
         ArticleDAO.new {
-            type = article.type
             name = article.name
-            description = article.description
-            price = BigDecimal(article.price.toDouble())
+            available = article.available
+            scheduled = article.scheduled
+            price = article.price
         }
     }
 
@@ -27,6 +26,10 @@ class PostgresArticleRepository : ArticleRepository {
             ArticleTable.id eq id
         }
         return@suspendTransaction rowsDeleted == 1
+    }
+
+    override suspend fun getCurrentArticles(): List<Article> = suspendTransaction {
+        ArticleDAO.find(ArticleTable.available eq true).map(::daoToModel)
     }
 }
 

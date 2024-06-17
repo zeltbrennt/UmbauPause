@@ -3,12 +3,10 @@ package de.pause.plugins
 import de.pause.model.Article
 import de.pause.model.ArticleRepository
 import io.ktor.server.application.*
-import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.thymeleaf.*
-import java.io.File
 
 fun Application.configureRouting(articleRepository: ArticleRepository) {
     routing {
@@ -20,21 +18,21 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
         }
         route("/article") {
             get("/all") {
-                val articles = articleRepository.allArticles()
-                call.respond(ThymeleafContent("allArticles", mapOf("articles" to articles) ))
+                val articles = articleRepository.getCurrentArticles().sortedBy { it.sortOrder }
+                call.respond(ThymeleafContent("allArticles", mapOf("articles" to articles)))
             }
         }
         route("/add") {
             get {
-                call.respond(ThymeleafContent("newArticle", emptyMap() ))
+                call.respond(ThymeleafContent("newArticle", emptyMap()))
             }
             post {
                 val formParams = call.receiveParameters()
                 val name = formParams["name"].toString()
-                val description = formParams["description"].toString()
-                val type = formParams["type"].toString()
-                val price = formParams["price"]?.toFloat() ?: 0F
-                articleRepository.addArticle(Article(name, type, description, price))
+                val available = formParams["available"].toBoolean()
+                val scheduled = formParams["scheduled"].toString()
+                val price = formParams["price"]!!.toDouble()
+                articleRepository.addArticle(Article(name, available, scheduled, price))
                 call.respondRedirect("/article/all")
             }
         }
