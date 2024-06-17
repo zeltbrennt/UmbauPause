@@ -16,7 +16,7 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
         route("/article") {
             get("/all") {
                 val articles = articleRepository.allArticles()
-                call.respond(articles)
+                call.respond(ThymeleafContent("allArticles", mapOf("articles" to articles) ))
             }
         }
         route("/add") {

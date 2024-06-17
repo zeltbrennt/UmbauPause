@@ -2,12 +2,31 @@
 <html lang="DE-de" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Wochenkarte</title>
+    <link href="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.css" rel="stylesheet">
 </head>
 <body>
-<ul>
-    <li th:each="article : ${articles}" th:text="${article.name}"></li>
-</ul>
+<nav class="left">
+<a href="/">
+    <i>home</i>
+    <div>Home</div>
+</a>
+<a href="/article/all">
+    <i>list_alt</i>
+    <div>Menu</div>
+</a>
+<a>
+    <i>login</i>
+    <div>Login</div>
+</a>
+</nav>
+<main class="responsive small">
+<h1>Menü</h1>
+<article class="boarder fill" th:each="article : ${articles}">
+    <h5 th:text="${article.type}"></h5>
+    <p th:text="${article.description}"></p>
+</article>
+</main>
 </body>
 </html>
 
