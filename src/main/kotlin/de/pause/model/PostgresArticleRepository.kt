@@ -4,6 +4,7 @@ import de.pause.db.ArticleDAO
 import de.pause.db.ArticleTable
 import de.pause.db.daoToModel
 import de.pause.db.suspendTransaction
+import io.ktor.http.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.update
@@ -35,6 +36,21 @@ class PostgresArticleRepository : ArticleRepository {
 
     override suspend fun resetMenu(): Unit = suspendTransaction {
         ArticleTable.update { it[available] = false }
+    }
+
+    override suspend fun addNewMenu(formParams: Parameters) {
+        resetMenu()
+        for (day in listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")) {
+            val newArticleName = formParams[day].toString()
+            addArticle(
+                Article(
+                    name = newArticleName.ifBlank { "Kantine geschlossen" },
+                    available = true,
+                    scheduled = day,
+                    price = 6.50
+                )
+            )
+        }
     }
 }
 

@@ -1,7 +1,6 @@
 package de.pause.plugins
 
 import de.pause.getWeekDatesFollowing
-import de.pause.model.Article
 import de.pause.model.ArticleRepository
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -36,21 +35,16 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
         }
         route("/newMenu") {
             get {
-                call.respond(ThymeleafContent("newMenu", emptyMap()))
+                call.respond(
+                    ThymeleafContent(
+                        "newMenu",
+                        mapOf("days" to listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"))
+                    )
+                )
             }
             post {
                 val formParams = call.receiveParameters()
-                articleRepository.resetMenu()
-                for (day in listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")) {
-                    articleRepository.addArticle(
-                        Article(
-                            name = formParams[day].toString(),
-                            available = true,
-                            scheduled = day,
-                            price = 6.50
-                        )
-                    )
-                }
+                articleRepository.addNewMenu(formParams)
                 call.respondRedirect("/weekly")
             }
         }

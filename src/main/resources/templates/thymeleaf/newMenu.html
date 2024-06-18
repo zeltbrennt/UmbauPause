@@ -10,30 +10,35 @@
 <div th:replace="landingpage :: navbar"></div>
 <div th:replace="landingpage :: login-dialog"></div>
 <main class="responsive small">
-    <h1>Neue Wochenkarte</h1>
+    <h1>Neue Mittagskarte</h1>
     <div class="large-space"></div>
     <form action="/newMenu" method="post">
-        <div class="field textarea label border small min">
-            <textarea name="Montag"></textarea>
-            <label>Montag</label>
+        <div class="field border label prefix">
+            <i>today</i>
+            <input name="week" type="date">
+            <label>Woche</label>
         </div>
-        <div class="field textarea label border small min">
-            <textarea name="Dienstag"></textarea>
-            <label>Dienstag</label>
+        <div class="grid" th:each="day : ${days}">
+            <div class="l9">
+                <div class="field label prefix textarea border small min">
+                    <i>skillet</i>
+                    <input th:name="${day}" type="text">
+                    <label th:text="${day}">Montag</label>
+                </div>
+            </div>
+            <div class="l3">
+                <div class="field prefix label border small min">
+                    <i>euro</i>
+                    <input type="text" value="6,90">
+                    <label>Preis</label>
+                </div>
+            </div>
         </div>
-        <div class="field textarea label border small min">
-            <textarea name="Mittwoch"></textarea>
-            <label>Mittwoch</label>
-        </div>
-        <div class="field textarea label border small min">
-            <textarea name="Donnerstag"></textarea>
-            <label>Donnerstag</label>
-        </div>
-        <div class="field textarea label border small min">
-            <textarea name="Freitag"></textarea>
-            <label>Freitag</label>
-        </div>
-        <button type="submit"><i>check</i>OK</button>
+        <button class="right">
+            <i>check</i>
+            <span>OK</span>
+        </button>
+
     </form>
 </main>
 </body>

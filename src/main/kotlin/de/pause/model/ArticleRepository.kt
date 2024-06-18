@@ -1,5 +1,7 @@
 package de.pause.model
 
+import io.ktor.http.*
+
 interface ArticleRepository {
 
     suspend fun allArticles(): List<Article>
@@ -8,6 +10,7 @@ interface ArticleRepository {
 
     suspend fun getCurrentArticles(): List<Article>
     suspend fun resetMenu()
+    suspend fun addNewMenu(formParams: Parameters)
     /*
     -activate
     -deactivate

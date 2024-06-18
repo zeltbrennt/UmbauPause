@@ -24,7 +24,7 @@
         <h3 th:text="${article.scheduled}">Lorem </h3>
         <h6 th:text="${article.name}">Ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
             tempor invidunt</h6>
-        <nav class="right-align">
+        <nav class="right-align" th:if="${article.name != 'Kantine geschlossen'}">
             <button th:class="${article.available ? '' : 'border'}">
                 <i th:text="${article.available ? 'restaurant' : 'no_meals'}">restaurant</i>
                 <span th:text="${article.available ? 'Bestellen' : 'Aufgegessen' }">Auswählen</span>
