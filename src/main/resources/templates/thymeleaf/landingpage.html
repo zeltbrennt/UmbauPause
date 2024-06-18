@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>UmbauPause</title>
     <link href="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.css" rel="stylesheet" th:fragment="import">
+    <script src="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.1/dist/cdn/material-dynamic-colors.min.js"
+            type="module"></script>
 </head>
 <body>
 <nav class="left" th:fragment="navbar">
@@ -15,11 +18,36 @@
         <i>menu_book</i>
         <div>Karte</div>
     </a>
-    <a>
+    <a href="/newMenu">
+        <i>edit_square</i>
+        <div>Edit</div>
+    </a>
+    <a data-ui="#login">
         <i>login</i>
         <div>Login</div>
     </a>
 </nav>
+
+<dialog id="login" th:fragment="login-dialog">
+    <h5>Login</h5>
+    <div class="small-space"></div>
+    <form>
+        <div class="field textarea label border small min">
+            <textarea name="email"></textarea>
+            <label>Email</label>
+        </div>
+        <div class="field textarea label border small min">
+            <input name="password" type="password">
+            <label>Passwort</label>
+        </div>
+        <nav class="right-align no-space">
+            <button class="transparent link">Cancel</button>
+            <button type="submit">Login</button>
+        </nav>
+    </form>
+</dialog>
+
+
 <main class="responsive">
     <h3>UmbauPause</h3>
 </main>

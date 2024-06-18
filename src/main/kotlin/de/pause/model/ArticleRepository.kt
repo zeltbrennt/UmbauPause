@@ -7,6 +7,7 @@ interface ArticleRepository {
     suspend fun removeArticle(id: Int): Boolean
 
     suspend fun getCurrentArticles(): List<Article>
+    suspend fun resetMenu()
     /*
     -activate
     -deactivate

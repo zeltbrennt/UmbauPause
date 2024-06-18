@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Wochenkarte erstellen</title>
+    <link href="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.js" type="module"></script>
+</head>
+<body>
+<div th:replace="landingpage :: navbar"></div>
+<div th:replace="landingpage :: login-dialog"></div>
+<main class="responsive small">
+    <h1>Neue Wochenkarte</h1>
+    <div class="large-space"></div>
+    <form action="/newMenu" method="post">
+        <div class="field textarea label border small min">
+            <textarea name="Montag"></textarea>
+            <label>Montag</label>
+        </div>
+        <div class="field textarea label border small min">
+            <textarea name="Dienstag"></textarea>
+            <label>Dienstag</label>
+        </div>
+        <div class="field textarea label border small min">
+            <textarea name="Mittwoch"></textarea>
+            <label>Mittwoch</label>
+        </div>
+        <div class="field textarea label border small min">
+            <textarea name="Donnerstag"></textarea>
+            <label>Donnerstag</label>
+        </div>
+        <div class="field textarea label border small min">
+            <textarea name="Freitag"></textarea>
+            <label>Freitag</label>
+        </div>
+        <button type="submit"><i>check</i>OK</button>
+    </form>
+</main>
+</body>
+</html>

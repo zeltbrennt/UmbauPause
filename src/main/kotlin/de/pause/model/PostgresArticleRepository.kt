@@ -6,6 +6,7 @@ import de.pause.db.daoToModel
 import de.pause.db.suspendTransaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.update
 
 class PostgresArticleRepository : ArticleRepository {
     override suspend fun allArticles(): List<Article> = suspendTransaction {
@@ -30,6 +31,10 @@ class PostgresArticleRepository : ArticleRepository {
 
     override suspend fun getCurrentArticles(): List<Article> = suspendTransaction {
         ArticleDAO.find(ArticleTable.available eq true).map(::daoToModel)
+    }
+
+    override suspend fun resetMenu(): Unit = suspendTransaction {
+        ArticleTable.update { it[available] = false }
     }
 }
 

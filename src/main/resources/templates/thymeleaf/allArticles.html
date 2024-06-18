@@ -4,20 +4,23 @@
     <meta charset="UTF-8">
     <title>Wochenkarte</title>
     <link href="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/beercss@3.5.8/dist/cdn/beer.min.js" type="module"></script>
 </head>
 <body>
 <div th:replace="landingpage :: navbar"></div>
+<div th:replace="landingpage :: login-dialog"></div>
 <!-- TODO: Hier könnte man überlegen HTMX einzusetzen, um nur die <main> neu zu rendern / zu ersetzen -->
 <main class="responsive small">
     <h1>Wochenkarte</h1>
+    <div class="large-space"></div>
     <article class="boarder fill" th:each="article : ${articles}">
         <h3 th:text="${article.scheduled}">Lorem </h3>
         <h6 th:text="${article.name}">Ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
             tempor invidunt</h6>
         <nav class="right-align">
-            <button th:class="${article.scheduled.toString() == 'Montag' ? 'border' : ''}">
-                <i th:text="${article.scheduled.toString() == 'Montag' ? 'no_meals' : 'restaurant'}">restaurant</i>
-                <span>Auswählen</span>
+            <button th:class="${article.available ? '' : 'border'}">
+                <i th:text="${article.available ? 'restaurant' : 'no_meals'}">restaurant</i>
+                <span th:text="${article.available ? 'Bestellen' : 'Aufgegessen' }">Auswählen</span>
             </button>
         </nav>
     </article>
