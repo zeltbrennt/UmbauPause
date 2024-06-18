@@ -10,10 +10,10 @@
 </head>
 <body>
 <nav class="left" th:fragment="navbar">
-    <img class="circle small" src="/static/pause_logo.png">
     <a href="/">
-        <i>home</i>
-        <div>Home</div>
+        <button class="circle transparent">
+            <img class="circle responsive" src="/static/pause_logo.png">
+        </button>
     </a>
     <a href="/weekly">
         <i>menu_book</i>
@@ -50,18 +50,15 @@
 
 
 <main class="responsive">
-    <article class="no-padding">
-        <div class="grid no-space">
-            <div class="s3">
-                <img class="large circle" src="/static/pause_logo.png">
-            </div>
-            <div class="s6">
-                <div class="padding middle-align center-align">
-                    <h5>UmbauPause</h5>
-                </div>
-            </div>
-        </div>
+    <article class="padding">
+        <h3 class="center-align">UmbauPause</h3>
     </article>
+    <div class="large space"></div>
+    <h1 class="center-align middle-align">Hier entsteht in Zukunft eine Website von</h1>
+    <div class="large-space"></div>
+    <div class="center-align">
+        <img src="/static/kantine.png" width="500px">
+    </div>
 </main>
 </body>
 </html>

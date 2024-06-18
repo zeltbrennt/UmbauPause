@@ -11,7 +11,14 @@
 <div th:replace="landingpage :: login-dialog"></div>
 <!-- TODO: Hier könnte man überlegen HTMX einzusetzen, um nur die <main> neu zu rendern / zu ersetzen -->
 <main class="responsive small">
-    <h1>Wochenkarte</h1>
+    <div class="grid no-space">
+        <div class="s4 padding">
+            <h1>Mittagskarte</h1>
+        </div>
+        <div class="s3 padding left-align bottom-align">
+            <h6 th:text="${week}">01.01. bis 31.12.2024</h6>
+        </div>
+    </div>
     <div class="large-space"></div>
     <article class="boarder fill" th:each="article : ${articles}">
         <h3 th:text="${article.scheduled}">Lorem </h3>
