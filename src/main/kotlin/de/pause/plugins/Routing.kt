@@ -3,14 +3,16 @@ package de.pause.plugins
 import de.pause.model.Article
 import de.pause.model.ArticleRepository
 import io.ktor.server.application.*
+import io.ktor.server.http.content.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.thymeleaf.*
 
 fun Application.configureRouting(articleRepository: ArticleRepository) {
+
     routing {
-        //staticResources("/", "static/files", index = "index.html")
+        staticResources("/static", "static")
         route("/") {
             get {
                 call.respond(ThymeleafContent("landingpage", emptyMap()))
