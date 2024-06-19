@@ -35,6 +35,6 @@ fun daoToModel(dao: ArticleDAO) = Article(
 fun isAvailable(scheduled: String): Boolean {
     val now = LocalDateTime.now()
     val dayOfWeek = scheduled.dayOfWeekToInt()
-    if (now.dayOfWeek.value == dayOfWeek && now.toLocalTime() > LocalTime.of(10, 30)) return false
-    return now.dayOfWeek.value < dayOfWeek
+    if (now.dayOfWeek.value == dayOfWeek && now.toLocalTime().isAfter(LocalTime.of(10, 30))) return false
+    return now.dayOfWeek.value <= dayOfWeek
 }

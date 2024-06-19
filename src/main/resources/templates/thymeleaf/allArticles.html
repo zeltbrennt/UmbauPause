@@ -20,17 +20,28 @@
         </div>
     </div>
     <div class="large-space"></div>
-    <article class="boarder fill" th:each="article : ${articles}">
-        <h3 th:text="${article.scheduled}">Lorem </h3>
-        <h6 th:text="${article.name}">Ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
-            tempor invidunt</h6>
-        <nav class="right-align" th:if="${article.name != 'Kantine geschlossen'}">
-            <button th:class="${article.available ? '' : 'border'}">
-                <i th:text="${article.available ? 'restaurant' : 'no_meals'}">restaurant</i>
-                <span th:text="${article.available ? 'Bestellen' : 'Aufgegessen' }">Auswählen</span>
-            </button>
-        </nav>
-    </article>
+    <form action="/order" method="post">
+        <article class="boarder fill" th:each="article : ${articles}">
+            <h3 th:text="${article.scheduled}">Lorem </h3>
+            <h6 th:text="${article.name}">Ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod
+                tempor invidunt</h6>
+            <nav class="right-align" th:if="${article.name != 'Kantine geschlossen'}">
+                <label class="switch icon">
+                    <input th:disabled="${!article.available}" type="checkbox">
+                    <span>
+                        <i>no_meals</i>
+                        <i>restaurant</i>
+                    </span>
+                    <!--<span th:text="${article.available ? 'Auswählen' : 'Aufgegessen' }">Auswählen</span>-->
+                </label>
+            </nav>
+        </article>
+        <div class="medium-space"></div>
+        <button type="submit">
+            <i>check</i>
+            <span>OK</span>
+        </button>
+    </form>
 </main>
 </body>
 </html>

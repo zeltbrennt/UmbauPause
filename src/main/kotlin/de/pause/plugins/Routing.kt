@@ -48,5 +48,10 @@ fun Application.configureRouting(articleRepository: ArticleRepository) {
                 call.respondRedirect("/weekly")
             }
         }
+        route("/order") {
+            post {
+                call.respondRedirect("/")
+            }
+        }
     }
 }
