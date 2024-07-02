@@ -1,75 +1,40 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import "beercss"
-import MenuItem from './MenuItem'
+import {Site} from "./util/Interfaces.ts";
+import Landingpage from "./components/Landingpage.tsx";
+import OrderMenu from "./components/OrderMenu.tsx";
+import Sidebar from "./components/Sidebar.tsx";
 
-const api_url = "http://localhost:8080/weekly"
-
-
-enum Site {
-    Menu,
-    Dashboard
-}
-
-export interface IMenuItem {
-    name: string,
-    available: boolean,
-    price: number,
-    scheduled: string
-}
 
 function App() {
-    const [display, setDisplay] = useState(Site.Menu)
-    const [items, setItems] = useState<IMenuItem[]>([])
+    const [display, setDisplay] = useState(Site.Landingpage)
+
 
     document.documentElement.lang = 'de'
 
-    const getMenu = async () => {
-        const response = await fetch(api_url)
-        const data = await response.json()
-
-        console.log(data.map((data: IMenuItem) => data.name))
-        setItems(data)
-
-    }
-
-    useEffect(() => {
-        getMenu()
-    }, [])
 
     return (
-        <>
-            <button onClick={() => setDisplay(Site.Menu)}>display menu</button>
-            <button onClick={() => setDisplay(Site.Dashboard)}>display Dashboard</button>
-            <button onClick={alarm}>ALARM</button>
-            {renderSwitch(display)}
-            {items.map((item) => <MenuItem data={item}/>)}
-        </>
+        <div>
+            <Sidebar/>
+            <main className="responsive">
+                <article className="padding">
+                    <h3 className="center-align">UmbauPause</h3>
+                </article>
+                <div className="large-space"></div>
+                {renderSwitch(display)}
+            </main>
+        </div>
     )
-}
-
-function alarm() {
-    alert("WTF????")
 }
 
 function renderSwitch(site: Site) {
     switch (site) {
+        case Site.Landingpage:
+            return <Landingpage/>
         case Site.Menu:
-            return <Menu/>
-        case Site.Dashboard:
-            return <Dashboard/>
+            return <OrderMenu/>
     }
 }
 
-function Menu() {
-    return (
-        <div>I am a Menu</div>
-    )
-}
-
-function Dashboard() {
-    return (
-        <div>I am a Dashboard</div>
-    )
-}
 
 export default App
