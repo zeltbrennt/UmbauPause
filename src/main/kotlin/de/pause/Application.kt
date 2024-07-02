@@ -2,10 +2,7 @@ package de.pause
 
 import de.pause.db.configureDatabase
 import de.pause.model.PostgresArticleRepository
-import de.pause.plugins.configureHTTP
-import de.pause.plugins.configureRouting
-import de.pause.plugins.configureSerialization
-import de.pause.plugins.configureTemplating
+import de.pause.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
@@ -22,5 +19,6 @@ fun Application.module() {
     configureTemplating()
     configureSerialization()
     configureRouting(articleRepository)
+    configureCORS()
     //configureValidation()
 }
