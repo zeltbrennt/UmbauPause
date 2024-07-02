@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import {IMenuItem} from "../util/Interfaces.ts";
+import {List, ListItem} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 
 
@@ -18,12 +19,16 @@ function OrderMenu() {
     }
 
     useEffect(() => {
-        getMenu()
+        getMenu().catch(() => console.log("could not fetch menu items"))
     }, [])
     return (
-        <div>
-            {items.map((item) => <MenuItemCard data={item}/>)}
-        </div>
+        <List>
+            {items.map((item) => (
+                <ListItem key={item.name} sx={{flexGrow: 1}}>
+                    <MenuItemCard data={item}/>
+                </ListItem>
+            ))}
+        </List>
     )
 }
 

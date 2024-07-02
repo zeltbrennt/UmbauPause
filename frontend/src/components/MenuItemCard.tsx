@@ -1,26 +1,20 @@
 import {IMenuItem} from "../util/Interfaces.ts";
+import {Box, Card, CardContent, Typography} from "@mui/material";
 
-function MenuItemCard({data}: { data?: IMenuItem }) {
-    if (!data) {
-        return <article className="border fill">
-            <h3>Kantine geschlossen</h3>
-        </article>
-    }
+function MenuItemCard({data}: { data: IMenuItem }) {
+
     return (
-        <article className="border fill">
-            <h3>{data.scheduled}</h3>
-            <h6>{data.name}</h6>
-            <nav className="right-align">
-                <label className="switch icon">
-                    <input type="checkbox" disabled={!data.available}></input>
-                    <span>
-                        <i>no_meals</i>
-                        <i>restaurant</i>
-                    </span>
-                </label>
-            </nav>
+        <Box sx={{flexGrow: 1}} key={data.name}>
 
-        </article>
+            <Card sx={{
+                ":hover": {boxShadow: 20}
+            }}>
+                <CardContent>
+                    <Typography variant="h3">{data.scheduled}</Typography>
+                    <Typography variant="h6">{data.name}</Typography>
+                </CardContent>
+            </Card>
+        </Box>
     )
 }
 

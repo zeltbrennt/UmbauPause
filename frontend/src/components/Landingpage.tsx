@@ -1,9 +1,10 @@
+import {Box, Typography} from "@mui/material";
+
 function Landingpage() {
     return (
-        <div>
-            <h1 className="enter-align center-align">Hier entsteht in Zukunft eine Website...</h1>
-
-        </div>
+        <Box>
+            <Typography variant="h1">Hier entsteht in Zukunft eine Website...</Typography>
+        </Box>
     )
 }
 
