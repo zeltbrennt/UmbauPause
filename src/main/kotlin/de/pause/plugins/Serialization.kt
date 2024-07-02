@@ -15,6 +15,26 @@ fun Application.configureSerialization() {
             isLenient = true
         })
     }
+    routing {
+        route("/chatgpt") {
+            get {
+                val client = HttpClient(CIO)
+                val body = this::class.java.classLoader.getResource("chat_gpt_prompt.json").readText()
+                val response = client.post("https://api.openai.com/v1/chat/completions") {
+                    headers {
+                        append(HttpHeaders.ContentType, "application/json")
+                        append(HttpHeaders.Authorization, "Bearer ${System.getenv("OPENAI_API_KEY")}")
+                        append("OpenAI-Organization", System.getenv("OPENAI_ORGANIZATION_ID"))
+                        append("OpenAI-Project", System.getenv("OPENAI_PROJECT_ID"))
+                    }
+                    setBody(body)
+                }
+
+                call.respondText { response.body() }
+                client.close()
+            }
+        }
+    }
 
 }
 
