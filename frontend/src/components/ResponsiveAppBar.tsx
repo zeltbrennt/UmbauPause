@@ -2,7 +2,7 @@ import {AppBar, Avatar, Box, IconButton, Toolbar, Typography} from "@mui/materia
 import MenuIcon from '@mui/icons-material/Menu';
 import pauseLogo from "/pause_logo.png";
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({drawerState, setDrawerState}) {
 
 
     return (
@@ -10,7 +10,7 @@ function ResponsiveAppBar() {
             <Toolbar>
                 <Box sx={{display: "flex"}}>
 
-                    <IconButton>
+                    <IconButton onClick={() => setDrawerState(!drawerState)}>
                         <MenuIcon/>
                     </IconButton>
                 </Box>

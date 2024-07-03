@@ -1,4 +1,15 @@
-import {Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Toolbar} from "@mui/material";
+import {
+    Box,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    SwipeableDrawer,
+    Toolbar,
+    useMediaQuery,
+    useTheme
+} from "@mui/material";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
@@ -8,6 +19,7 @@ import {Site} from "../util/Interfaces.ts";
 import Landingpage from "./Landingpage.tsx";
 import OrderMenu from "./OrderMenu.tsx";
 import {useState} from "react";
+
 
 const drawerWidth = 240
 
@@ -23,14 +35,21 @@ function renderSwitch(site: Site) {
 export default function ClippedDrawer() {
 
     const [display, setDisplay] = useState(Site.Landingpage)
+    const theme = useTheme()
+    const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
+    const [open, setOpen] = useState(false)
 
     return (
         <Box sx={{display: 'flex'}}>
-            <ResponsiveAppBar/>
-            <Drawer variant="permanent" sx={{
-                width: drawerWidth,
-                flexShrink: 0,
-            }}>
+            <ResponsiveAppBar drawerState={open} setDrawerState={setOpen}/>
+            <SwipeableDrawer variant={isDesktop ? 'permanent' : 'temporary'}
+                             open={isDesktop ? true : open}
+                             onClose={() => setOpen(false)}
+                             onOpen={() => setOpen(true)}
+                             sx={{
+                                 width: drawerWidth,
+                                 flexShrink: 0,
+                             }}>
                 <Toolbar/>
                 <Box sx={{overflow: 'auto'}}>
                     <List>
@@ -68,7 +87,7 @@ export default function ClippedDrawer() {
                         </ListItem>
                     </List>
                 </Box>
-            </Drawer>
+            </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
                 {renderSwitch(display)}
