@@ -2,6 +2,7 @@ import {AppBar, Avatar, Box, IconButton, Toolbar, Typography} from "@mui/materia
 import MenuIcon from '@mui/icons-material/Menu';
 import pauseLogo from "/pause_logo.png";
 
+// @ts-ignore //TODO type this correctly
 function ResponsiveAppBar({drawerState, setDrawerState}) {
 
 
@@ -15,7 +16,7 @@ function ResponsiveAppBar({drawerState, setDrawerState}) {
                     </IconButton>
                 </Box>
                 <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                    (Umbau)Pause in der Kantine im DNT
+                    Kantine (Umbau)Pause im DNT
                 </Typography>
                 <IconButton>
                     <Avatar alt="Pause Logo" src={pauseLogo}></Avatar>

@@ -10,8 +10,8 @@ function MenuItemCard({data}: { data: IMenuItem }) {
                 ":hover": {boxShadow: 20}
             }}>
                 <CardContent>
-                    <Typography variant="h3">{data.scheduled}</Typography>
-                    <Typography variant="h6">{data.name}</Typography>
+                    <Typography sx={{typography: {xs: 'h6', sm: 'h4'}}}>{data.scheduled}</Typography>
+                    <Typography sx={{typography: {xs: 'p', sm: 'h6'}}}>{data.name}</Typography>
                 </CardContent>
             </Card>
         </Box>

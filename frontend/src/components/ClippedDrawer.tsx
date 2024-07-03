@@ -54,7 +54,10 @@ export default function ClippedDrawer() {
                 <Box sx={{overflow: 'auto'}}>
                     <List>
                         <ListItem disablePadding key="home">
-                            <ListItemButton onClick={() => setDisplay(Site.Landingpage)}>
+                            <ListItemButton onClick={() => {
+                                setDisplay(Site.Landingpage)
+                                setOpen(false)
+                            }}>
                                 <ListItemIcon>
                                     <HomeIcon/>
                                 </ListItemIcon>
@@ -62,7 +65,10 @@ export default function ClippedDrawer() {
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding key="menu">
-                            <ListItemButton onClick={() => setDisplay(Site.Menu)}>
+                            <ListItemButton onClick={() => {
+                                setDisplay(Site.Menu)
+                                setOpen(false)}
+                            }>
                                 <ListItemIcon>
                                     <MenuBookIcon/>
                                 </ListItemIcon>
