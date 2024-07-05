@@ -10,16 +10,17 @@ function OrderMenu() {
 
     const [items, setItems] = useState<IMenuItem[]>([])
     const getMenu = async () => {
-        const response = await fetch(api_url)
+        const response = await fetch(api_url, {
+            headers: {
+                "Authorization": `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`
+            }
+        })
         const data = await response.json()
-
-        console.log(data.map((data: IMenuItem) => data.name))
         setItems(data)
-
     }
 
     useEffect(() => {
-        getMenu().catch(() => console.log("could not fetch menu items"))
+        getMenu().catch((reason) => console.log(`could not fetch menu items: ${reason}`))
     }, [])
     return (
         <List>
