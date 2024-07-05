@@ -12,7 +12,7 @@ function OrderMenu() {
     const getMenu = async () => {
         const response = await fetch(api_url, {
             headers: {
-                "Authorization": `Bearer ${import.meta.env.VITE_BACKEND_TOKEN}`
+                "Authorization": `Bearer ${import.meta.env.VITE_API_TOKEN}`
             }
         })
         const data = await response.json()

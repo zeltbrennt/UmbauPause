@@ -18,7 +18,7 @@ fun Application.configureSecurity() {
         bearer("basic-auth") {
             realm = "basic access"
             authenticate { cred ->
-                if (cred.token == System.getenv("BASE_FRONEND_TOKEN")) {
+                if (cred.token == System.getenv("VITE_API_TOKEN")) {
                     UserIdPrincipal("frontend")
                 } else {
                     null
