@@ -18,6 +18,7 @@ fun Application.module() {
     configureHTTP()
     configureTemplating()
     configureSerialization()
+    configureSecurity()
     configureRouting(articleRepository)
     configureCORS()
     //configureValidation()

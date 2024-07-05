@@ -1,6 +1,7 @@
 package de.pause.plugins
 
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
@@ -12,6 +13,20 @@ fun Application.configureSecurity() {
             cookie.extensions["SameSite"] = "lax"
         }
     }
+
+    install(Authentication) {
+        bearer("basic-auth") {
+            realm = "basic access"
+            authenticate { cred ->
+                if (cred.token == System.getenv("BASE_FRONEND_TOKEN")) {
+                    UserIdPrincipal("frontend")
+                } else {
+                    null
+                }
+            }
+        }
+    }
+
     routing {
         get("/session/increment") {
             val session = call.sessions.get<MySession>() ?: MySession()
