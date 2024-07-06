@@ -1,6 +1,8 @@
-Dieser Plan dient als grobe Orientierung, welche Schritte umgesetzt werden müssen. Es werden Ziele und Nicht-Ziele definiert, welche das Erreichen von Meilensteinen kennzeichnen. 
+Dieser Plan dient als grobe Orientierung, welche Schritte umgesetzt werden müssen. Es werden Ziele und Nicht-Ziele
+definiert, welche das Erreichen von Meilensteinen kennzeichnen.
 
-Weiterhin ist skizziert, welche Kapitel der Ausarbeitung sinnvoll parallel zum Entwicklungsprozess geschrieben (oder wenigstens begonnen) werden können.
+Weiterhin ist skizziert, welche Kapitel der Ausarbeitung sinnvoll parallel zum Entwicklungsprozess geschrieben (oder
+wenigstens begonnen) werden können.
 
 Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im weiteren Projektverlauf dienen.
 
@@ -38,58 +40,60 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Backend Tests
 
 **Nicht-Ziele**
+
 - [ ] Nutzer können nicht die Daten anderer Nutzer sehen
 - [ ] Nutzer können keine Funktionen aufrufen, die Administratoren und Manager haben
 - [ ] Manager können keine Funktionen aufrufen, die Administratoren haben
 - [ ] Passwörter werden nicht im Klartext gespeichert
 
-
 ### 1.1.4 CRUD-Operationen
 
-- [ ] Manager kann Liste aller Gerichte sehen 
-	- [ ] Endpunkt Backend
-	- [ ] View im Frontend
+- [ ] Manager kann Liste aller Gerichte sehen
+    - [ ] Endpunkt Backend
+    - [ ] View im Frontend
 - [ ] Manager kann Gerichte hinzufügen, bearbeiten und löschen
-- [ ] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage verteilt)
+- [ ] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage
+  verteilt)
 - [ ] Manager kann Wochenkarte aus Gerichten erstellen
 - [ ] Wenn kein Gericht an einem Wochentag eingetragen ist, wird die Kantine als „geschlossen“ angezeigt
 - [ ] Manager kann festlegen, in welchem Zeitraum eine Wochenkarte gültig ist
 - [ ] Es existiert eine Tabelle mit Standorten
-	- [ ] Maske in der Standort hinzugefügt werden können
-	- [ ] Standorte können aktiviert und deaktiviert werden
+    - [ ] Maske in der Standort hinzugefügt werden können
+    - [ ] Standorte können aktiviert und deaktiviert werden
 - [ ] Fronend Tests
 - [ ] Backend Tests
-- [ ] 
+
 ### 1.1.5 Bestellungen
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
-- [ ] Bestellungen haben einen Status 
-	- Bestellt
-	- Storniert
-	- Ausgeliefert
-	- Bezahlt
+- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in
+  Verbindung bringt
+- [ ] Bestellungen haben einen Status
+    - Bestellt
+    - Storniert
+    - Ausgeliefert
+    - Bezahlt
 - [ ] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
 **Nicht-Ziele**
+
 - [ ] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
 - [ ] Es können keine Bestellungen für andere Nutzer abgegeben werden
-
 
 ### 1.1.6 Bestellübersicht
 
 - [ ] Manager kann aggregiert die Anzahl der Bestellungen je Tag einsehen
-	- [ ] Alle Bestellungen
-	- [ ] Bestellungen je Nutzer
-	- [ ] Bestellungen je Standort
-	- [ ] Bestellungen der Woche
+    - [ ] Alle Bestellungen
+    - [ ] Bestellungen je Nutzer
+    - [ ] Bestellungen je Standort
+    - [ ] Bestellungen der Woche
 - [ ] Update der Bestellübersicht erfolgt automatisch
 - [ ] Verlauf der Bestellungen über den Tag
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
-## 1.2 Ausarbeitung 
+## 1.2 Ausarbeitung
 
 - [ ] Hintergrund
 - [ ] Problemstellung
@@ -97,9 +101,10 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Verwandte Arbeiten
 - [ ] Grundlagen
 - [ ] Konzept
-	- [ ] Architektur
-	- [ ] Schemata (MVC, Client-Server, Datenbank-UML)
+    - [ ] Architektur
+    - [ ] Schemata (MVC, Client-Server, Datenbank-UML)
 - [ ] Realisierung
+
 # 2 Zusätzliche Features
 
 ## 2.1 App
@@ -116,10 +121,10 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
-### 2.1.2 Dashboard 
+### 2.1.2 Dashboard
 
 - [ ] Es werden Kennzahlen dargestellt:
-	- [ ] Wie viele Gerichte verkauft wurden
+    - [ ] Wie viele Gerichte verkauft wurden
 - [ ] Grafik über zeitlichen Verlauf der Bestellungen
 - [ ] Matrix von Zutaten über Häufigkeit
 - [ ] Aufteilung in Wochentag, Standort und Kunde
@@ -154,29 +159,33 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 # 3 Abschluss
 
 ## 3.1 App
+
 ### 3.1.1 Zugangskontrolle
 
 - [ ] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
 - [ ] Admin kann neuen Manager hinzufügen
 
 **Nicht-Ziele**
+
 - [ ] Manager kann keine Manger oder Admin Accounts hinzufügen
 
 ### 3.1.2 Zwei-Faktor-Authentifikation
 
 - [ ] Anbindung von 2FA
 - [ ] Einstellmöglichkeit in Profil
+
 ### 3.1.3 Landingpage
 
-- [ ] es Existiert eine Willkommensseite mit den wichtigsten Infos
+- [ ] es existiert eine Willkommensseite mit den wichtigsten Infos
 
 ### 3.1.4 Impressum
 
 - [ ] es existiert eine Impressumseite
 
-### 3.1.5 Cookie-Banner 
+### 3.1.5 Cookie-Banner
 
 - [ ] es existiert ein Cooke-Banner
+
 ## 3.2 Ausarbeitung
 
 - [ ] Zusammenfassung
