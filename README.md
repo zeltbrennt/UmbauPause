@@ -47,8 +47,9 @@ gibt
 ein Kontaktformular für Catering-Anfragen für Events. Ebenfalls für alle einsehbar sind das Impressum und
 Bildergalerien.
 
-Zuletzt gibt es die Rolle des *Administrators*, welcher Nutzer sperren und freischalten kann, Zugriffe auf Logfiles hat
-und Fernwartungen durchführen kann.
+> **Hinweis**: die vollständige Ausarbeitung
+> wird [privates Latex-Repository](https://github.com/zeltbrennt/Projektarbeit-UmbauPause) versioniert.
+> Nach Abschluss der Arbeit wird das fertige PDF hier hinzugefügt.
 
 # Deployment
 
