@@ -14,10 +14,9 @@
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.21",
     "@react-buddy/ide-toolbox": "^2.4.0",
-    "beercss": "^3.6.5",
+    "@react-buddy/palette-mui": "^5.0.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@react-buddy/palette-mui": "^5.0.1"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",
