@@ -36,5 +36,7 @@ out/
 .vscode/
 
 ### environment ###
-docker/.env
 *.env
+
+### Obsidian ###
+.obsidian
