@@ -14,6 +14,8 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
 import HomeIcon from '@mui/icons-material/Home';
+import TableViewIcon from '@mui/icons-material/TableView';
+import InsightsIcon from '@mui/icons-material/Insights';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {Site} from "../util/Interfaces.ts";
 import Landingpage from "./Landingpage.tsx";
@@ -67,7 +69,8 @@ export default function ClippedDrawer() {
                         <ListItem disablePadding key="menu">
                             <ListItemButton onClick={() => {
                                 setDisplay(Site.Menu)
-                                setOpen(false)}
+                                setOpen(false)
+                            }
                             }>
                                 <ListItemIcon>
                                     <MenuBookIcon/>
@@ -83,12 +86,28 @@ export default function ClippedDrawer() {
                                 <ListItemText primary="Karte bearbeiten"/>
                             </ListItemButton>
                         </ListItem>
+                        <ListItem disablePadding key="overview">
+                            <ListItemButton onClick={() => alert("not implemented")}>
+                                <ListItemIcon>
+                                    <TableViewIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Bestellübersicht"/>
+                            </ListItemButton>
+                        </ListItem>
+                        <ListItem disablePadding key="dashboard">
+                            <ListItemButton onClick={() => alert("not implemented")}>
+                                <ListItemIcon>
+                                    <InsightsIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Dashboard"/>
+                            </ListItemButton>
+                        </ListItem>
                         <ListItem disablePadding key="login">
                             <ListItemButton onClick={() => alert("not implemented")}>
                                 <ListItemIcon>
                                     <LoginIcon/>
                                 </ListItemIcon>
-                                <ListItemText primary="Login"/>
+                                <ListItemText primary="Logout"/>
                             </ListItemButton>
                         </ListItem>
                     </List>
