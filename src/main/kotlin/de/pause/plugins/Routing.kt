@@ -1,52 +1,29 @@
 package de.pause.plugins
 
 import de.pause.model.ArticleRepository
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
-import io.ktor.server.http.content.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.thymeleaf.*
 
 
 fun Application.configureRouting(articleRepository: ArticleRepository) {
 
     routing {
-        authenticate("basic-auth") {
-            staticResources("/static", "static")
-            route("/") {
-                get {
-                    call.respond(ThymeleafContent("landingpage", emptyMap()))
-                }
-            }
-            route("/weekly") {
-                get {
+        route("/weekly") {
+            get {
 
-                    val articles = articleRepository.getCurrentArticles().sortedBy { it.order }
-                    call.respond(
-                        articles
-                    )
-                }
+                val articles = articleRepository.getCurrentArticles().sortedBy { it.order }
+                call.respond(
+                    articles
+                )
             }
+        }
+        authenticate("basic-auth") {
             route("/newMenu") {
                 get {
-                    call.respond(
-                        ThymeleafContent(
-                            "newMenu",
-                            mapOf("days" to listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"))
-                        )
-                    )
-                }
-                post {
-                    val formParams = call.receiveParameters()
-                    articleRepository.addNewMenu(formParams)
-                    call.respondRedirect("/weekly")
-                }
-            }
-            route("/order") {
-                post {
-                    call.respondRedirect("/")
+                    call.respond(HttpStatusCode.OK)
                 }
             }
         }

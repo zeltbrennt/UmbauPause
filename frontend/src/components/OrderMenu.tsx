@@ -10,11 +10,7 @@ function OrderMenu() {
 
     const [items, setItems] = useState<IMenuItem[]>([])
     const getMenu = async () => {
-        const response = await fetch(api_url, {
-            headers: {
-                "Authorization": `Bearer ${import.meta.env.VITE_API_TOKEN}`
-            }
-        })
+        const response = await fetch(api_url)
         const data = await response.json()
         setItems(data)
     }
