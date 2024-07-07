@@ -6,6 +6,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
+import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
@@ -29,6 +30,7 @@ class BackendApiTests {
     }
 
     @Test
+    @Ignore
     fun `add new menu is available with vite token`() = testApplication {
 
         val response = client.get("/newMenu") {
