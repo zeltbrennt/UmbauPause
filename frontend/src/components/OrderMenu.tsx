@@ -21,7 +21,7 @@ function OrderMenu() {
     return (
         <List>
             {items.map((item) => (
-                <ListItem key={item.name} sx={{flexGrow: 1}}>
+                <ListItem key={item.description} sx={{flexGrow: 1}}>
                     <MenuItemCard data={item}/>
                 </ListItem>
             ))}

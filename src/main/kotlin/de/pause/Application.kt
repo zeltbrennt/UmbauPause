@@ -1,7 +1,7 @@
 package de.pause
 
 import de.pause.db.configureDatabase
-import de.pause.model.PostgresArticleRepository
+import de.pause.model.PostgresDishRepository
 import de.pause.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -13,7 +13,7 @@ fun main() {
 }
 
 fun Application.module() {
-    val articleRepository = PostgresArticleRepository()
+    val articleRepository = PostgresDishRepository()
     configureDatabase()
     configureHTTP()
     configureTemplating()

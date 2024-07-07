@@ -1,4 +1,4 @@
-insert into shop.article (name, available, scheduled, price)
+insert into shop.dish (description, available, scheduled, price)
 values ('cremige Polenta mit gebratenen Champignons und Tomaten-Mangold', true, 'Montag', 6.50),
        ('Kartoffeln mit Senfsoße und Ei', true, 'Dienstag', 6.50),
        ('gegrillter Spitzkohl mit Süßkartoffelstampf und Nam Pik (thailändische Tomatensalsa)', true, 'Mittwoch', 6.50),

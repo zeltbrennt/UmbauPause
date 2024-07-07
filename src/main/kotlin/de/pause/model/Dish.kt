@@ -3,8 +3,8 @@ package de.pause.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Article(
-    val name: String,
+data class Dish(
+    val description: String,
     val available: Boolean,
     val scheduled: String,
     val price: Double,

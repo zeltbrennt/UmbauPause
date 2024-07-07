@@ -1,6 +1,6 @@
 package de.pause.db
 
-import de.pause.model.Article
+import de.pause.model.Dish
 import de.pause.model.dayOfWeekToInt
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
@@ -9,24 +9,24 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-object ArticleTable : IntIdTable("shop.article") {
-    val name = varchar("name", 250)
+object DishTable : IntIdTable("shop.dish") {
+    val description = varchar("description", 250)
     val available = bool("available")
     val scheduled = varchar("scheduled", 50)
     val price = double("price")
 }
 
-class ArticleDAO(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ArticleDAO>(ArticleTable)
+class DishDao(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<DishDao>(DishTable)
 
-    var name by ArticleTable.name
-    var available by ArticleTable.available
-    var scheduled by ArticleTable.scheduled
-    var price by ArticleTable.price
+    var description by DishTable.description
+    var available by DishTable.available
+    var scheduled by DishTable.scheduled
+    var price by DishTable.price
 }
 
-fun daoToModel(dao: ArticleDAO) = Article(
-    name = dao.name,
+fun daoToModel(dao: DishDao) = Dish(
+    description = dao.description,
     scheduled = dao.scheduled,
     available = isAvailable(dao.scheduled),
     price = dao.price
