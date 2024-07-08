@@ -3,7 +3,9 @@ FROM node:20
 WORKDIR /webshop/frontend
 COPY ./package.json .
 RUN npm install
+RUN npm i -g serve
 COPY . .
-EXPOSE 5173
+RUN npm run build
+EXPOSE 3000
 
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["serve", "-s", "dist"]
