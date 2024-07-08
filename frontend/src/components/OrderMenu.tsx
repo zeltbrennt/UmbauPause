@@ -6,7 +6,7 @@ import MenuItemCard from "./MenuItemCard.tsx";
 
 function OrderMenu() {
 
-    const api_url = "http://localhost:8080/weekly"
+    const api_url = "http://localhost:8080/weekly" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
 
     const [items, setItems] = useState<IMenuItem[]>([])
     const getMenu = async () => {
