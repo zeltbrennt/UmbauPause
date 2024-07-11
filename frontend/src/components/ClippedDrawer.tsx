@@ -18,36 +18,29 @@ import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {Site} from "../util/Interfaces.ts";
-import Landingpage from "./Landingpage.tsx";
-import OrderMenu from "./OrderMenu.tsx";
+import MainViewRender from './MainViewRender.tsx'
 import {useState} from "react";
 
 
 const drawerWidth = 240
 
-function renderSwitch(site: Site) {
-    switch (site) {
-        case Site.Landingpage:
-            return <Landingpage/>
-        case Site.Menu:
-            return <OrderMenu/>
-    }
-}
+// @ts-ignore
+export default function ClippedDrawer({currentView, changeView, openLoginDialog}) {
 
-export default function ClippedDrawer() {
 
-    const [display, setDisplay] = useState(Site.Landingpage)
     const theme = useTheme()
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
-    const [open, setOpen] = useState(false)
+    const [drawerOpen, setDrawerOpen] = useState(false)
+
 
     return (
         <Box sx={{display: 'flex'}}>
-            <ResponsiveAppBar drawerState={open} setDrawerState={setOpen}/>
+
+            <ResponsiveAppBar drawerState={drawerOpen} setDrawerState={setDrawerOpen}/>
             <SwipeableDrawer variant={isDesktop ? 'permanent' : 'temporary'}
-                             open={isDesktop ? true : open}
-                             onClose={() => setOpen(false)}
-                             onOpen={() => setOpen(true)}
+                             open={isDesktop ? true : drawerOpen}
+                             onClose={() => setDrawerOpen(false)}
+                             onOpen={() => setDrawerOpen(true)}
                              sx={{
                                  width: drawerWidth,
                                  flexShrink: 0,
@@ -57,8 +50,8 @@ export default function ClippedDrawer() {
                     <List>
                         <ListItem disablePadding key="home">
                             <ListItemButton onClick={() => {
-                                setDisplay(Site.Landingpage)
-                                setOpen(false)
+                                changeView(Site.Landingpage)
+                                setDrawerOpen(false)
                             }}>
                                 <ListItemIcon>
                                     <HomeIcon/>
@@ -68,8 +61,8 @@ export default function ClippedDrawer() {
                         </ListItem>
                         <ListItem disablePadding key="menu">
                             <ListItemButton onClick={() => {
-                                setDisplay(Site.Menu)
-                                setOpen(false)
+                                changeView(Site.Menu)
+                                setDrawerOpen(false)
                             }
                             }>
                                 <ListItemIcon>
@@ -103,7 +96,7 @@ export default function ClippedDrawer() {
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding key="login">
-                            <ListItemButton onClick={() => alert("not implemented")}>
+                            <ListItemButton onClick={openLoginDialog}>
                                 <ListItemIcon>
                                     <LoginIcon/>
                                 </ListItemIcon>
@@ -115,7 +108,7 @@ export default function ClippedDrawer() {
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                {renderSwitch(display)}
+                <MainViewRender site={currentView}/>
             </Box>
         </Box>
     )
