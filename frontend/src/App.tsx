@@ -1,5 +1,5 @@
 import {Container} from "@mui/material";
-import ClippedDrawer from "./components/ClippedDrawer.tsx";
+import AppFrame from "./components/AppFrame.tsx";
 import {ThemeProvider} from "@emotion/react";
 import {lightTheme} from "./Themes.ts";
 import LoginDialog from "./components/LoginDialog.tsx";
@@ -16,13 +16,13 @@ function App() {
                 <LoginDialog open={loginDialogOpen}
                              handleClose={() => setLoginDialogOpen(false)}
                              setCurrentUser={(user: string) => setCurrentUser(user)}/>
-                <ClippedDrawer currentUser={currentUser}
-                               logout={() => setCurrentUser("")}
-                               currentView={mainView}
-                               changeView={(site: Site) => {
-                                   setMainView(site)
-                               }}
-                               openLoginDialog={() => setLoginDialogOpen(true)}/>
+                <AppFrame currentUser={currentUser}
+                          logout={() => setCurrentUser("")}
+                          currentView={mainView}
+                          changeView={(site: Site) => {
+                              setMainView(site)
+                          }}
+                          openLoginDialog={() => setLoginDialogOpen(true)}/>
             </Container>
         </ThemeProvider>
     )

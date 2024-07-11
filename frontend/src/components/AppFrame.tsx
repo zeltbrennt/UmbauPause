@@ -25,7 +25,7 @@ import {useState} from "react";
 
 const drawerWidth = 240
 
-interface ClippedDrawerProps {
+interface AppFrameProps {
     currentUser: string,
     logout: () => void,
     currentView: Site,
@@ -33,13 +33,13 @@ interface ClippedDrawerProps {
     openLoginDialog: () => void
 }
 
-export default function ClippedDrawer({
-                                          currentUser,
-                                          logout,
-                                          currentView,
-                                          changeView,
-                                          openLoginDialog
-                                      }: ClippedDrawerProps) {
+export default function AppFrame({
+                                     currentUser,
+                                     logout,
+                                     currentView,
+                                     changeView,
+                                     openLoginDialog
+                                 }: AppFrameProps) {
 
 
     const theme = useTheme()
@@ -50,7 +50,7 @@ export default function ClippedDrawer({
     return (
         <Box sx={{display: 'flex'}}>
 
-            <ResponsiveAppBar drawerState={drawerOpen} setDrawerState={setDrawerOpen}/>
+            <ResponsiveAppBar drawerState={drawerOpen} setDrawerState={setDrawerOpen} isDesktop={isDesktop}/>
             <SwipeableDrawer variant={isDesktop ? 'permanent' : 'temporary'}
                              open={isDesktop ? true : drawerOpen}
                              onClose={() => setDrawerOpen(false)}
