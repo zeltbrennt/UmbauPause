@@ -46,6 +46,7 @@ fun Application.configureRouting(
                         .withAudience(audience)
                         .withIssuer(issuer)
                         .withClaim("username", user.username)
+                        .withClaim("role", user.role.name)
                         .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
                         .withIssuedAt(Instant.now())
                         .sign(Algorithm.HMAC256(secret))
