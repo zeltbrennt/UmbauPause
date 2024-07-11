@@ -46,5 +46,6 @@ dependencies {
     testImplementation("com.h2database:h2:2.2.224")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
     implementation("io.ktor:ktor-server-cors:$ktor_version")
+    implementation("org.mindrot:jbcrypt:0.4")
 }
 
