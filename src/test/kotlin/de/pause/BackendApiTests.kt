@@ -1,5 +1,7 @@
 package de.pause
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.Dish
 import de.pause.model.LoginRequest
 import io.ktor.client.plugins.contentnegotiation.*
@@ -9,10 +11,9 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
-import kotlin.test.Ignore
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlin.test.*
 
 class BackendApiTests {
     @Test
@@ -57,6 +58,16 @@ class BackendApiTests {
             setBody(loginRequestData)
         }
         assertEquals(HttpStatusCode.OK, response.status)
+        val respondBody = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val token = respondBody["token"]!!.jsonPrimitive.content
+        val decodedJWT = JWT.decode(token)
+        assertEquals("Alice", decodedJWT.getClaim("username").asString())
+
+        val secret = System.getenv("JWT_SHARED_SECRET")
+        val algorithm = Algorithm.HMAC256(secret)
+        val verifier = JWT.require(algorithm).build()
+        assertTrue { verifier.verify(token) != null }
+
     }
 
     @Test

@@ -1,5 +1,7 @@
 package de.pause.plugins
 
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.DishRepository
 import de.pause.model.LoginRequest
 import de.pause.model.UserRepository
@@ -10,6 +12,8 @@ import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.time.Instant
+
 
 fun Application.configureRouting(
     appConfig: HoconApplicationConfig,
@@ -38,7 +42,14 @@ fun Application.configureRouting(
                 val loginRequest = call.receive<LoginRequest>()
                 val user = userRepository.login(loginRequest)
                 if (user != null) {
-                    call.respond(HttpStatusCode.OK, user)
+                    val token = JWT.create()
+                        .withAudience(audience)
+                        .withIssuer(issuer)
+                        .withClaim("username", user.username)
+                        .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
+                        .withIssuedAt(Instant.now())
+                        .sign(Algorithm.HMAC256(secret))
+                    call.respond(HttpStatusCode.OK, hashMapOf("token" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
