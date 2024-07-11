@@ -25,8 +25,21 @@ import {useState} from "react";
 
 const drawerWidth = 240
 
-// @ts-ignore
-export default function ClippedDrawer({currentUser, logout, currentView, changeView, openLoginDialog}) {
+interface ClippedDrawerProps {
+    currentUser: string,
+    logout: () => void,
+    currentView: Site,
+    changeView: (site: Site) => void,
+    openLoginDialog: () => void
+}
+
+export default function ClippedDrawer({
+                                          currentUser,
+                                          logout,
+                                          currentView,
+                                          changeView,
+                                          openLoginDialog
+                                      }: ClippedDrawerProps) {
 
 
     const theme = useTheme()

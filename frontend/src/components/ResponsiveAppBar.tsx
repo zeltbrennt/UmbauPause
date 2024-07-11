@@ -2,8 +2,13 @@ import {AppBar, Avatar, Box, IconButton, Toolbar, Typography} from "@mui/materia
 import MenuIcon from '@mui/icons-material/Menu';
 import pauseLogo from "/pause_logo.png";
 
-// @ts-ignore //TODO type this correctly
-function ResponsiveAppBar({drawerState, setDrawerState}) {
+
+interface AppBarProps {
+    drawerState: boolean,
+    setDrawerState: (state: boolean) => void
+}
+
+function ResponsiveAppBar({drawerState, setDrawerState}: AppBarProps) {
 
 
     return (
