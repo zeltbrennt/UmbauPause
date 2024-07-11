@@ -25,6 +25,6 @@ fun Application.module() {
     configureSerialization()
     configureSecurity()
     configureCORS()
-    configureRouting(articleRepository)
+    configureRouting(articleRepository, userRepository)
     //configureValidation()
 }
