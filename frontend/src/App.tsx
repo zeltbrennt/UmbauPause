@@ -9,11 +9,20 @@ import {Site} from "./util/Interfaces.ts";
 function App() {
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
     const [mainView, setMainView] = useState(Site.Landingpage)
+    const [currentUser, setCurrentUser] = useState("")
     return (
         <ThemeProvider theme={lightTheme}>
             <Container>
-                <LoginDialog open={loginDialogOpen} handleClose={() => setLoginDialogOpen(false)}/>
-                <ClippedDrawer currentView={mainView} changeView={(site: Site) => {setMainView(site)}} openLoginDialog={() => setLoginDialogOpen(true)}/>
+                <LoginDialog open={loginDialogOpen}
+                             handleClose={() => setLoginDialogOpen(false)}
+                             setCurrentUser={(user: string) => setCurrentUser(user)}/>
+                <ClippedDrawer currentUser={currentUser}
+                               logout={() => setCurrentUser("")}
+                               currentView={mainView}
+                               changeView={(site: Site) => {
+                                   setMainView(site)
+                               }}
+                               openLoginDialog={() => setLoginDialogOpen(true)}/>
             </Container>
         </ThemeProvider>
     )

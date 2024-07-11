@@ -1,11 +1,14 @@
 import {
     Avatar,
     Box,
-    Button, Checkbox,
+    Button,
+    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
-    FormControlLabel, Grid, Link,
+    FormControlLabel,
+    Grid,
+    Link,
     TextField,
     Typography
 } from "@mui/material";
@@ -14,12 +17,18 @@ function LockOutlinedIcon() {
     return null;
 }
 
+interface LoginDialogProps {
+    open: boolean,
+    handleClose: () => void,
+    setCurrentUser: (user: string) => void
+}
 
-// @ts-ignore
-export default function LoginDialog({open, handleClose}) {
+export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDialogProps) {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+        setCurrentUser("TestLogin")
+        handleClose()
         console.log({
             email: data.get('email'),
             password: data.get('password'),
@@ -41,13 +50,13 @@ export default function LoginDialog({open, handleClose}) {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
+                    <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
+                        <LockOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
                         <TextField
                             margin="normal"
                             required
@@ -69,14 +78,14 @@ export default function LoginDialog({open, handleClose}) {
                             autoComplete="current-password"
                         />
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
+                            control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"
                         />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            sx={{ mt: 3, mb: 2 }}
+                            sx={{mt: 3, mb: 2}}
                         >
                             Anmelden
                         </Button>

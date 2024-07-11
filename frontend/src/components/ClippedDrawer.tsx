@@ -13,6 +13,7 @@ import {
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
@@ -25,7 +26,7 @@ import {useState} from "react";
 const drawerWidth = 240
 
 // @ts-ignore
-export default function ClippedDrawer({currentView, changeView, openLoginDialog}) {
+export default function ClippedDrawer({currentUser, logout, currentView, changeView, openLoginDialog}) {
 
 
     const theme = useTheme()
@@ -96,11 +97,11 @@ export default function ClippedDrawer({currentView, changeView, openLoginDialog}
                             </ListItemButton>
                         </ListItem>
                         <ListItem disablePadding key="login">
-                            <ListItemButton onClick={openLoginDialog}>
+                            <ListItemButton onClick={currentUser === "" ? openLoginDialog : logout}>
                                 <ListItemIcon>
-                                    <LoginIcon/>
+                                    {currentUser === "" ? <LoginIcon/> : <LogoutIcon/>}
                                 </ListItemIcon>
-                                <ListItemText primary="Logout"/>
+                                <ListItemText primary={currentUser === "" ? "Login" : "Logout"}/>
                             </ListItemButton>
                         </ListItem>
                     </List>
