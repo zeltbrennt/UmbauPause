@@ -6,7 +6,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 
-fun Application.configureSecurity() {
+fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
+
+    val secret = appConfig.property("ktor.jwt.secret").getString()
+    val issuer = appConfig.property("ktor.jwt.issuer").getString()
+    val audience = appConfig.property("ktor.jwt.audience").getString()
+    val myRealm = appConfig.property("ktor.jwt.realm").getString()
+
     data class MySession(val count: Int = 0)
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {
