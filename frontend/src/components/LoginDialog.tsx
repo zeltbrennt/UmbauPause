@@ -12,10 +12,7 @@ import {
     TextField,
     Typography
 } from "@mui/material";
-
-function LockOutlinedIcon() {
-    return null;
-}
+import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 
 interface LoginDialogProps {
     open: boolean,
@@ -51,7 +48,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                     }}
                 >
                     <Avatar sx={{m: 1, bgcolor: 'secondary.main'}}>
-                        <LockOutlinedIcon/>
+                        <LockPersonOutlinedIcon/>
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign in
