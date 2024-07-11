@@ -16,7 +16,7 @@ class UserRepository {
         }
     }
 
-    suspend fun login(req: LoginRequest): User? = suspendTransaction {
+    suspend fun login(req: LoginRequest): User? = suspendTransaction {// TODO: do send JWT instead of full user data
         val user = UserDao
             .find { UserTable.email eq req.email }
             .firstOrNull()
