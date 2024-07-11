@@ -122,7 +122,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView}/>
+                <MainViewRender site={currentView} currentUser={currentUser}/>
             </Box>
         </Box>
     )

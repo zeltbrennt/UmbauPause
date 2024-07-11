@@ -13,6 +13,7 @@ import {
     Typography
 } from "@mui/material";
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
+import {useState} from "react";
 
 interface LoginDialogProps {
     open: boolean,
@@ -20,16 +21,46 @@ interface LoginDialogProps {
     setCurrentUser: (user: string) => void
 }
 
+interface LoginRequestData {
+    email: string,
+    password: string
+}
+
 export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDialogProps) {
+
+    const api_url = "http://localhost:8080/login"
+    const [loginError, setLoginError] = useState(false)
+
+    const getToken = async (loginData: LoginRequestData) => {
+        const response = await fetch(api_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: loginData.email,
+                password: loginData.password
+            })
+        })
+        return await response.json()
+    }
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        setCurrentUser("TestLogin")
-        handleClose()
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+        getToken({
+            email: data.get('email') as string,
+            password: data.get('password') as string
+        }).then(token => {
+            console.log(token)
+            //  const {decodedToken} = useJwt(token)
+//            setCurrentUser(decodedToken.username)
+            setCurrentUser(data.get('email') as string)
+            handleClose()
+        }).catch(reason => {
+            console.log(`could not login: ${reason}`)
+            setLoginError(true)
+
+        })
     };
     return (
         <Dialog
@@ -63,6 +94,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             name="email"
                             autoComplete="email"
                             autoFocus
+                            error={loginError}
                         />
                         <TextField
                             margin="normal"
@@ -73,6 +105,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             type="password"
                             id="password"
                             autoComplete="current-password"
+                            error={loginError}
                         />
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
