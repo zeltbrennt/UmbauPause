@@ -15,12 +15,12 @@ import {
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
-import {JWTToken} from "../util/Interfaces.ts";
+import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
 
 interface LoginDialogProps {
     open: boolean,
     handleClose: () => void,
-    setCurrentUser: (user: string) => void
+    setCurrentUser: (user: UserPrincipal) => void
 }
 
 interface LoginRequestData {
@@ -53,7 +53,12 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
             .then(response => {
                 const decodedToken = jwtDecode<JWTToken>(response.token)
                 sessionStorage.setItem('token', response.token)
-                setCurrentUser(decodedToken.username)
+                const userPrincipal = {
+                    username: decodedToken.username,
+                    role: decodedToken.role
+                } as UserPrincipal
+                sessionStorage.setItem('userPrincipal', JSON.stringify(userPrincipal))
+                setCurrentUser(userPrincipal)
                 setLoginError(false)
                 handleClose()
                 console.log(sessionStorage)

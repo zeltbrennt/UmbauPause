@@ -18,3 +18,12 @@ export interface JWTToken {
     username: string,
     role: string,
 }
+
+export enum UserRole {
+    USER = "USER", MODERATOR = "MODERATOR", ADMIN = "ADMIN"
+}
+
+export interface UserPrincipal {
+    username: string,
+    role: UserRole
+}

@@ -18,7 +18,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
-import {Site} from "../util/Interfaces.ts";
+import {Site, UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import MainViewRender from './MainViewRender.tsx'
 import {useState} from "react";
 
@@ -26,7 +26,7 @@ import {useState} from "react";
 const drawerWidth = 240
 
 interface AppFrameProps {
-    currentUser: string,
+    currentUser: UserPrincipal,
     logout: () => void,
     currentView: Site,
     changeView: (site: Site) => void,
@@ -45,7 +45,6 @@ export default function AppFrame({
     const theme = useTheme()
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
     const [drawerOpen, setDrawerOpen] = useState(false)
-
 
     return (
         <Box sx={{display: 'flex'}}>
@@ -85,36 +84,38 @@ export default function AppFrame({
                                 <ListItemText primary="Wochenkarte"/>
                             </ListItemButton>
                         </ListItem>
-                        <ListItem disablePadding key="edit">
-                            <ListItemButton onClick={() => alert("not implemented")}>
-                                <ListItemIcon>
-                                    <EditNoteIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Karte bearbeiten"/>
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding key="overview">
-                            <ListItemButton onClick={() => alert("not implemented")}>
-                                <ListItemIcon>
-                                    <TableViewIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Bestellübersicht"/>
-                            </ListItemButton>
-                        </ListItem>
-                        <ListItem disablePadding key="dashboard">
-                            <ListItemButton onClick={() => alert("not implemented")}>
-                                <ListItemIcon>
-                                    <InsightsIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Dashboard"/>
-                            </ListItemButton>
-                        </ListItem>
+                        {currentUser?.role == UserRole.MODERATOR ? <>
+                            <ListItem disablePadding key="edit">
+                                <ListItemButton onClick={() => alert("not implemented")}>
+                                    <ListItemIcon>
+                                        <EditNoteIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Karte bearbeiten"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding key="overview">
+                                <ListItemButton onClick={() => alert("not implemented")}>
+                                    <ListItemIcon>
+                                        <TableViewIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Bestellübersicht"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding key="dashboard">
+                                <ListItemButton onClick={() => alert("not implemented")}>
+                                    <ListItemIcon>
+                                        <InsightsIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Dashboard"/>
+                                </ListItemButton>
+                            </ListItem>
+                        </> : <></>}
                         <ListItem disablePadding key="login">
-                            <ListItemButton onClick={currentUser === "" ? openLoginDialog : logout}>
+                            <ListItemButton onClick={currentUser ? logout : openLoginDialog}>
                                 <ListItemIcon>
-                                    {currentUser === "" ? <LoginIcon/> : <LogoutIcon/>}
+                                    {currentUser ? <LogoutIcon/> : <LoginIcon/>}
                                 </ListItemIcon>
-                                <ListItemText primary={currentUser === "" ? "Login" : "Logout"}/>
+                                <ListItemText primary={currentUser ? "Logout" : "Login"}/>
                             </ListItemButton>
                         </ListItem>
                     </List>
@@ -122,7 +123,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView} currentUser={currentUser}/>
+                <MainViewRender site={currentView} currentUser={currentUser?.username}/>
             </Box>
         </Box>
     )
