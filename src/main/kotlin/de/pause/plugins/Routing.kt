@@ -45,10 +45,10 @@ fun Application.configureRouting(
                     val token = JWT.create()
                         .withAudience(audience)
                         .withIssuer(issuer)
+                        .withIssuedAt(Instant.now())
+                        .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
                         .withClaim("username", user.username)
                         .withClaim("role", user.role.name)
-                        .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withIssuedAt(Instant.now())
                         .sign(Algorithm.HMAC256(secret))
                     call.respond(HttpStatusCode.OK, hashMapOf("token" to token))
                 } else {

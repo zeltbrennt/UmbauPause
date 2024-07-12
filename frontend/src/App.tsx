@@ -17,7 +17,10 @@ function App() {
                              handleClose={() => setLoginDialogOpen(false)}
                              setCurrentUser={(user: string) => setCurrentUser(user)}/>
                 <AppFrame currentUser={currentUser}
-                          logout={() => setCurrentUser("")}
+                          logout={() => {
+                              setCurrentUser("");
+                              sessionStorage.clear()
+                          }}
                           currentView={mainView}
                           changeView={(site: Site) => {
                               setMainView(site)

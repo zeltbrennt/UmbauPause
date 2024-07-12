@@ -13,7 +13,9 @@ import {
     Typography
 } from "@mui/material";
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
-import {useState} from "react";
+import {FormEvent, useState} from "react";
+import {jwtDecode} from "jwt-decode";
+import {JWTToken} from "../util/Interfaces.ts";
 
 interface LoginDialogProps {
     open: boolean,
@@ -37,26 +39,25 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-                email: loginData.email,
-                password: loginData.password
-            })
+            body: JSON.stringify(loginData)
         })
         return await response.json()
     }
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         getToken({
-            email: data.get('email') as string,
-            password: data.get('password') as string
-        }).then(token => {
-            console.log(token)
-            //  const {decodedToken} = useJwt(token)
-//            setCurrentUser(decodedToken.username)
-            setCurrentUser(data.get('email') as string)
-            handleClose()
-        }).catch(reason => {
+            email: data.get('email'),
+            password: data.get('password')
+        } as LoginRequestData)
+            .then(response => {
+                const decodedToken = jwtDecode<JWTToken>(response.token)
+                sessionStorage.setItem('token', response.token)
+                setCurrentUser(decodedToken.username)
+                setLoginError(false)
+                handleClose()
+                console.log(sessionStorage)
+            }).catch(reason => {
             console.log(`could not login: ${reason}`)
             setLoginError(true)
 
@@ -65,7 +66,10 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
     return (
         <Dialog
             open={open}
-            onClose={handleClose}
+            onClose={() => {
+                handleClose();
+                setLoginError(false)
+            }}
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
