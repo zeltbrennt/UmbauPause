@@ -16,14 +16,30 @@ class UserRepository {
         }
     }
 
-    suspend fun login(req: LoginRequest): User? = suspendTransaction {// TODO: do send JWT instead of full user data
+    suspend fun login(req: LoginRequest): User? = suspendTransaction {
         val user = UserDao
             .find { UserTable.email eq req.email }
             .firstOrNull()
-        if (user != null && BCrypt.checkpw(req.password, user.password)) {
-            return@suspendTransaction daoToModel(user)
+        when {
+            user != null && BCrypt.checkpw(req.password, user.password) -> {
+                user.isLoggedIn = true
+                return@suspendTransaction daoToModel(user)
+            }
+
+            else -> return@suspendTransaction null
         }
-        return@suspendTransaction null
+    }
+
+    suspend fun logout(username: String) = suspendTransaction {
+        val user = UserDao.find { UserTable.username eq username }.firstOrNull()
+        when {
+            user != null -> {
+                user.isLoggedIn = false
+                return@suspendTransaction true
+            }
+
+            else -> return@suspendTransaction false
+        }
     }
 
 }

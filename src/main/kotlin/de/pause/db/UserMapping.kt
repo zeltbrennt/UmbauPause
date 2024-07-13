@@ -12,6 +12,7 @@ object UserTable : IntIdTable("shop.user") {
     val email = varchar("email", 200)
     val password = varchar("password", 250)
     val role = varchar("role", 100)
+    val isLoggedIn = bool("is_logged_in")
 }
 
 class UserDao(id: EntityID<Int>) : IntEntity(id) {
@@ -21,6 +22,7 @@ class UserDao(id: EntityID<Int>) : IntEntity(id) {
     var email by UserTable.email
     var password by UserTable.password
     var role by UserTable.role
+    var isLoggedIn by UserTable.isLoggedIn
 }
 
 fun daoToModel(dao: UserDao) = User(

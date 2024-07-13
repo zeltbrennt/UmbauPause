@@ -8,6 +8,7 @@ import de.pause.model.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -43,6 +44,7 @@ fun Application.configureRouting(
                 val user = userRepository.login(loginRequest)
                 if (user != null) {
                     val token = JWT.create()
+                        // TODO: id
                         .withAudience(audience)
                         .withIssuer(issuer)
                         .withIssuedAt(Instant.now())
@@ -53,6 +55,19 @@ fun Application.configureRouting(
                     call.respond(HttpStatusCode.OK, hashMapOf("token" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
+                }
+            }
+        }
+        authenticate("jwt-auth") {
+            route("/logout") {
+                post {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val user = jwt!!.payload.getClaim("username").asString()
+                    val success = userRepository.logout(user)
+                    when {
+                        success -> call.respond(HttpStatusCode.OK)
+                        else -> call.respond(HttpStatusCode.BadRequest)
+                    }
                 }
             }
         }

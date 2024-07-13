@@ -35,7 +35,7 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
                 }
             }
         }
-        jwt("auth-jwt") {
+        jwt("jwt-auth") {
             realm = myRealm
             verifier(
                 JWT
@@ -44,6 +44,13 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
                     .withIssuer(issuer)
                     .build()
             )
+            validate { credential ->
+                if (credential.payload.getClaim("username").asString().isNotBlank()) {
+                    JWTPrincipal(credential.payload)
+                } else {
+                    null
+                }
+            }
         }
     }
 
