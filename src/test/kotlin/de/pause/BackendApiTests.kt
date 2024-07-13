@@ -103,4 +103,28 @@ class BackendApiTests {
         }
         assertEquals(HttpStatusCode.Unauthorized, response.status)
     }
+
+    @Test
+    fun `logout with example data`() = testApplication {
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        //login first
+        val loginRequestData = LoginRequest("alice@example.com", System.getenv("USER_DEFAULT_PASSWORD"))
+        val response = client.post("/login") {
+            contentType(ContentType.Application.Json)
+            setBody(loginRequestData)
+        }
+        //receive token from response and try to logout
+        val respondBody = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        val token = respondBody["token"]!!.jsonPrimitive.content
+        val logoutResponse = client.post("/logout") {
+            header(HttpHeaders.Authorization, "Bearer $token")
+            contentType(ContentType.Application.Json)
+        }
+        assertEquals(HttpStatusCode.OK, logoutResponse.status)
+    }
 }
