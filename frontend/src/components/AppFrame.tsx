@@ -111,7 +111,10 @@ export default function AppFrame({
                             </ListItem>
                         </> : <></>}
                         <ListItem disablePadding key="login">
-                            <ListItemButton onClick={currentUser ? logout : openLoginDialog}>
+                            <ListItemButton onClick={() => {
+                                currentUser ? logout() : openLoginDialog()
+                                setDrawerOpen(false)
+                            }}>
                                 <ListItemIcon>
                                     {currentUser ? <LogoutIcon/> : <LoginIcon/>}
                                 </ListItemIcon>
