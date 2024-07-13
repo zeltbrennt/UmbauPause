@@ -30,8 +30,8 @@ class UserRepository {
         }
     }
 
-    suspend fun logout(username: String) = suspendTransaction {
-        val user = UserDao.find { UserTable.username eq username }.firstOrNull()
+    suspend fun logout(email: String): Boolean = suspendTransaction {
+        val user = UserDao.find { UserTable.email eq email }.firstOrNull()
         when {
             user != null -> {
                 user.isLoggedIn = false

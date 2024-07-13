@@ -45,7 +45,7 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
                     .build()
             )
             validate { credential ->
-                if (credential.payload.getClaim("username").asString().isNotBlank()) {
+                if (credential.payload.getClaim("email").asString().isNotBlank()) {
                     JWTPrincipal(credential.payload)
                 } else {
                     null

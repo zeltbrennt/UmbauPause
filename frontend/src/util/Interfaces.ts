@@ -15,7 +15,7 @@ export interface JWTToken {
     iss: string,
     iat: number,
     exp: number,
-    username: string,
+    email: string,
     role: string,
 }
 
@@ -24,6 +24,6 @@ export enum UserRole {
 }
 
 export interface UserPrincipal {
-    username: string,
+    email: string,
     role: UserRole
 }

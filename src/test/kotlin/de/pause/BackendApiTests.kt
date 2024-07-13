@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.Dish
 import de.pause.model.LoginRequest
+import de.pause.model.UserRole
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -59,9 +60,10 @@ class BackendApiTests {
         }
         assertEquals(HttpStatusCode.OK, response.status)
         val respondBody = Json.parseToJsonElement(response.bodyAsText()).jsonObject
-        val token = respondBody["token"]!!.jsonPrimitive.content
+        val token = respondBody["accessToken"]!!.jsonPrimitive.content
         val decodedJWT = JWT.decode(token)
-        assertEquals("Alice", decodedJWT.getClaim("username").asString())
+        assertEquals("alice@example.com", decodedJWT.getClaim("email").asString())
+        assertEquals(UserRole.USER.toString(), decodedJWT.getClaim("role").asString())
 
         val secret = System.getenv("JWT_SHARED_SECRET")
         val algorithm = Algorithm.HMAC256(secret)
@@ -120,7 +122,7 @@ class BackendApiTests {
         }
         //receive token from response and try to logout
         val respondBody = Json.parseToJsonElement(response.bodyAsText()).jsonObject
-        val token = respondBody["token"]!!.jsonPrimitive.content
+        val token = respondBody["accessToken"]!!.jsonPrimitive.content
         val logoutResponse = client.post("/logout") {
             header(HttpHeaders.Authorization, "Bearer $token")
             contentType(ContentType.Application.Json)
