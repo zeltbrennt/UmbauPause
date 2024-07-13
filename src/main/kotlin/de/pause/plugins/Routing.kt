@@ -52,7 +52,7 @@ fun Application.configureRouting(
                         .withClaim("username", user.username)
                         .withClaim("role", user.role.name)
                         .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, hashMapOf("token" to token))
+                    call.respond(HttpStatusCode.OK, hashMapOf("accessToken" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
