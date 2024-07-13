@@ -26,7 +26,7 @@ import {useState} from "react";
 const drawerWidth = 240
 
 interface AppFrameProps {
-    currentUser: UserPrincipal,
+    currentUser: UserPrincipal | null,
     logout: () => void,
     currentView: Site,
     changeView: (site: Site) => void,
