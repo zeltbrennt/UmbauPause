@@ -30,8 +30,8 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 ### 1.1.3 Getrennte Rollen
 
 - [x] Auf der Datenbank existiert eine Tabelle mit Nutzern
-- [ ] Im Backend werden Endpunkte zur Übermittlung von Nutzerdaten bereitgestellt
-- [ ] Backend hat Kenntnis über eingeloggte Nutzer
+- [x] Im Backend werden Endpunkte zur Übermittlung von Nutzerdaten bereitgestellt
+- [x] Backend hat Kenntnis über eingeloggte Nutzer
 
 - [x] Es existiert die Möglichkeit sich auf der Website ein- und auszuloggen.
 - [x] Sessions werden über den Besuch erhalten
