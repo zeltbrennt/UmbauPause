@@ -21,10 +21,8 @@ class UserRepository {
             .find { UserTable.email eq req.email }
             .firstOrNull()
         when {
-            user != null && BCrypt.checkpw(req.password, user.password) -> {
-                user.isLoggedIn = true
+            user != null && BCrypt.checkpw(req.password, user.password) ->
                 return@suspendTransaction daoToModel(user)
-            }
 
             else -> return@suspendTransaction null
         }
@@ -33,11 +31,7 @@ class UserRepository {
     suspend fun logout(email: String): Boolean = suspendTransaction {
         val user = UserDao.find { UserTable.email eq email }.firstOrNull()
         when {
-            user != null -> {
-                user.isLoggedIn = false
-                return@suspendTransaction true
-            }
-
+            user != null -> return@suspendTransaction true
             else -> return@suspendTransaction false
         }
     }
