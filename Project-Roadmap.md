@@ -158,6 +158,11 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Admin hat die Μöglichkeit, alle Nutzer auszuloggen
 - [ ] Admin kann Nutzer sperren / entsperren
+- [ ] Loging
+	- [ ] angemeldete Nutzer
+	- [ ] Durchgeführte Bestellungen, Stornierungen
+	- [ ] Durchgeführte Änderungen an der Datenbank
+	- [ ] Loginversuche
 
 ## 2.2 Ausarbeitung
 
