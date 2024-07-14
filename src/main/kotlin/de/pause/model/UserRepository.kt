@@ -36,4 +36,14 @@ class UserRepository {
         }
     }
 
+    fun register(loginRequest: RegisterRequest): Boolean {
+        val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
+        return UserDao.new {
+            username = loginRequest.email
+            email = loginRequest.email
+            password = hashedPassword
+            role = UserRole.USER.toString()
+        }.id.value > 0
+    }
+
 }

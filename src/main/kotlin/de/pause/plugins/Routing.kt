@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.DishRepository
 import de.pause.model.LoginRequest
+import de.pause.model.RegisterRequest
 import de.pause.model.UserRepository
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -69,6 +70,16 @@ fun Application.configureRouting(
                         success -> call.respond(HttpStatusCode.OK)
                         else -> call.respond(HttpStatusCode.BadRequest)
                     }
+                }
+            }
+        }
+        route("/register") {
+            post {
+                val loginRequest = call.receive<RegisterRequest>()
+                val success = userRepository.register(loginRequest)
+                when {
+                    success -> call.respond(HttpStatusCode.OK)
+                    else -> call.respond(HttpStatusCode.BadRequest)
                 }
             }
         }
