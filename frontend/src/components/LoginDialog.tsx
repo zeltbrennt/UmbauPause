@@ -16,6 +16,7 @@ import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
+import {useNavigate} from "react-router-dom";
 
 interface LoginDialogProps {
     open: boolean,
@@ -32,6 +33,8 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
 
     const api_url = "http://localhost:8080/login"
     const [loginError, setLoginError] = useState(false)
+
+    const navigate = useNavigate()
 
     const getToken = async (loginData: LoginRequestData) => {
         const response = await fetch(api_url, {
@@ -135,9 +138,9 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Noch keinen Account? Hier anmelden."}
-                                </Link>
+                                <Button variant="text" onClick={() => navigate("/register")}>
+                                    Registrieren
+                                </Button>
                             </Grid>
                         </Grid>
                     </Box>

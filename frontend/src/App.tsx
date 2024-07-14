@@ -5,6 +5,8 @@ import {lightTheme} from "./Themes.ts";
 import LoginDialog from "./components/LoginDialog.tsx";
 import {useState} from "react";
 import {JWTToken, Site, UserPrincipal} from "./util/Interfaces.ts";
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import Register from "./components/Register.tsx";
 
 function App() {
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
@@ -29,20 +31,28 @@ function App() {
     }
 
     return (
-        <ThemeProvider theme={lightTheme}>
-            <Container>
-                <LoginDialog open={loginDialogOpen}
-                             handleClose={() => setLoginDialogOpen(false)}
-                             setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}/>
-                <AppFrame currentUser={currentUser}
-                          logout={() => serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)}
-                          currentView={mainView}
-                          changeView={(site: Site) => {
-                              setMainView(site)
-                          }}
-                          openLoginDialog={() => setLoginDialogOpen(true)}/>
-            </Container>
-        </ThemeProvider>
+        <BrowserRouter>
+            <ThemeProvider theme={lightTheme}>
+                <Routes>
+                    <Route path="/register" element={<Register/>}/>
+                    <Route path="/" element={
+
+                        <Container>
+                            <LoginDialog open={loginDialogOpen}
+                                         handleClose={() => setLoginDialogOpen(false)}
+                                         setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}/>
+                            <AppFrame currentUser={currentUser}
+                                      logout={() => serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)}
+                                      currentView={mainView}
+                                      changeView={(site: Site) => {
+                                          setMainView(site)
+                                      }}
+                                      openLoginDialog={() => setLoginDialogOpen(true)}/>
+                        </Container>
+                    }/>
+                </Routes>
+            </ThemeProvider>
+        </BrowserRouter>
     )
 }
 

@@ -75,10 +75,11 @@ fun Application.configureRouting(
         }
         route("/register") {
             post {
+                //TODO: handle Deserialization of Register request
                 val loginRequest = call.receive<RegisterRequest>()
                 val success = userRepository.register(loginRequest)
                 when {
-                    success -> call.respond(HttpStatusCode.OK)
+                    success -> call.respond(HttpStatusCode.Created)
                     else -> call.respond(HttpStatusCode.BadRequest)
                 }
             }
