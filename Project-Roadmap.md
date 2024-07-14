@@ -171,11 +171,15 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
 - [ ] Admin kann neuen Manager hinzufügen
+- [ ] rateLimit für Zugriffe auf die Login-Ressource
+- [ ] Benutzer werden nach 5 fehlerhaften Loginversuchen für eine exponentiell steigende Zeit an einem weiteren Loginversuch gehindert
+
 
 **Nicht-Ziele**
 
 - [ ] Manager kann keine Manger oder Admin Accounts hinzufügen
-
+- [ ] es ist nicht möglich beliebig viele Login versuche auszulösen
+- [ ] der Server gibt möglich wenig Informationen preis, also auch nicht, ob Benutzername vergeben ist, oder nicht
 ### 3.1.2 Zwei-Faktor-Authentifikation
 
 - [ ] Anbindung von 2FA
