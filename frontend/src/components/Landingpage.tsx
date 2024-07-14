@@ -1,10 +1,12 @@
 import {Box, Typography} from "@mui/material";
 
-function Landingpage() {
+function Landingpage({currentUser}: { currentUser: string | undefined }) {
 
     return (
         <Box>
-            <Typography sx={{typography: {sm: 'h1', xs: 'h3'}}}>Hier entsteht in Zukunft eine Website...</Typography>
+            <Typography sx={{typography: {sm: 'h1', xs: 'h3'}}}>
+                {currentUser == undefined ? "Hier entsteht in Zukunft eine Website..." : `Willkommen ${currentUser}!`}
+            </Typography>
         </Box>
     )
 }

@@ -24,17 +24,19 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [x] Es existiert ein Frontend, welches die REST-API des Backends konsumiert
 - [x] Das Fronend kann aufgerufen werden und ein Wochenmenü wird angezeigt
 - [x] Die Backend-API kann nur vom Frontend aufgerufen werden
-- [ ] Tests mit Mock Repository
+- [x] Tests mit Mock Repository
 - [ ] Tests Bedienung Frontend
 
 ### 1.1.3 Getrennte Rollen
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Nutzern
-- [ ] Im Backend werden Endpunkte zur Übermittlung von Nutzerdaten bereitgestellt
-- [ ] Es existiert die Möglichkeit sich auf der Website ein- und auszuloggen.
-- [ ] Sessions werden über den Besuch erhalten
-- [ ] Passwortdaten werden geshasht gespeichert (bcrypt)
-- [ ] Nutzer haben unterschiedliche Rollen (Nutzer, Admin, Manager)
+- [x] Auf der Datenbank existiert eine Tabelle mit Nutzern
+- [x] Im Backend werden Endpunkte zur Übermittlung von Nutzerdaten bereitgestellt
+- [x] Backend hat Kenntnis über eingeloggte Nutzer
+
+- [x] Es existiert die Möglichkeit sich auf der Website ein- und auszuloggen.
+- [x] Sessions werden über den Besuch erhalten
+- [x] Passwortdaten werden geshasht gespeichert (bcrypt)
+- [x] Nutzer haben unterschiedliche Rollen (Nutzer, Admin, Manager)
 - [ ] Es existieren Endpunkte, die jeweils nur von Administratoren bzw. Managern aufgerufen werden können
 - [ ] Frontend Tests
 - [ ] Backend Tests
@@ -152,6 +154,11 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Nutzer können ihre Passwörter ändern und zurücksetzen
 - [ ] Nutzer können präferierten Standort einstellen
 
+### 2.1.7 Admin
+
+- [ ] Admin hat die Μöglichkeit, alle Nutzer auszuloggen
+- [ ] Admin kann Nutzer sperren / entsperren
+
 ## 2.2 Ausarbeitung
 
 - [ ] Implementierung
@@ -164,11 +171,15 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
 - [ ] Admin kann neuen Manager hinzufügen
+- [ ] rateLimit für Zugriffe auf die Login-Ressource
+- [ ] Benutzer werden nach 5 fehlerhaften Loginversuchen für eine exponentiell steigende Zeit an einem weiteren Loginversuch gehindert
+
 
 **Nicht-Ziele**
 
 - [ ] Manager kann keine Manger oder Admin Accounts hinzufügen
-
+- [ ] es ist nicht möglich beliebig viele Login versuche auszulösen
+- [ ] der Server gibt möglich wenig Informationen preis, also auch nicht, ob Benutzername vergeben ist, oder nicht
 ### 3.1.2 Zwei-Faktor-Authentifikation
 
 - [ ] Anbindung von 2FA

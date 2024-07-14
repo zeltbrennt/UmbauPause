@@ -2,19 +2,26 @@ import {AppBar, Avatar, Box, IconButton, Toolbar, Typography} from "@mui/materia
 import MenuIcon from '@mui/icons-material/Menu';
 import pauseLogo from "/pause_logo.png";
 
-// @ts-ignore //TODO type this correctly
-function ResponsiveAppBar({drawerState, setDrawerState}) {
+
+interface AppBarProps {
+    drawerState: boolean,
+    setDrawerState: (state: boolean) => void,
+    isDesktop: boolean
+}
+
+function ResponsiveAppBar({drawerState, setDrawerState, isDesktop}: AppBarProps) {
 
 
     return (
         <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
             <Toolbar>
-                <Box sx={{display: "flex"}}>
-
-                    <IconButton onClick={() => setDrawerState(!drawerState)}>
-                        <MenuIcon/>
-                    </IconButton>
-                </Box>
+                {isDesktop ? <></> :
+                    <Box sx={{display: "flex"}}>
+                        <IconButton onClick={() => setDrawerState(!drawerState)}>
+                            <MenuIcon/>
+                        </IconButton>
+                    </Box>
+                }
                 <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
                     Kantine (Umbau)Pause im DNT
                 </Typography>

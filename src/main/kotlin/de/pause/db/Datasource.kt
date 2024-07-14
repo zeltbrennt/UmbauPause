@@ -1,6 +1,5 @@
 package de.pause.db
 
-import com.typesafe.config.ConfigFactory
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
@@ -12,8 +11,7 @@ import org.jetbrains.exposed.sql.Transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 
-fun Application.configureDatabase() {
-    val appConfig = HoconApplicationConfig(ConfigFactory.load())
+fun Application.configureDatabase(appConfig: HoconApplicationConfig) {
     val hikariConfig = HikariConfig().apply {
         jdbcUrl = appConfig.property("ktor.datasource.jdbcUrl").getString()
         driverClassName = appConfig.property("ktor.datasource.driverClassName").getString()
