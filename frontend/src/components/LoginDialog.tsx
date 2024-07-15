@@ -16,12 +16,12 @@ import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
-import {useNavigate} from "react-router-dom";
 
 interface LoginDialogProps {
     open: boolean,
     handleClose: () => void,
-    setCurrentUser: (user: UserPrincipal) => void
+    setCurrentUser: (user: UserPrincipal) => void,
+    handleRegister: () => void
 }
 
 interface LoginRequestData {
@@ -29,12 +29,10 @@ interface LoginRequestData {
     password: string
 }
 
-export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDialogProps) {
+export default function LoginDialog({open, handleClose, setCurrentUser, handleRegister}: LoginDialogProps) {
 
     const api_url = "http://localhost:8080/login"
     const [loginError, setLoginError] = useState(false)
-
-    const navigate = useNavigate()
 
     const getToken = async (loginData: LoginRequestData) => {
         const response = await fetch(api_url, {
@@ -102,7 +100,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Email Adresse"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -113,7 +111,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Passwort"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -138,7 +136,10 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Button variant="text" onClick={() => navigate("/register")}>
+                                <Button variant="text" onClick={() => {
+                                    handleRegister();
+                                    handleClose()
+                                }}>
                                     Registrieren
                                 </Button>
                             </Grid>

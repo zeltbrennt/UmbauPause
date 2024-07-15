@@ -40,7 +40,9 @@ function App() {
                         <Container>
                             <LoginDialog open={loginDialogOpen}
                                          handleClose={() => setLoginDialogOpen(false)}
-                                         setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}/>
+                                         setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}
+                                         handleRegister={() => setMainView(Site.Register)}
+                            />
                             <AppFrame currentUser={currentUser}
                                       logout={() => serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)}
                                       currentView={mainView}

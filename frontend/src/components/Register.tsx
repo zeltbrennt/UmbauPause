@@ -1,20 +1,31 @@
-import {Box, Button, TextField} from "@mui/material";
+import {Alert, AlertTitle, Box, Button, Stack, TextField, Typography} from "@mui/material";
 import {FormEvent, useState} from "react";
-import {useNavigate} from "react-router-dom";
 
 export default function Register() {
 
-    const navigate = useNavigate()
     const [email, setEmail] = useState("")
     const [pass, setPass] = useState("")
     const [pass2, setPass2] = useState("")
     const [emailOk, setEmailOk] = useState(true)
     const [passOk, setPassOk] = useState(true)
+    const [success, setSuccess] = useState(false)
+
+    interface RegisterRequestData {
+        email: string,
+        password: string
+    }
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 
+        console.log(`email: ${email}, pass: ${pass}, pass2: ${pass2}`)
         event.preventDefault()
-        if (!emailOk || !passOk || pass !== pass2) return
+        validateEmail(email)
+        validatePassword(pass)
+
+        if (!emailOk || !passOk || pass !== pass2) {
+            setPass2("")
+            return
+        }
         fetch("http://localhost:8080/register", {
             method: 'POST',
             headers: {
@@ -23,12 +34,12 @@ export default function Register() {
             body: JSON.stringify({
                     email: email,
                     password: pass
-                }
+                } as RegisterRequestData
             )
         }).then(response => {
             if (response.status === 201) {
                 console.log("registered")
-                navigate("/")
+                setSuccess(true)
             } else {
                 console.log("registration failed")
             }
@@ -40,26 +51,28 @@ export default function Register() {
     }
 
     const validatePassword = (password: string) => {
-        return setPassOk(password.length > 8)
+        return setPassOk(
+            password.length > 0 // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
+        )
     }
 
     return (
         <Box component="form" onSubmit={handleSubmit}>
+            <Typography variant={"h3"}>Jetzt registrieren</Typography>
+            <Typography gutterBottom={true}>Gib deine DNT-Email-Adresse ein und vergib ein sicheres
+                Passwort</Typography>
             <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email Adresse"
                 name="email"
                 autoComplete="email"
                 autoFocus
                 onChange={(e) => {
                     setEmail(e.target.value)
-                    if (!emailOk) validateEmail(e.target.value)
                 }}
-                onBlur={() => validateEmail(email)}
-                error={!emailOk && email.length > 0}
             />
             <TextField
                 margin="normal"
@@ -72,12 +85,7 @@ export default function Register() {
                 autoComplete="current-password"
                 onChange={(e) => {
                     setPass(e.target.value)
-                    if (!passOk) validatePassword(e.target.value)
                 }}
-                onBlur={() => {
-                    validatePassword(pass)
-                }}
-                error={!passOk && pass.length > 0}
             />
             <TextField
                 margin="normal"
@@ -89,16 +97,25 @@ export default function Register() {
                 id="password2"
                 autoComplete="current-password"
                 onChange={(e) => setPass2(e.target.value)}
-                error={pass !== pass2}
             />
             <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                //deactivated={email.length === 0 || pass.length === 0 || pass2.length === 0 || pass !== pass2 || !emailOk || !passOk}
                 sx={{mt: 3, mb: 2}}
-            >
-                Register</Button>
+            >Registrieren</Button>
+            <Stack spacing={2}>
+                {success ? <Alert severity="success">Registrierung erfolgreich</Alert> : null}
+                {emailOk ? null : <Alert severity="error"><AlertTitle>Email Adresse ungültig</AlertTitle>
+                    Email Adresse gehört nicht zu einem gültigen Format.
+                </Alert>}
+                {pass === pass2 ? null : <Alert severity="error">Beide Passwörter sind nicht identisch</Alert>}
+                {passOk ? null :
+                    <Alert severity="error" hidden={pass !== pass2}><AlertTitle>Passwort unsicher</AlertTitle>
+                        Das Passwort muss mindestens 8 Zeichen haben, aus Groß- und Kleinbuchstaben, Zahlen und
+                        Sonderzeichen bestehen.
+                    </Alert>}
+            </Stack>
         </Box>
     )
 }

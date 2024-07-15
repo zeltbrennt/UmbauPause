@@ -7,6 +7,7 @@ export interface IMenuItem {
 
 export enum Site {
     Landingpage,
+    Register,
     Menu,
 }
 
