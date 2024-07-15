@@ -20,7 +20,8 @@ import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
 interface LoginDialogProps {
     open: boolean,
     handleClose: () => void,
-    setCurrentUser: (user: UserPrincipal) => void
+    setCurrentUser: (user: UserPrincipal) => void,
+    handleRegister: () => void
 }
 
 interface LoginRequestData {
@@ -28,7 +29,7 @@ interface LoginRequestData {
     password: string
 }
 
-export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDialogProps) {
+export default function LoginDialog({open, handleClose, setCurrentUser, handleRegister}: LoginDialogProps) {
 
     const api_url = "http://localhost:8080/login"
     const [loginError, setLoginError] = useState(false)
@@ -99,7 +100,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             required
                             fullWidth
                             id="email"
-                            label="Email Address"
+                            label="Email Adresse"
                             name="email"
                             autoComplete="email"
                             autoFocus
@@ -110,7 +111,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                             required
                             fullWidth
                             name="password"
-                            label="Password"
+                            label="Passwort"
                             type="password"
                             id="password"
                             autoComplete="current-password"
@@ -135,9 +136,12 @@ export default function LoginDialog({open, handleClose, setCurrentUser}: LoginDi
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Noch keinen Account? Hier anmelden."}
-                                </Link>
+                                <Button variant="text" onClick={() => {
+                                    handleRegister();
+                                    handleClose()
+                                }}>
+                                    Registrieren
+                                </Button>
                             </Grid>
                         </Grid>
                     </Box>
