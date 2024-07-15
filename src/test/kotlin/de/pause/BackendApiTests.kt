@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.Dish
 import de.pause.model.LoginRequest
+import de.pause.model.RegisterRequest
 import de.pause.model.UserRole
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -128,5 +129,22 @@ class BackendApiTests {
             contentType(ContentType.Application.Json)
         }
         assertEquals(HttpStatusCode.OK, logoutResponse.status)
+    }
+
+    @Test
+    fun `registering a new user`() = testApplication {
+
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val registerRequestData = RegisterRequest("test@email.com", "password")
+        val response = client.post("/register") {
+            contentType(ContentType.Application.Json)
+            setBody(registerRequestData)
+        }
+        assertEquals(HttpStatusCode.Created, response.status)
     }
 }

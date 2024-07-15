@@ -36,9 +36,9 @@ class UserRepository {
         }
     }
 
-    fun register(loginRequest: RegisterRequest): Boolean {
+    suspend fun register(loginRequest: RegisterRequest): Boolean = suspendTransaction {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
-        return UserDao.new {
+        return@suspendTransaction UserDao.new {
             username = loginRequest.email
             email = loginRequest.email
             password = hashedPassword
