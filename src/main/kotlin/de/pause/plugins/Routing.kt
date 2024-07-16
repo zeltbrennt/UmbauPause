@@ -2,10 +2,7 @@ package de.pause.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.DishRepository
-import de.pause.model.LoginRequest
-import de.pause.model.RegisterRequest
-import de.pause.model.UserRepository
+import de.pause.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -60,6 +57,16 @@ fun Application.configureRouting(
                 }
             }
         }
+        route("/register") {
+            post {
+                val loginRequest = call.receive<RegisterRequest>()
+                val success = userRepository.register(loginRequest)
+                when {
+                    success -> call.respond(HttpStatusCode.Created)
+                    else -> call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+        }
         authenticate("jwt-auth") {
             route("/logout") {
                 post {
@@ -72,22 +79,17 @@ fun Application.configureRouting(
                     }
                 }
             }
-        }
-        route("/register") {
-            post {
-                //TODO: handle Deserialization of Register request
-                val loginRequest = call.receive<RegisterRequest>()
-                val success = userRepository.register(loginRequest)
-                when {
-                    success -> call.respond(HttpStatusCode.Created)
-                    else -> call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
-        authenticate("basic-auth") {
-            route("/newMenu") {
-                get {
-                    call.respond(HttpStatusCode.OK)
+            route("/newDish") {
+                post {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
+                        val newDish = call.receive<Dish>()
+                        dishRepository.addDish(newDish)
+                        call.respond(HttpStatusCode.Created)
+                    } else {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
                 }
             }
         }
