@@ -9,6 +9,7 @@ export enum Site {
     Landingpage,
     Register,
     Menu,
+    Schedule
 }
 
 export interface JWTToken {

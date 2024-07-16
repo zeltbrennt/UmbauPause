@@ -86,7 +86,10 @@ export default function AppFrame({
                         </ListItem>
                         {currentUser?.role == UserRole.MODERATOR ? <>
                             <ListItem disablePadding key="edit">
-                                <ListItemButton onClick={() => alert("not implemented")}>
+                                <ListItemButton onClick={() => {
+                                    changeView(Site.Schedule)
+                                    setDrawerOpen(false)
+                                }}>
                                     <ListItemIcon>
                                         <EditNoteIcon/>
                                     </ListItemIcon>
