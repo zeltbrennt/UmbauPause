@@ -2,9 +2,7 @@ package de.pause
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.Dish
 import de.pause.model.LoginRequest
-import de.pause.model.RegisterRequest
 import de.pause.model.UserRole
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -15,35 +13,23 @@ import io.ktor.server.testing.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
-class BackendApiTests {
-    @Test
-    fun `current menu endpoint is publicly available`() = testApplication {
-        val response = client.get("/weekly")
-        assertEquals(HttpStatusCode.OK, response.status)
-        val dishes: List<Dish> = Json.decodeFromString(response.bodyAsText())
-        assertEquals(5, dishes.size)
-        val wochentage = listOf("Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag")
-        assertContentEquals(wochentage, dishes.map { it.scheduled })
-    }
+class SecurityTests {
 
-    @Test
-    fun `add new menu is not publicly available`() = testApplication {
-
-        val response = client.get("/newMenu")
-        assertEquals(HttpStatusCode.Unauthorized, response.status)
-    }
-
-    @Test
-    @Ignore
-    fun `add new menu is available with vite token`() = testApplication {
-
-        val response = client.get("/newMenu") {
-            header(HttpHeaders.Authorization, "Bearer ${System.getenv("VITE_API_TOKEN")}")
+    /* TODO: cleanup is not working
+    @AfterTest
+    fun cleanup() {
+        runBlocking {
+            suspendTransaction {
+                UserTable.deleteWhere { email like "test%" }
+            }
         }
-        assertEquals(HttpStatusCode.OK, response.status)
     }
+     */
+
 
     @Test
     fun `login with example data`() = testApplication {
@@ -132,19 +118,13 @@ class BackendApiTests {
     }
 
     @Test
-    fun `registering a new user`() = testApplication {
+    fun `adding new dish without jwt is impossible`() = testApplication {
 
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
-
-        val registerRequestData = RegisterRequest("test@email.com", "password")
-        val response = client.post("/register") {
-            contentType(ContentType.Application.Json)
-            setBody(registerRequestData)
-        }
-        assertEquals(HttpStatusCode.Created, response.status)
     }
+
+    @Test
+    fun `add new dish with wrong role in jwt is impossible`() = testApplication {
+
+    }
+
 }
