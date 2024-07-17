@@ -16,6 +16,7 @@ class UserRepository {
         }
     }
 
+
     suspend fun login(req: LoginRequest): User? = suspendTransaction {
         val user = UserDao
             .find { UserTable.email eq req.email }
@@ -38,12 +39,16 @@ class UserRepository {
 
     suspend fun register(loginRequest: RegisterRequest): Boolean = suspendTransaction {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
-        return@suspendTransaction UserDao.new {
-            username = loginRequest.email
-            email = loginRequest.email
-            password = hashedPassword
-            role = UserRole.USER.toString()
-        }.id.value > 0
+        try {
+            return@suspendTransaction UserDao.new {
+                username = loginRequest.email
+                email = loginRequest.email
+                password = hashedPassword
+                role = UserRole.USER.toString()
+            }.id.value > 0
+        } catch (e: Exception) {
+            return@suspendTransaction false
+        }
     }
 
 }

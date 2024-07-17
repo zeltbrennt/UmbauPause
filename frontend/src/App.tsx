@@ -10,7 +10,7 @@ import Register from "./components/Register.tsx";
 
 function App() {
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-    const [mainView, setMainView] = useState(Site.Landingpage)
+    const [mainView, setMainView] = useState(Site.Menu)
     const [currentUser, setCurrentUser] = useState(
         sessionStorage.getItem('userPrincipal') ?
             sessionStorage.getItem('userPrincipal') as unknown as UserPrincipal :

@@ -18,7 +18,7 @@ class PostgresDishRepository : DishRepository {
         DishDao.new {
             description = dish.description
             available = dish.available
-            scheduled = dish.scheduled.toString()
+            scheduled = dish.scheduled
             price = dish.price
         }
     }
