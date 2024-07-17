@@ -1,5 +1,5 @@
-import {Box, Button, Grid, TextField, Typography} from "@mui/material";
-import {FormEvent, useState} from "react";
+import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
+import {FormEvent, useEffect, useState} from "react";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
@@ -17,6 +17,24 @@ export default function ScheduleMenu() {
         Donnerstag: "",
         Freitag: ""
     });
+    const [dishes, setDishes] = useState<string[]>([]);
+    useEffect(() => {
+        // Fetch dish names when the component mounts
+        const fetchDishes = async () => {
+            const response = await fetch("http://localhost:8080/dishes", {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+                }
+            });
+            const data = await response.json();
+            const dishNames = data.map(dish => dish.description); // Assuming each dish object has a description field
+            setDishes(dishNames);
+        };
+
+        fetchDishes().then(() => console.log("Fetched dishes")).catch((reason) => console.log(`could not fetch dishes: ${reason}`));
+    }, []); // Empty dependency array means this effect runs once on mount
+
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -59,7 +77,7 @@ export default function ScheduleMenu() {
                 {weekdays.map((day, index) => {
                     return (
                         <Box key={index}>
-                            <WeekdayScheduler day={day} index={index} handle={handleWeekdayChange}/>
+                            <WeekdayScheduler day={day} index={index} handle={handleWeekdayChange} dishes={dishes}/>
                         </Box>
                     )
                 })}
@@ -69,23 +87,26 @@ export default function ScheduleMenu() {
     );
 }
 
-function WeekdayScheduler({day, index, handle}: {
+function WeekdayScheduler({day, index, handle, dishes}: {
     day: string,
     index: number,
     handle: (day: string, value: string) => void
+    dishes: string[]
 }) {
-    const [active, setActive] = useState(true);
 
     return (
-        <TextField variant={"outlined"}
-                   margin={"normal"}
-                   fullWidth
-                   label={day}
-                   type={"text"}
-                   key={index}
-                   disabled={!active}
-                   onChange={(e) => handle(day, e.target.value)}/>
-
+        <Autocomplete renderInput={(params) =>
+            <TextField {...params}
+                       variant={"outlined"}
+                       margin={"normal"}
+                       fullWidth
+                       label={day}
+                       type={"text"}
+                       key={index}
+                       onChange={(e) => handle(day, e.target.value)}/>}
+                      options={dishes}
+                      freeSolo
+        />
 
     )
 }

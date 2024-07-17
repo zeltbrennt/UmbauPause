@@ -91,6 +91,17 @@ fun Application.configureRouting(
                     }
                 }
             }
+            route("/dishes") {
+                get {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
+                        call.respond(HttpStatusCode.OK, dishRepository.allDishes())
+                    } else {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
+                }
+            }
         }
     }
 }

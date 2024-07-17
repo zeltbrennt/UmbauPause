@@ -44,7 +44,10 @@ function App() {
                                          handleRegister={() => setMainView(Site.Register)}
                             />
                             <AppFrame currentUser={currentUser}
-                                      logout={() => serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)}
+                                      logout={() => {
+                                          serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)
+                                          setMainView(Site.Menu)
+                                      }}
                                       currentView={mainView}
                                       changeView={(site: Site) => {
                                           setMainView(site)
