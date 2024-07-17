@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Menu(
-    val monday: String,
-    val tuesday: String,
-    val wednesday: String,
-    val thursday: String,
-    val friday: String,
+    val Montag: String,
+    val Dienstag: String,
+    val Mittwoch: String,
+    val Donnerstag: String,
+    val Freitag: String,
     val validFrom: String,
     val validTo: String,
 

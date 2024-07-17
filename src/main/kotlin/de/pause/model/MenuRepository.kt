@@ -14,11 +14,11 @@ class MenuRepository {
         MenuDao.find {
             (MenuTable.validFrom lessEq today) and (MenuTable.validTo greaterEq today)
         }.firstOrNull()?.let(::daoToModel) ?: Menu(
-            monday = "Kantine geschlossen",
-            tuesday = "Kantine geschlossen",
-            wednesday = "Kantine geschlossen",
-            thursday = "Kantine geschlossen",
-            friday = "Kantine geschlossen",
+            Montag = "Kantine geschlossen",
+            Dienstag = "Kantine geschlossen",
+            Mittwoch = "Kantine geschlossen",
+            Donnerstag = "Kantine geschlossen",
+            Freitag = "Kantine geschlossen",
             validFrom = today.toString(),
             validTo = today.toString()
         )

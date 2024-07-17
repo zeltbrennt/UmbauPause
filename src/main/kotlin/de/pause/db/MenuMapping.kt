@@ -36,11 +36,11 @@ class MenuDao(id: EntityID<Int>) : IntEntity(id) {
 fun daoToModel(dao: MenuDao): Menu {
     val formatter = DateTimeFormat.forPattern("dd.MM.yyyy")
     return Menu(
-        monday = dao.monday,
-        tuesday = dao.tuesday,
-        wednesday = dao.wednesday,
-        thursday = dao.thursday,
-        friday = dao.friday,
+        Montag = dao.monday,
+        Dienstag = dao.tuesday,
+        Mittwoch = dao.wednesday,
+        Donnerstag = dao.thursday,
+        Freitag = dao.friday,
         validFrom = formatter.print(dao.validFrom),
         validTo = formatter.print(dao.validTo)
     )

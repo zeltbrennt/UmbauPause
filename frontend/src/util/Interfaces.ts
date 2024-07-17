@@ -1,9 +1,9 @@
 export interface IWeeklyMenu {
-    monday: string,
-    tuesday: string,
-    wednesday: string,
-    thursday: string,
-    friday: string,
+    Montag: string,
+    Dienstag: string,
+    Mittwoch: string,
+    Donnerstag: string,
+    Freitag: string,
     validFrom: string,
     validTo: string,
 }
