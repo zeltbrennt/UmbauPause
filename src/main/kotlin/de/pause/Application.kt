@@ -2,6 +2,7 @@ package de.pause
 
 import com.typesafe.config.ConfigFactory
 import de.pause.db.configureDatabase
+import de.pause.model.MenuRepository
 import de.pause.model.PostgresDishRepository
 import de.pause.model.UserRepository
 import de.pause.plugins.*
@@ -20,6 +21,7 @@ fun Application.module() {
     val appConfig = HoconApplicationConfig(ConfigFactory.load())
     val articleRepository = PostgresDishRepository()
     val userRepository = UserRepository()
+    val menuRepository = MenuRepository()
     configureDatabase(appConfig)
     launch {
         userRepository.setDefaultPasswordOfPreloadedUsers()
@@ -28,6 +30,6 @@ fun Application.module() {
     configureSerialization()
     configureSecurity(appConfig)
     configureCORS()
-    configureRouting(appConfig, articleRepository, userRepository)
+    configureRouting(appConfig, articleRepository, userRepository, menuRepository)
     //configureValidation()
 }

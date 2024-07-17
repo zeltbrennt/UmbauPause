@@ -18,7 +18,8 @@ import java.util.*
 fun Application.configureRouting(
     appConfig: HoconApplicationConfig,
     dishRepository: DishRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    menurepo: MenuRepository,
 ) {
 
 
@@ -28,13 +29,11 @@ fun Application.configureRouting(
     val tokenExpiration = 600L
 
     routing {
-        route("/weekly") {
+        route("/current_menu") {
             get {
 
-                val articles = dishRepository.getAvailableDishes().sortedBy { it.order }
-                call.respond(
-                    articles
-                )
+                val menu = menurepo.getCurrentMenu()
+                call.respond(menu)
             }
         }
         route("/login") {
