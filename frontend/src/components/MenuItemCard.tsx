@@ -1,17 +1,16 @@
-import {IMenuItem} from "../util/Interfaces.ts";
 import {Box, Card, CardContent, Typography} from "@mui/material";
 
-function MenuItemCard({data}: { data: IMenuItem }) {
+function MenuItemCard({day, dish}: { day: string, dish: string }) {
 
     return (
-        <Box sx={{flexGrow: 1}} key={data.description}>
+        <Box sx={{flexGrow: 1}} key={day}>
 
             <Card sx={{
                 ":hover": {boxShadow: 20}
             }}>
                 <CardContent>
-                    <Typography sx={{typography: {xs: 'h6', sm: 'h4'}}}>{data.scheduled}</Typography>
-                    <Typography sx={{typography: {xs: 'p', sm: 'h6'}}}>{data.description}</Typography>
+                    <Typography sx={{typography: {xs: 'h6', sm: 'h4'}}}>{day}</Typography>
+                    <Typography sx={{typography: {xs: 'p', sm: 'h6'}}}>{dish}</Typography>
                 </CardContent>
             </Card>
         </Box>

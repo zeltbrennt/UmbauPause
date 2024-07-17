@@ -6,6 +6,7 @@ import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.jodatime.date
+import org.joda.time.format.DateTimeFormat
 
 
 object MenuTable : IntIdTable("shop.weekly_menu") {
@@ -32,12 +33,15 @@ class MenuDao(id: EntityID<Int>) : IntEntity(id) {
 
 }
 
-fun daoToModel(dao: MenuDao) = Menu(
-    monday = dao.monday,
-    tuesday = dao.tuesday,
-    wednesday = dao.wednesday,
-    thursday = dao.thursday,
-    friday = dao.friday,
-    validFrom = dao.validFrom.toString(),
-    validTo = dao.validTo.toString()
-)
+fun daoToModel(dao: MenuDao): Menu {
+    val formatter = DateTimeFormat.forPattern("dd.MM.yyyy")
+    return Menu(
+        monday = dao.monday,
+        tuesday = dao.tuesday,
+        wednesday = dao.wednesday,
+        thursday = dao.thursday,
+        friday = dao.friday,
+        validFrom = formatter.print(dao.validFrom),
+        validTo = formatter.print(dao.validTo)
+    )
+}

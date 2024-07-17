@@ -1,8 +1,11 @@
-export interface IMenuItem {
-    description: string,
-    available: boolean,
-    price: number,
-    scheduled: string
+export interface IWeeklyMenu {
+    monday: string,
+    tuesday: string,
+    wednesday: string,
+    thursday: string,
+    friday: string,
+    validFrom: string,
+    validTo: string,
 }
 
 export enum Site {
