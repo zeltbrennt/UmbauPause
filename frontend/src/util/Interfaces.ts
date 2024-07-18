@@ -32,3 +32,10 @@ export interface UserPrincipal {
     email: string,
     role: UserRole
 }
+
+export interface Dish {
+    description: string,
+    available: boolean,
+    scheduled: string,
+    price: number
+}

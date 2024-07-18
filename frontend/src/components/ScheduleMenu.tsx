@@ -4,6 +4,7 @@ import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import "dayjs/locale/de";
+import {Dish} from "../util/Interfaces.ts";
 
 
 export default function ScheduleMenu() {
@@ -44,8 +45,22 @@ export default function ScheduleMenu() {
             weekdays: weekdaysData
         };
         console.log(formData);
-    };
-
+        weekdays.forEach((day) => {
+            fetch("http://localhost:8080/newDish", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+                },
+                body: JSON.stringify({
+                    description: weekdaysData[day],
+                    available: false,
+                    scheduled: day,
+                    price: 9.5
+                } as Dish)
+            }).catch((reason) => console.log(`could not post ${day}: ${reason}`));
+        });
+    }
     const handleWeekdayChange = (day: string, value: string) => {
         setWeekdaysData(prev => ({...prev, [day]: value}));
     };
@@ -107,6 +122,6 @@ function WeekdayScheduler({day, index, handle, dishes}: {
                       options={dishes}
                       freeSolo
         />
-
     )
+
 }
