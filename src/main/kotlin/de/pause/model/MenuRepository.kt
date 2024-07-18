@@ -27,4 +27,16 @@ class MenuRepository {
     suspend fun getAllMenus(): List<Menu> = suspendTransaction {
         MenuDao.all().map(::daoToModel)
     }
+
+    suspend fun addNewMenu(menu: Menu): Boolean = suspendTransaction {
+        MenuDao.new {
+            monday = menu.Montag
+            tuesday = menu.Dienstag
+            wednesday = menu.Mittwoch
+            thursday = menu.Donnerstag
+            friday = menu.Freitag
+            validFrom = DateTime.parse(menu.validFrom)
+            validTo = DateTime.parse(menu.validTo)
+        }.id.value > 0
+    }
 }

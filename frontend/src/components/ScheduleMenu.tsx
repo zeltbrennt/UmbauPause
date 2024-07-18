@@ -4,7 +4,6 @@ import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import "dayjs/locale/de";
-import {Dish} from "../util/Interfaces.ts";
 
 
 export default function ScheduleMenu() {
@@ -40,26 +39,20 @@ export default function ScheduleMenu() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = {
-            start: start.format("YYYY-MM-DD"),
-            end: end.format("YYYY-MM-DD"),
-            weekdays: weekdaysData
+            validFrom: start.format("YYYY-MM-DD"),
+            validTo: end.format("YYYY-MM-DD"),
+            ...weekdaysData
         };
         console.log(formData);
-        weekdays.forEach((day) => {
-            fetch("http://localhost:8080/newDish", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
-                },
-                body: JSON.stringify({
-                    description: weekdaysData[day],
-                    available: false,
-                    scheduled: day,
-                    price: 9.5
-                } as Dish)
-            }).catch((reason) => console.log(`could not post ${day}: ${reason}`));
-        });
+
+        fetch("http://localhost:8080/newMenu", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            },
+            body: JSON.stringify(formData)
+        }).catch((reason) => console.log(`could not save menu: ${reason}`));
     }
     const handleWeekdayChange = (day: string, value: string) => {
         setWeekdaysData(prev => ({...prev, [day]: value}));

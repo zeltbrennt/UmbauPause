@@ -102,6 +102,19 @@ fun Application.configureRouting(
                     }
                 }
             }
+            route("/newMenu") {
+                post {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
+                        val newMenu = call.receive<Menu>()
+                        menurepo.addNewMenu(newMenu)
+                        call.respond(HttpStatusCode.Created)
+                    } else {
+                        call.respond(HttpStatusCode.Forbidden)
+                    }
+                }
+            }
         }
     }
 }
