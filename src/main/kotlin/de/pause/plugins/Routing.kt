@@ -19,7 +19,7 @@ fun Application.configureRouting(
     appConfig: HoconApplicationConfig,
     dishRepository: DishRepository,
     userRepository: UserRepository,
-    menurepo: MenuRepository,
+    menuRepository: MenuRepository,
 ) {
 
 
@@ -32,7 +32,7 @@ fun Application.configureRouting(
         route("/current_menu") {
             get {
 
-                val menu = menurepo.getCurrentMenu()
+                val menu = menuRepository.getCurrentMenu()
                 call.respond(menu)
             }
         }
@@ -108,7 +108,12 @@ fun Application.configureRouting(
                     val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
                     if (role == UserRole.MODERATOR) {
                         val newMenu = call.receive<Menu>()
-                        menurepo.addNewMenu(newMenu)
+                        menuRepository.addNewMenu(newMenu)
+                        dishRepository.addDish(Dish(newMenu.Montag))
+                        dishRepository.addDish(Dish(newMenu.Dienstag))
+                        dishRepository.addDish(Dish(newMenu.Mittwoch))
+                        dishRepository.addDish(Dish(newMenu.Donnerstag))
+                        dishRepository.addDish(Dish(newMenu.Freitag))
                         call.respond(HttpStatusCode.Created)
                     } else {
                         call.respond(HttpStatusCode.Forbidden)

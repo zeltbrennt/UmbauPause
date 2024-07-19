@@ -2,8 +2,8 @@ package de.pause
 
 import com.typesafe.config.ConfigFactory
 import de.pause.db.configureDatabase
+import de.pause.model.DishRepository
 import de.pause.model.MenuRepository
-import de.pause.model.PostgresDishRepository
 import de.pause.model.UserRepository
 import de.pause.plugins.*
 import io.ktor.server.application.*
@@ -19,7 +19,7 @@ fun main() {
 
 fun Application.module() {
     val appConfig = HoconApplicationConfig(ConfigFactory.load())
-    val articleRepository = PostgresDishRepository()
+    val articleRepository = DishRepository()
     val userRepository = UserRepository()
     val menuRepository = MenuRepository()
     configureDatabase(appConfig)

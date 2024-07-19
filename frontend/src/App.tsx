@@ -13,7 +13,7 @@ function App() {
     const [mainView, setMainView] = useState(Site.Menu)
     const [currentUser, setCurrentUser] = useState(
         sessionStorage.getItem('userPrincipal') ?
-            sessionStorage.getItem('userPrincipal') as unknown as UserPrincipal :
+            JSON.parse(sessionStorage?.getItem('userPrincipal') || '') as UserPrincipal :
             null)
 
     const serverLogout = async (accessToken: JWTToken) => {

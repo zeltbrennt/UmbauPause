@@ -45,7 +45,6 @@ export default function AppFrame({
     const theme = useTheme()
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
     const [drawerOpen, setDrawerOpen] = useState(false)
-
     return (
         <Box sx={{display: 'flex'}}>
 
