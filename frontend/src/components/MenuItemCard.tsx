@@ -1,12 +1,27 @@
-import {Box, Card, CardContent, Typography} from "@mui/material";
+import {Box, Card, CardContent, Typography, useTheme} from "@mui/material";
+import {MenuItemState} from "../util/Interfaces.ts";
+import {useState} from "react";
 
-function MenuItemCard({day, dish}: { day: string, dish: string }) {
+function MenuItemCard({day, dish, handleClick}: {
+    day: string,
+    dish: string,
+    handleClick?: () => void
+}) {
 
+    const [selection, setSelection] = useState(MenuItemState.AVAILABLE)
+    const toggleSelection = () => {
+        console.log(selection.toString())
+        setSelection(selection === MenuItemState.SELECTED ? MenuItemState.AVAILABLE : MenuItemState.SELECTED)
+    }
     return (
         <Box sx={{flexGrow: 1}} key={day}>
 
             <Card sx={{
+                bgcolor: getCardColor(selection),
                 ":hover": {boxShadow: 20}
+            }} onClick={() => {
+                if (handleClick) toggleSelection();
+                handleClick()
             }}>
                 <CardContent>
                     <Typography sx={{typography: {xs: 'h6', sm: 'h4'}}}>{day}</Typography>
@@ -15,6 +30,18 @@ function MenuItemCard({day, dish}: { day: string, dish: string }) {
             </Card>
         </Box>
     )
+}
+
+function getCardColor(state: MenuItemState) {
+    const theme = useTheme()
+    switch (state) {
+        case MenuItemState.AVAILABLE:
+            return theme.palette.background.default
+        case MenuItemState.UNAVAILABLE:
+            return theme.palette.action.disabled
+        case MenuItemState.SELECTED:
+            return theme.palette.primary.main
+    }
 }
 
 export default MenuItemCard

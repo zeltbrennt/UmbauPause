@@ -16,6 +16,12 @@ export enum Site {
     Order
 }
 
+export enum MenuItemState {
+    AVAILABLE,
+    UNAVAILABLE,
+    SELECTED
+}
+
 export interface JWTToken {
     aud: string,
     iss: string,
