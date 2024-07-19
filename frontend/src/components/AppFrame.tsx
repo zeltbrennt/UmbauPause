@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {Site, UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import MainViewRender from './MainViewRender.tsx'
@@ -112,6 +113,12 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                         </> : <></>}
+                        <ListItem disablePadding key={"order"}>
+                            <ListItemButton onClick={() => changeView(Site.Order)}>
+                                <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                                <ListItemText primary={"Bestellen"}></ListItemText>
+                            </ListItemButton>
+                        </ListItem>
                         <ListItem disablePadding key="login">
                             <ListItemButton onClick={() => {
                                 currentUser ? logout() : openLoginDialog()

@@ -12,7 +12,8 @@ export enum Site {
     Landingpage,
     Register,
     Menu,
-    Schedule
+    Schedule,
+    Order
 }
 
 export interface JWTToken {
