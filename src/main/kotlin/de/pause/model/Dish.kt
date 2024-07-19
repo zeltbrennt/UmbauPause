@@ -5,20 +5,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Dish(
     val description: String,
-    val available: Boolean,
-    val scheduled: String,
     val price: Double,
 ) {
-    val order: Int
-        get() = scheduled.dayOfWeekToInt()
-}
+    companion object {
+        const val DEFAULT_PRICE = 6.5
+    }
 
-fun String.dayOfWeekToInt(): Int = when (this) {
-    "Montag" -> 1
-    "Dienstag" -> 2
-    "Mittwoch" -> 3
-    "Donnerstag" -> 4
-    "Freitag" -> 5
-    else -> 0
+    constructor(description: String) : this(description, DEFAULT_PRICE)
 }
 

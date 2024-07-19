@@ -10,13 +10,11 @@ export default function ScheduleMenu() {
     const weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [start, setStart] = useState(dayjs().add(1, 'week').day(1));
     const [end, setEnd] = useState(dayjs().add(1, 'week').day(5));
-    const [weekdaysData, setWeekdaysData] = useState({
-        Montag: "",
-        Dienstag: "",
-        Mittwoch: "",
-        Donnerstag: "",
-        Freitag: ""
-    });
+    const [monday, setMonday] = useState("");
+    const [tuesday, setTuesday] = useState("");
+    const [wednesday, setWednesday] = useState("");
+    const [thursday, setThursday] = useState("");
+    const [friday, setFriday] = useState("");
     const [dishes, setDishes] = useState<string[]>([]);
     useEffect(() => {
         // Fetch dish names when the component mounts
@@ -39,9 +37,13 @@ export default function ScheduleMenu() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = {
+            Montag: monday,
+            Dienstag: tuesday,
+            Mittwoch: wednesday,
+            Donnerstag: thursday,
+            Freitag: friday,
             validFrom: start.format("YYYY-MM-DD"),
             validTo: end.format("YYYY-MM-DD"),
-            ...weekdaysData
         };
         console.log(formData);
 
@@ -54,9 +56,6 @@ export default function ScheduleMenu() {
             body: JSON.stringify(formData)
         }).catch((reason) => console.log(`could not save menu: ${reason}`));
     }
-    const handleWeekdayChange = (day: string, value: string) => {
-        setWeekdaysData(prev => ({...prev, [day]: value}));
-    };
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
@@ -82,39 +81,42 @@ export default function ScheduleMenu() {
                     </Grid>
                 </Grid>
 
-                {weekdays.map((day, index) => {
-                    return (
-                        <Box key={index}>
-                            <WeekdayScheduler day={day} index={index} handle={handleWeekdayChange} dishes={dishes}/>
-                        </Box>
-                    )
-                })}
+
+                <WeekdayScheduler key={"Montag"} day={"Montag"} handle={(_day, value) => setMonday(value)}
+                                  dishes={dishes}/>
+                <WeekdayScheduler key={"Dienstag"} day={"Dienstag"} handle={(_day, value) => setTuesday(value)}
+                                  dishes={dishes}/>
+                <WeekdayScheduler key={"Mittwoch"} day={"Mittwoch"} handle={(_day, value) => setWednesday(value)}
+                                  dishes={dishes}/>
+                <WeekdayScheduler key={"Donnerstag"} day={"Donnerstag"} handle={(_day, value) => setThursday(value)}
+                                  dishes={dishes}/>
+                <WeekdayScheduler key={"Freitag"} day={"Freitag"} handle={(_day, value) => setFriday(value)}
+                                  dishes={dishes}/>
+
                 <Button variant={"contained"} type={"submit"}>Speichern</Button>
             </Box>
         </LocalizationProvider>
     );
 }
 
-function WeekdayScheduler({day, index, handle, dishes}: {
+function WeekdayScheduler({day, handle, dishes}: {
     day: string,
-    index: number,
     handle: (day: string, value: string) => void
     dishes: string[]
 }) {
 
     return (
-        <Autocomplete renderInput={(params) =>
-            <TextField {...params}
-                       variant={"outlined"}
-                       margin={"normal"}
-                       fullWidth
-                       label={day}
-                       type={"text"}
-                       key={index}
-                       onChange={(e) => handle(day, e.target.value)}/>}
+        <Autocomplete onInputChange={(_e, newVal) => handle(day, newVal)}
                       options={dishes}
                       freeSolo
+                      renderInput={(params) =>
+                          <TextField {...params}
+                                     variant={"outlined"}
+                                     margin={"normal"}
+                                     fullWidth
+                                     label={day}
+                                     type={"text"}
+                          />}
         />
     )
-
 }
