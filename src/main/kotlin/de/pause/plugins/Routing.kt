@@ -67,6 +67,15 @@ fun Application.configureRouting(
             }
         }
         authenticate("jwt-auth") {
+            route("/order") {
+                post {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val user = jwt!!.payload.getClaim("email").asString()
+                    val temp = call.receive<String>()
+                    call.application.environment.log.info("user: $user ordered: $temp")
+                    call.respond(HttpStatusCode.Created)
+                }
+            }
             route("/logout") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()

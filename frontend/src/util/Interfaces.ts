@@ -40,9 +40,3 @@ export interface UserPrincipal {
     role: UserRole
 }
 
-export interface Dish {
-    description: string,
-    available: boolean,
-    scheduled: string,
-    price: number
-}
