@@ -22,7 +22,7 @@ export default function MakeOrder() {
         <>
             <Typography variant={"h3"} textAlign={"center"}>Bestellen</Typography>
             <Typography textAlign={"center"}>vom ??? bis ??? </Typography>
-            <List>
+            <List disablePadding>
                 <ListItem>
                     <MenuItemCard day={"Montag"} dish={"whatever"} handleClick={() => setMonday(true)}/>
                 </ListItem>
@@ -38,8 +38,10 @@ export default function MakeOrder() {
                 <ListItem>
                     <MenuItemCard day={"Freitag"} dish={"whatever"} handleClick={() => setFriday(!friday)}/>
                 </ListItem>
+                <ListItem sx={{justifyContent: "right"}}>
+                    <Button variant={"contained"} onClick={handleClick}>Bestellen</Button>
+                </ListItem>
             </List>
-            <Button variant={"contained"} onClick={handleClick}>Bestellen</Button>
         </>
     )
 }
