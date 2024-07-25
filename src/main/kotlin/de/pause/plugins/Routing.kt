@@ -70,7 +70,7 @@ fun Application.configureRouting(
             route("/order") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("email").asString()
+                    val user = jwt!!.payload.getClaim("userId").asString()
                     val temp = call.receive<String>()
                     call.application.environment.log.info("user: $user ordered: $temp")
                     call.respond(HttpStatusCode.Created)
