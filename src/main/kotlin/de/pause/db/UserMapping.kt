@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object UserTable : IntIdTable("shop.user") {
-    val userId = varchar("user_uuid", 250)
+    val userId = uuid("user_uuid")
     val email = varchar("email", 200)
     val password = varchar("password", 250)
     val role = varchar("role", 100)
@@ -24,7 +24,7 @@ class UserDao(id: EntityID<Int>) : IntEntity(id) {
 }
 
 fun daoToModel(dao: UserDao) = User(
-    userId = dao.userId,
+    userId = dao.userId.toString(),
     email = dao.email,
     password = dao.password,
     role = UserRole.valueOf(dao.role)

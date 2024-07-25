@@ -30,7 +30,8 @@ class UserRepository {
         }
     }
 
-    suspend fun logout(uuid: String): Boolean = suspendTransaction {
+    suspend fun logout(uuidString: String): Boolean = suspendTransaction {
+        val uuid = UUID.fromString(uuidString)
         val user = UserDao.find { UserTable.userId eq uuid }.firstOrNull()
         when {
             user != null -> return@suspendTransaction true
@@ -42,7 +43,7 @@ class UserRepository {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
         try {
             return@suspendTransaction UserDao.new {
-                userId = UUID.randomUUID().toString()
+                userId = UUID.randomUUID()
                 email = loginRequest.email
                 password = hashedPassword
                 role = UserRole.USER.toString()
