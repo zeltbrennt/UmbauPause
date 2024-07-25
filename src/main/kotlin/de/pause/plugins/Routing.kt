@@ -47,7 +47,7 @@ fun Application.configureRouting(
                         .withIssuer(issuer)
                         .withIssuedAt(Instant.now())
                         .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withClaim("email", user.email)
+                        .withClaim("userId", user.userId)
                         .withClaim("role", user.role.name)
                         .sign(Algorithm.HMAC256(secret))
                     call.respond(HttpStatusCode.OK, hashMapOf("accessToken" to token))
@@ -70,7 +70,7 @@ fun Application.configureRouting(
             route("/logout") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("email").asString()
+                    val user = jwt!!.payload.getClaim("userId").asString()
                     val success = userRepository.logout(user)
                     when {
                         success -> call.respond(HttpStatusCode.OK)
