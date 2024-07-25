@@ -128,7 +128,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView} currentUser={currentUser?.email}/>
+                <MainViewRender site={currentView} currentUser={currentUser?.userId}/>
             </Box>
         </Box>
     )

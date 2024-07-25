@@ -20,7 +20,7 @@ export interface JWTToken {
     iss: string,
     iat: number,
     exp: number,
-    email: string,
+    userId: string,
     role: string,
 }
 
@@ -29,13 +29,6 @@ export enum UserRole {
 }
 
 export interface UserPrincipal {
-    email: string,
+    userId: string,
     role: UserRole
-}
-
-export interface Dish {
-    description: string,
-    available: boolean,
-    scheduled: string,
-    price: number
 }
