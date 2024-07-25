@@ -5,6 +5,7 @@ import de.pause.db.UserTable
 import de.pause.db.daoToModel
 import de.pause.db.suspendTransaction
 import org.mindrot.jbcrypt.BCrypt
+import java.util.*
 
 class UserRepository {
 
@@ -29,8 +30,8 @@ class UserRepository {
         }
     }
 
-    suspend fun logout(email: String): Boolean = suspendTransaction {
-        val user = UserDao.find { UserTable.email eq email }.firstOrNull()
+    suspend fun logout(uuid: String): Boolean = suspendTransaction {
+        val user = UserDao.find { UserTable.userId eq uuid }.firstOrNull()
         when {
             user != null -> return@suspendTransaction true
             else -> return@suspendTransaction false
@@ -41,7 +42,7 @@ class UserRepository {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
         try {
             return@suspendTransaction UserDao.new {
-                username = loginRequest.email
+                userId = UUID.randomUUID().toString()
                 email = loginRequest.email
                 password = hashedPassword
                 role = UserRole.USER.toString()
