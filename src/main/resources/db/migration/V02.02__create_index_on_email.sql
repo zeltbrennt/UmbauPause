@@ -1,1 +1,0 @@
-create unique index idx_user_email on shop.user (email);
