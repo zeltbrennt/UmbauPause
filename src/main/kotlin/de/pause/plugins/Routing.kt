@@ -2,6 +2,7 @@ package de.pause.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
+import de.pause.db.MenuDto
 import de.pause.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -72,6 +73,12 @@ fun Application.configureRouting(
                     val jwt = call.principal<JWTPrincipal>()
                     val user = jwt!!.payload.getClaim("userId").asString()
                     val temp = call.receive<String>()
+                    /*
+                    - get a list of dish names
+                    - get uuid from jwt
+                    - get timestamp from now
+                    - insert into order table
+                     */
                     call.application.environment.log.info("user: $user ordered: $temp")
                     call.respond(HttpStatusCode.Created)
                 }
@@ -90,9 +97,9 @@ fun Application.configureRouting(
             route("/newDish") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        val newDish = call.receive<Dish>()
+                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == Enums.MODERATOR) {
+                        val newDish = call.receive<DishDto>()
                         dishRepository.addDish(newDish)
                         call.respond(HttpStatusCode.Created)
                     } else {
@@ -103,8 +110,8 @@ fun Application.configureRouting(
             route("/dishes") {
                 get {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
+                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == Enums.MODERATOR) {
                         call.respond(HttpStatusCode.OK, dishRepository.allDishes())
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
@@ -114,15 +121,18 @@ fun Application.configureRouting(
             route("/newMenu") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        val newMenu = call.receive<Menu>()
+                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == Enums.MODERATOR) {
+                        val newMenu = call.receive<MenuDto>()
                         menuRepository.addNewMenu(newMenu)
+                        /*?
                         dishRepository.addDish(Dish(newMenu.Montag))
                         dishRepository.addDish(Dish(newMenu.Dienstag))
                         dishRepository.addDish(Dish(newMenu.Mittwoch))
                         dishRepository.addDish(Dish(newMenu.Donnerstag))
                         dishRepository.addDish(Dish(newMenu.Freitag))
+
+                         */
                         call.respond(HttpStatusCode.Created)
                     } else {
                         call.respond(HttpStatusCode.Forbidden)

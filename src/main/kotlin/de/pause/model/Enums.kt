@@ -1,5 +1,5 @@
 package de.pause.model
 
-enum class UserRole {
+enum class Enums {
     ADMIN, USER, MODERATOR
 }

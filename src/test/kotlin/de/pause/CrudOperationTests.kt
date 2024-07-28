@@ -3,7 +3,7 @@ package de.pause
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import de.pause.model.Dish
-import de.pause.model.UserRole
+import de.pause.model.Enums
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -31,7 +31,7 @@ class CrudOperationTests {
             .withIssuedAt(Instant.now())
             .withExpiresAt(Instant.now().plusSeconds(600L))
             .withClaim("email", "mod@example.com")
-            .withClaim("role", UserRole.MODERATOR.toString())
+            .withClaim("role", Enums.MODERATOR.toString())
             .sign(Algorithm.HMAC256(secret))
         client = createTestClient()
     }
