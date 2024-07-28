@@ -22,7 +22,7 @@ create table shop.dish
 
 create table shop.week
 (
-    id         char(8) primary key,
+    id         serial primary key,
     week_start date not null,
     week_end   date not null,
     kw         int  not null,
@@ -41,7 +41,7 @@ create table shop.menu
     id         serial primary key,
     created_at timestamp not null,
     updated_at timestamp not null,
-    week_id    char(8)   not null,
+    week_id    integer   not null,
     dish_id    integer   not null,
     day_id     int       not null,
     foreign key (dish_id) references shop.dish (id),
