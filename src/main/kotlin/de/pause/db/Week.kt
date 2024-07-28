@@ -4,6 +4,7 @@ import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.jodatime.date
 
 object WeekTable : IntIdTable("shop.week") {
@@ -23,4 +24,11 @@ class WeekEntity(id: EntityID<Int>) : IntEntity(id) {
     var year by WeekTable.year
     var quarter by WeekTable.quarter
 
+}
+
+suspend fun getCurrentWeek() = suspendTransaction {
+    val today = org.joda.time.DateTime.now()
+    WeekEntity.find {
+        (WeekTable.weekStart lessEq today) and (WeekTable.weekEnd greaterEq today)
+    }.first().id.value
 }

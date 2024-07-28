@@ -16,19 +16,21 @@ export default function ScheduleMenu() {
     const [thursday, setThursday] = useState("");
     const [friday, setFriday] = useState("");
     const [dishes, setDishes] = useState<string[]>([]);
+
+    const fetchDishes = async () => {
+        const response = await fetch("http://localhost:8080/dishes", {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            }
+        });
+        const data = await response.json();
+        setDishes(data);
+    };
+
     useEffect(() => {
         // Fetch dish names when the component mounts
-        const fetchDishes = async () => {
-            const response = await fetch("http://localhost:8080/dishes", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
-                }
-            });
-            const data = await response.json();
-            const dishNames = data.map(dish => dish.description); // Assuming each dish object has a description field
-            setDishes(dishNames);
-        };
+
 
         fetchDishes().then(() => console.log("Fetched dishes")).catch((reason) => console.log(`could not fetch dishes: ${reason}`));
     }, []); // Empty dependency array means this effect runs once on mount
