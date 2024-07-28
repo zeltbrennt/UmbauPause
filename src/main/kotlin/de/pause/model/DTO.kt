@@ -9,11 +9,16 @@ typealias RegisterRequest = LoginRequest
 
 @Serializable
 data class MenuInfo(
-    val menuId: Int,
     val validFrom: String,
     val validTo: String,
-    val dish: String,
-    val day: Int,
+    val dishes: List<MenuItem>
+)
+
+@Serializable
+data class MenuItem(
+    val id: Int,
+    val name: String,
+    val day: String,
 )
 
 @Serializable

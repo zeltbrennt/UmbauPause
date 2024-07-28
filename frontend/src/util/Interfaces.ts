@@ -1,11 +1,13 @@
-export interface IWeeklyMenu {
-    Montag: string,
-    Dienstag: string,
-    Mittwoch: string,
-    Donnerstag: string,
-    Freitag: string,
+export interface MenuInfo {
     validFrom: string,
     validTo: string,
+    dishes: MenuItem[]
+}
+
+export interface MenuItem {
+    id: number,
+    name: string,
+    day: string,
 }
 
 export enum Site {

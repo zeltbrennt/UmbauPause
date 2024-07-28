@@ -7,22 +7,30 @@ import org.joda.time.DateTime
 
 class MenuRepository {
 
-    suspend fun getCurrentMenu() = suspendTransaction {
+    suspend fun getCurrentMenu(): MenuInfo = suspendTransaction {
         val today = DateTime.now()
-        (MenuTable innerJoin DishTable innerJoin DayTable innerJoin WeekTable)
+        val validFrom: DateTime
+        val validTo: DateTime
+        val info = (MenuTable innerJoin DishTable innerJoin DayTable innerJoin WeekTable)
             .selectAll()
             .where { (WeekTable.weekStart lessEq today) and (WeekTable.weekEnd greaterEq today) }
-            .map {
-                MenuInfo(
-                    menuId = it[MenuTable.id].value,
-                    validFrom = it[WeekTable.weekStart].toString(),
-                    validTo = it[WeekTable.weekEnd].toString(),
-                    dish = it[DishTable.description].toString(),
-                    day = it[DayTable.id].value,
-                )
-
+            .orderBy(DayTable.id)
+            .also {
+                validFrom = it.first()[WeekTable.weekStart]
+                validTo = it.first()[WeekTable.weekEnd]
             }
-
+            .map {
+                MenuItem(
+                    id = it[MenuTable.id].value,
+                    name = it[DishTable.description].toString(),
+                    day = it[DayTable.name],
+                )
+            }
+        MenuInfo(
+            validFrom = validFrom.toString("yyyy-MM-dd"),
+            validTo = validTo.toString("yyyy-MM-dd"),
+            dishes = info
+        )
     }
     /*
         suspend fun addNewMenu(menu: MenuDto): Boolean = suspendTransaction {

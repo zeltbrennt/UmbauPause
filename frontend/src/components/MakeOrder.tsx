@@ -1,7 +1,7 @@
 import {Button, List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import {useEffect, useState} from "react";
-import {IWeeklyMenu} from "../util/Interfaces.ts";
+import {MenuInfo} from "../util/Interfaces.ts";
 
 export default function MakeOrder() {
 
@@ -10,7 +10,7 @@ export default function MakeOrder() {
     const [wednesday, setWednesday] = useState(false);
     const [thursday, setThursday] = useState(false);
     const [friday, setFriday] = useState(false);
-    const [menu, setMenu] = useState({} as IWeeklyMenu)
+    const [menu, setMenu] = useState({} as MenuInfo)
     const api_url = "http://localhost:8080/current_menu"
     const getMenu = async () => {
         const response = await fetch(api_url)
@@ -31,7 +31,7 @@ export default function MakeOrder() {
             Mittwoch: wednesday,
             Donnerstag: thursday,
             Freitag: friday
-        } as IWeeklyMenu
+        } as MenuInfo
         console.log(order)
         fetch("http://localhost:8080/order", {
             method: 'POST',
