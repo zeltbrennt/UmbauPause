@@ -1,6 +1,5 @@
 package de.pause.model
 
-import de.pause.db.UserDto
 import de.pause.db.UserEntity
 import de.pause.db.UserTable
 import de.pause.db.suspendTransaction
@@ -19,13 +18,13 @@ class UserRepository {
     }
 
 
-    suspend fun login(req: LoginRequest): UserDto? = suspendTransaction {
+    suspend fun login(req: LoginRequest): UserPrincipal? = suspendTransaction {
         val user = UserEntity
             .find { UserTable.email eq req.email }
             .firstOrNull()
         when {
             user != null && BCrypt.checkpw(req.password, user.passwordHash) ->
-                return@suspendTransaction user.toUserDto()
+                return@suspendTransaction user.toUserPrincipal()
 
             else -> return@suspendTransaction null
         }

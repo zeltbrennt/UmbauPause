@@ -1,5 +1,6 @@
 package de.pause.db
 
+import de.pause.model.UserPrincipal
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID
@@ -24,5 +25,9 @@ class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
     var passwordHash by UserTable.passwordHash
     var role by UserTable.role
 
+    fun toUserPrincipal() = UserPrincipal(
+        id = id.value.toString(),
+        role = role
+    )
 }
 

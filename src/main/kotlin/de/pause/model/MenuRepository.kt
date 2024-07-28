@@ -24,14 +24,14 @@ class MenuRepository {
             }
 
     }
-
-    suspend fun addNewMenu(menu: MenuDto): Boolean = suspendTransaction {
-        MenuEntity.new {
-            createdAt = DateTime.now()
-            updatedAt = DateTime.now()
-            weekId = WeekEntity[menu.weekId]
-            dishId = DishEntity[menu.dishId]
-            dayId = DayEntity[menu.dayId]
-        }.id.value > 0
-    }
+    /*
+        suspend fun addNewMenu(menu: MenuDto): Boolean = suspendTransaction {
+            MenuEntity.new {
+                createdAt = DateTime.now()
+                updatedAt = DateTime.now()
+                weekId = WeekEntity[menu.weekId]
+                dishId = DishEntity[menu.dishId]
+                dayId = DayEntity[menu.dayId]
+            }.id.value > 0
+        }*/
 }

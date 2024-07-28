@@ -21,3 +21,9 @@ data class DishDto(
     val id: Int,
     val description: String,
 )
+
+@Serializable
+data class UserPrincipal(
+    val id: String,
+    val role: String,
+)

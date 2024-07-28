@@ -2,7 +2,6 @@ package de.pause.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.db.MenuDto
 import de.pause.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -48,10 +47,10 @@ fun Application.configureRouting(
                         .withIssuer(issuer)
                         .withIssuedAt(Instant.now())
                         .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withClaim("userId", user.userId)
-                        .withClaim("role", user.role.name)
+                        .withClaim("userId", user.id)
+                        .withClaim("role", user.role)
                         .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, hashMapOf("accessToken" to token))
+                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
@@ -123,8 +122,8 @@ fun Application.configureRouting(
                     val jwt = call.principal<JWTPrincipal>()
                     val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
                     if (role == Enums.MODERATOR) {
-                        val newMenu = call.receive<MenuDto>()
-                        menuRepository.addNewMenu(newMenu)
+                        //val newMenu = call.receive<MenuDto>()
+                        //menuRepository.addNewMenu(newMenu)
                         /*?
                         dishRepository.addDish(Dish(newMenu.Montag))
                         dishRepository.addDish(Dish(newMenu.Dienstag))
