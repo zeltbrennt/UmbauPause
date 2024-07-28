@@ -2,6 +2,7 @@ import {Button, List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import {useEffect, useState} from "react";
 import {MenuInfo} from "../util/Interfaces.ts";
+import dayjs from "dayjs";
 
 export default function MakeOrder() {
 
@@ -10,12 +11,16 @@ export default function MakeOrder() {
     const [wednesday, setWednesday] = useState(false);
     const [thursday, setThursday] = useState(false);
     const [friday, setFriday] = useState(false);
-    const [menu, setMenu] = useState({} as MenuInfo)
-    const api_url = "http://localhost:8080/current_menu"
+    const api_url = "http://localhost:8080/current_menu" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const [menu, setMenu] = useState<MenuInfo>()
+    const [validFrom, setValidFrom] = useState("")
+    const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
         const response = await fetch(api_url)
-        const data = await response.json()
+        const data: MenuInfo = await response.json()
         setMenu(data)
+        setValidFrom(dayjs(data.validFrom).add(1, "day").format("DD.MM.YYYY"))
+        setValidTo(dayjs(data.validTo).subtract(1, "day").format("DD.MM.YYYY"))
     }
 
     useEffect(() => {
@@ -23,45 +28,20 @@ export default function MakeOrder() {
     }, [])
 
     const handleClick = () => {
-        const order = {
-            validFrom: menu.validFrom,
-            validTo: menu.validTo,
-            Montag: monday,
-            Dienstag: tuesday,
-            Mittwoch: wednesday,
-            Donnerstag: thursday,
-            Freitag: friday
-        } as MenuInfo
-        console.log(order)
-        fetch("http://localhost:8080/order", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
-            },
-            body: JSON.stringify(order)
-        }).catch((reason) => console.log(`could not post order: ${reason}`))
+
     }
     return (
         <>
             <Typography variant={"h3"} textAlign={"center"}>Bestellen</Typography>
-            <Typography textAlign={"center"}>vom {menu.validFrom} bis {menu.validTo} </Typography>
+            <Typography textAlign={"center"}>vom {validFrom} bis {validTo} </Typography>
             <List disablePadding>
-                <ListItem>
-                    <MenuItemCard day={"Montag"} dish={menu.Montag} handleClick={() => setMonday(true)}/>
-                </ListItem>
-                <ListItem>
-                    <MenuItemCard day={"Dienstag"} dish={menu.Dienstag} handleClick={() => setTuesday(!tuesday)}/>
-                </ListItem>
-                <ListItem>
-                    <MenuItemCard day={"Mittwoch"} dish={menu.Mittwoch} handleClick={() => setWednesday(!wednesday)}/>
-                </ListItem>
-                <ListItem>
-                    <MenuItemCard day={"Donnerstag"} dish={menu.Donnerstag} handleClick={() => setThursday(!thursday)}/>
-                </ListItem>
-                <ListItem>
-                    <MenuItemCard day={"Freitag"} dish={menu.Freitag} handleClick={() => setFriday(!friday)}/>
-                </ListItem>
+                {menu?.dishes.map(dish => {
+                    return (
+                        <ListItem key={dish.id} sx={{flexGrow: 1}}>
+                            <MenuItemCard day={dish.day} dish={dish.name} handleClick={handleClick}/>
+                        </ListItem>
+                    )
+                })}
                 <ListItem sx={{justifyContent: "right"}}>
                     <Button variant="contained" onClick={handleClick}>Bestellen</Button>
                 </ListItem>
