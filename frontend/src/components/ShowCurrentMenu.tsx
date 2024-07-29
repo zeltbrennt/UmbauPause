@@ -7,16 +7,19 @@ import dayjs from "dayjs";
 
 function ShowCurrentMenu() {
 
-    const api_url = "http://localhost:8080/current_menu" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const api_url = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        const response = await fetch(api_url)
+        const response = await fetch(api_url + new URLSearchParams(
+            {from: dayjs().format("YYYY-MM-DD")}))
         const data: MenuInfo = await response.json()
         setMenu(data)
-        setValidFrom(dayjs(data.validFrom).add(1, "day").format("DD.MM.YYYY"))
-        setValidTo(dayjs(data.validTo).subtract(1, "day").format("DD.MM.YYYY"))
+        console.log(data)
+        setValidFrom(dayjs(data.validFrom).format("DD.MM.YYYY"))
+        setValidTo(dayjs(data.validTo).format("DD.MM.YYYY"))
     }
 
     useEffect(() => {
@@ -28,10 +31,11 @@ function ShowCurrentMenu() {
             <Typography
                 textAlign={"center"}>vom {validFrom} bis {validTo}</Typography>
             <List>
-                {menu?.dishes.map(dish => {
+                {week.map((day, id) => {
+                    const dish = menu?.dishes[id].name ?? "Kantine geschlossen"
                     return (
-                        <ListItem key={dish.id} sx={{flexGrow: 1}}>
-                            <MenuItemCard day={dish.day} dish={dish.name}/>
+                        <ListItem key={id} sx={{flexGrow: 1}}>
+                            <MenuItemCard day={day} dish={dish}/>
                         </ListItem>
                     )
                 })}

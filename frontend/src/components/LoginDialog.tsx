@@ -52,13 +52,13 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
             password: data.get('password')
         } as LoginRequestData)
             .then(response => {
-                const decodedToken = jwtDecode<JWTToken>(response.accessToken)
-                sessionStorage.setItem('accessToken', response.accessToken)
+                const decodedToken = jwtDecode<JWTToken>(response.access_token)
+                sessionStorage.setItem('access_token', response.access_token)
                 const userPrincipal = {
-                    userId: decodedToken.userId,
-                    role: decodedToken.role
+                    uid: decodedToken.uid,
+                    role: decodedToken.roles
                 } as UserPrincipal
-                sessionStorage.setItem('userPrincipal', JSON.stringify(userPrincipal))
+                sessionStorage.setItem('user_principal', JSON.stringify(userPrincipal))
                 setCurrentUser(userPrincipal)
                 setLoginError(false)
                 handleClose()

@@ -84,7 +84,7 @@ export default function AppFrame({
                                 <ListItemText primary="Wochenkarte"/>
                             </ListItemButton>
                         </ListItem>
-                        {currentUser?.role == UserRole.MODERATOR ? <>
+                        {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
                                     changeView(Site.Schedule)
@@ -135,7 +135,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView} currentUser={currentUser?.userId}/>
+                <MainViewRender site={currentView} currentUser={currentUser?.uid}/>
             </Box>
         </Box>
     )

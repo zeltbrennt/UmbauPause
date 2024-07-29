@@ -7,7 +7,7 @@ export interface MenuInfo {
 export interface MenuItem {
     id: number,
     name: string,
-    day: string,
+    day: number,
 }
 
 export enum Site {
@@ -29,16 +29,16 @@ export interface JWTToken {
     iss: string,
     iat: number,
     exp: number,
-    userId: string,
-    role: string,
+    uid: string,
+    roles: string[],
 }
 
 export enum UserRole {
-    USER = "USER", MODERATOR = "MODERATOR", ADMIN = "ADMIN"
+    ADMIN = "ADMIN", USER = "USER",
 }
 
 export interface UserPrincipal {
-    userId: string,
-    role: UserRole
+    uid: string,
+    roles: UserRole[]
 }
 
