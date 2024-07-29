@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.UUIDTable
 import org.jetbrains.exposed.sql.jodatime.datetime
 import java.util.*
 
-object UserTable : UUIDTable("shop.user") {
+object UserTable : UUIDTable("user.account") {
     val email = varchar("email", 200)
     val created_at = datetime("created_at")
     val updated_at = datetime("updated_at")
