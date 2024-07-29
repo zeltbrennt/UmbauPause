@@ -47,7 +47,7 @@ class UserRepository {
                 updated_at = DateTime.now()
                 email = loginRequest.email
                 passwordHash = hashedPassword
-                role = Enums.USER.toString()
+                //role = UserRole.USER.toString()
             }.id.value.toString().isNotBlank()
         } catch (e: Exception) {
             return@suspendTransaction false

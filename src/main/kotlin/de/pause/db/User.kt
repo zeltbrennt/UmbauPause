@@ -13,7 +13,6 @@ object UserTable : UUIDTable("shop.user") {
     val created_at = datetime("created_at")
     val updated_at = datetime("updated_at")
     val passwordHash = varchar("password_hash", 250)
-    val role = varchar("role", 100)
 }
 
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -23,11 +22,11 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var created_at by UserTable.created_at
     var updated_at by UserTable.updated_at
     var passwordHash by UserTable.passwordHash
-    var role by UserTable.role
+    var role by Role via UserRoleTable
 
     fun toUserPrincipal() = UserPrincipal(
         id = id.value.toString(),
-        role = role
+        roles = role.map { it.role }
     )
 }
 

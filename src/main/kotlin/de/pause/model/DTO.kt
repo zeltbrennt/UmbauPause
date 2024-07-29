@@ -30,5 +30,5 @@ data class DishDto(
 @Serializable
 data class UserPrincipal(
     val id: String,
-    val role: String,
+    val roles: List<String>,
 )

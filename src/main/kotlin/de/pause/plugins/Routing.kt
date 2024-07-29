@@ -57,10 +57,10 @@ fun Application.configureRouting(
                         .withIssuer(issuer)
                         .withIssuedAt(Instant.now())
                         .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withClaim("userId", user.id)
-                        .withClaim("role", user.role)
+                        .withClaim("uid", user.id)
+                        .withClaim("roles", user.roles)
                         .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to token))
+                    call.respond(HttpStatusCode.OK, mapOf("access_token" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
