@@ -60,7 +60,7 @@ fun Application.configureRouting(
                         .withClaim("uid", user.id)
                         .withClaim("roles", user.roles)
                         .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, mapOf("access_token" to token))
+                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
@@ -95,7 +95,7 @@ fun Application.configureRouting(
             route("/logout") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("userId").asString()
+                    val user = jwt!!.payload.getClaim("uid").asString()
                     val success = userRepository.logout(user)
                     when {
                         success -> call.respond(HttpStatusCode.OK)
@@ -106,8 +106,8 @@ fun Application.configureRouting(
             route("/newDish") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
+                    val roles = jwt!!.payload.getClaim("roles").asString()
+                    if (UserRole.ADMIN.name in roles) {
                         val newDish = call.receive<DishDto>()
                         dishRepository.addDish(newDish)
                         call.respond(HttpStatusCode.Created)
