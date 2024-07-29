@@ -42,3 +42,7 @@ export interface UserPrincipal {
     roles: UserRole[]
 }
 
+export interface Dish {
+    id: number,
+    description: string,
+}
