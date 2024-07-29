@@ -16,13 +16,13 @@ object OrderTable : UUIDTable("shop.order") {
     val status = varchar("status", 50)
 }
 
-class OrderEntity(id: EntityID<UUID>) : UUIDEntity(id) {
-    companion object : UUIDEntityClass<OrderEntity>(OrderTable)
+class Order(id: EntityID<UUID>) : UUIDEntity(id) {
+    companion object : UUIDEntityClass<Order>(OrderTable)
 
     var createdAt by OrderTable.createdAt
     var updatedAt by OrderTable.updatedAt
-    var userId by UserEntity referencedOn OrderTable.userId
-    var menuId by MenuEntity referencedOn OrderTable.menuId
+    var userId by User referencedOn OrderTable.userId
+    var menuId by Menu referencedOn OrderTable.menuId
     var status by OrderTable.status
 
 }

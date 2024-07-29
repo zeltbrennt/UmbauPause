@@ -16,8 +16,8 @@ object UserTable : UUIDTable("shop.user") {
     val role = varchar("role", 100)
 }
 
-class UserEntity(id: EntityID<UUID>) : UUIDEntity(id) {
-    companion object : UUIDEntityClass<UserEntity>(UserTable)
+class User(id: EntityID<UUID>) : UUIDEntity(id) {
+    companion object : UUIDEntityClass<User>(UserTable)
 
     var email by UserTable.email
     var created_at by UserTable.created_at

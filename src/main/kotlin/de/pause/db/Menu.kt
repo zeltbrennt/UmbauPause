@@ -17,15 +17,15 @@ object MenuTable : IntIdTable("shop.menu") {
     val dishId = reference("dish_id", DishTable)
 }
 
-class MenuEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<MenuEntity>(MenuTable)
+class Menu(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Menu>(MenuTable)
 
     var createdAt by MenuTable.createdAt
     var updatedAt by MenuTable.updatedAt
     var validFrom by MenuTable.validFrom
     var validTo by MenuTable.validTo
     var dayOfWeek by MenuTable.dayOfWeek
-    var dishId by DishEntity referencedOn MenuTable.dishId
+    var dishId by Dish referencedOn MenuTable.dishId
 
 }
 

@@ -1,6 +1,6 @@
 package de.pause.model
 
-import de.pause.db.UserEntity
+import de.pause.db.User
 import de.pause.db.UserTable
 import de.pause.db.suspendTransaction
 import org.joda.time.DateTime
@@ -10,7 +10,7 @@ import java.util.*
 class UserRepository {
 
     suspend fun setDefaultPasswordOfPreloadedUsers() = suspendTransaction {
-        UserEntity.all().forEach {
+        User.all().forEach {
             if (it.passwordHash.isBlank()) {
                 it.passwordHash = BCrypt.hashpw(System.getenv("USER_DEFAULT_PASSWORD"), BCrypt.gensalt())
             }
@@ -19,7 +19,7 @@ class UserRepository {
 
 
     suspend fun login(req: LoginRequest): UserPrincipal? = suspendTransaction {
-        val user = UserEntity
+        val user = User
             .find { UserTable.email eq req.email }
             .firstOrNull()
         when {
@@ -32,7 +32,7 @@ class UserRepository {
 
     suspend fun logout(uuidString: String): Boolean = suspendTransaction {
         val uuid = UUID.fromString(uuidString)
-        val user = UserEntity.find { UserTable.id eq uuid }.firstOrNull()
+        val user = User.find { UserTable.id eq uuid }.firstOrNull()
         when {
             user != null -> return@suspendTransaction true
             else -> return@suspendTransaction false
@@ -42,7 +42,7 @@ class UserRepository {
     suspend fun register(loginRequest: RegisterRequest): Boolean = suspendTransaction {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
         try {
-            return@suspendTransaction UserEntity.new {
+            return@suspendTransaction User.new {
                 created_at = DateTime.now()
                 updated_at = DateTime.now()
                 email = loginRequest.email

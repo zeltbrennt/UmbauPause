@@ -13,8 +13,8 @@ object DishTable : IntIdTable("shop.dish") {
     val description = varchar("description", 250)
 }
 
-class DishEntity(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<DishEntity>(DishTable)
+class Dish(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Dish>(DishTable)
 
     var createdAt by DishTable.createdAt
     var updatedAt by DishTable.updatedAt

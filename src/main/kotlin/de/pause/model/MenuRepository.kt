@@ -1,6 +1,6 @@
 package de.pause.model
 
-import de.pause.db.MenuEntity
+import de.pause.db.Menu
 import de.pause.db.MenuTable
 import de.pause.db.suspendTransaction
 import org.jetbrains.exposed.sql.and
@@ -11,7 +11,7 @@ class MenuRepository {
     suspend fun getScheduledMenuFrom(day: DateTime): MenuInfo? = suspendTransaction {
         val validFrom: DateTime
         val validTo: DateTime
-        val info = MenuEntity
+        val info = Menu
             .find { (MenuTable.validFrom lessEq day) and (MenuTable.validTo greaterEq day) }
             .sortedBy { it.dayOfWeek }
         if (info.isEmpty()) {
