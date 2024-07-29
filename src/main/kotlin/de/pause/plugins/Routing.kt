@@ -106,8 +106,8 @@ fun Application.configureRouting(
             route("/newDish") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == Enums.MODERATOR) {
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
                         val newDish = call.receive<DishDto>()
                         dishRepository.addDish(newDish)
                         call.respond(HttpStatusCode.Created)
@@ -119,8 +119,8 @@ fun Application.configureRouting(
             route("/dishes") {
                 get {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == Enums.MODERATOR) {
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
                         call.respond(HttpStatusCode.OK, dishRepository.allDishes())
                     } else {
                         call.respond(HttpStatusCode.Forbidden)
@@ -130,8 +130,8 @@ fun Application.configureRouting(
             route("/newMenu") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val role = Enums.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == Enums.MODERATOR) {
+                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
+                    if (role == UserRole.MODERATOR) {
                         //val newMenu = call.receive<MenuDto>()
                         //menuRepository.addNewMenu(newMenu)
                         /*?
