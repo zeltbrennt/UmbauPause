@@ -13,12 +13,18 @@ class DishRepository {
         Dish.all().map { it.description }
     }
 
-    suspend fun addDish(dish: DishDto): Unit = suspendTransaction {
+    suspend fun findByName(name: String): Dish = suspendTransaction {
+        Dish.find { DishTable.description eq name }.first()
+    }
+
+    suspend fun addDish(dish: DishDto) = suspendTransaction {
+
         Dish.new {
             description = dish.description
             createdAt = DateTime.now()
             updatedAt = DateTime.now()
         }
+
     }
 
     suspend fun removeDish(dish: DishDto) = suspendTransaction {

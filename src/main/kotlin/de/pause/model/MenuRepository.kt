@@ -1,5 +1,6 @@
 package de.pause.model
 
+import de.pause.db.Dish
 import de.pause.db.Menu
 import de.pause.db.MenuTable
 import de.pause.db.suspendTransaction
@@ -32,14 +33,15 @@ class MenuRepository {
             }
         )
     }
-    /*
-        suspend fun addNewMenu(menu: MenuDto): Boolean = suspendTransaction {
-            MenuEntity.new {
-                createdAt = DateTime.now()
-                updatedAt = DateTime.now()
-                weekId = WeekEntity[menu.weekId]
-                dishId = DishEntity[menu.dishId]
-                dayId = DayEntity[menu.dayId]
-            }.id.value > 0
-        }*/
+
+    suspend fun addNewMenu(validFrom: String, validTo: String, dayOfWeek: Int, dishId: Int) = suspendTransaction {
+        Menu.new {
+            createdAt = DateTime.now()
+            updatedAt = DateTime.now()
+            this.validFrom = DateTime.parse(validFrom)
+            this.validTo = DateTime.parse(validTo)
+            this.dayOfWeek = dayOfWeek
+            this.dishId = Dish[dishId]
+        }
+    }
 }

@@ -11,6 +11,7 @@ import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.joda.time.format.DateTimeFormat
 import java.time.Instant
 import java.util.*
@@ -84,7 +85,7 @@ fun Application.configureRouting(
                     val user = jwt!!.payload.getClaim("uid").asString()
                     val temp = call.receive<List<Int>>()
                     temp.forEach { orderRepository.addOrderByMenuId(it, user) }
-                    call.application.environment.log.info("user: $user ordered: $temp")
+                    //call.application.environment.log.info("user: $user ordered: $temp")
                     //todo: check if order was successful
                     call.respond(HttpStatusCode.Created)
                 }
@@ -132,23 +133,25 @@ fun Application.configureRouting(
             }
             route("/newMenu") {
                 post {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        //val newMenu = call.receive<MenuDto>()
-                        //menuRepository.addNewMenu(newMenu)
-                        /*?
-                        dishRepository.addDish(Dish(newMenu.Montag))
-                        dishRepository.addDish(Dish(newMenu.Dienstag))
-                        dishRepository.addDish(Dish(newMenu.Mittwoch))
-                        dishRepository.addDish(Dish(newMenu.Donnerstag))
-                        dishRepository.addDish(Dish(newMenu.Freitag))
 
-                         */
-                        call.respond(HttpStatusCode.Created)
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
+                    val newMenu = call.receive<MenuInfo>()
+                    call.application.environment.log.info(newMenu.toString())
+                    newMenu.dishes.forEach {
+                        val dish = try {
+                            dishRepository.addDish(DishDto(0, it.name))
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Dish already exists")
+                            dishRepository.findByName(it.name)
+                        }
+                        try {
+                            call.application.environment.log.info("new Menu: ${newMenu.validFrom}, ${it.day} , ${dish.id.value}")
+                            menuRepository.addNewMenu(newMenu.validFrom, newMenu.validTo, it.day, dish.id.value)
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Menu already exists")
+                            //call.respond(HttpStatusCode.Conflict)
+                        }
                     }
+                    call.respond(HttpStatusCode.Created)
                 }
             }
         }
