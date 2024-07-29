@@ -1,42 +1,47 @@
 package de.pause.model
 
-import de.pause.db.MenuDao
+import de.pause.db.Dish
+import de.pause.db.Menu
 import de.pause.db.MenuTable
-import de.pause.db.daoToModel
 import de.pause.db.suspendTransaction
 import org.jetbrains.exposed.sql.and
 import org.joda.time.DateTime
 
 class MenuRepository {
 
-    suspend fun getCurrentMenu(): Menu = suspendTransaction {
-        val today = DateTime.now()
-        MenuDao.find {
-            (MenuTable.validFrom lessEq today) and (MenuTable.validTo greaterEq today)
-        }.firstOrNull()?.let(::daoToModel) ?: Menu(
-            Montag = "Kantine geschlossen",
-            Dienstag = "Kantine geschlossen",
-            Mittwoch = "Kantine geschlossen",
-            Donnerstag = "Kantine geschlossen",
-            Freitag = "Kantine geschlossen",
-            validFrom = today.toString(),
-            validTo = today.toString()
+    suspend fun getScheduledMenuFrom(day: DateTime): MenuInfo? = suspendTransaction {
+        val validFrom: DateTime
+        val validTo: DateTime
+        val info = Menu
+            .find { (MenuTable.validFrom lessEq day) and (MenuTable.validTo greaterEq day) }
+            .sortedBy { it.dayOfWeek }
+        if (info.isEmpty()) {
+            return@suspendTransaction null
+        } else {
+            validTo = info.first().validTo
+            validFrom = info.first().validFrom
+        }
+        MenuInfo(
+            validFrom = validFrom.toString("yyyy-MM-dd"),
+            validTo = validTo.toString("yyyy-MM-dd"),
+            dishes = info.map {
+                MenuItem(
+                    id = it.id.value,
+                    name = it.dishId.description,
+                    day = it.dayOfWeek,
+                )
+            }
         )
     }
 
-    suspend fun getAllMenus(): List<Menu> = suspendTransaction {
-        MenuDao.all().map(::daoToModel)
-    }
-
-    suspend fun addNewMenu(menu: Menu): Boolean = suspendTransaction {
-        MenuDao.new {
-            monday = menu.Montag
-            tuesday = menu.Dienstag
-            wednesday = menu.Mittwoch
-            thursday = menu.Donnerstag
-            friday = menu.Freitag
-            validFrom = DateTime.parse(menu.validFrom)
-            validTo = DateTime.parse(menu.validTo)
-        }.id.value > 0
+    suspend fun addNewMenu(validFrom: String, validTo: String, dayOfWeek: Int, dishId: Int) = suspendTransaction {
+        Menu.new {
+            createdAt = DateTime.now()
+            updatedAt = DateTime.now()
+            this.validFrom = DateTime.parse(validFrom)
+            this.validTo = DateTime.parse(validTo)
+            this.dayOfWeek = dayOfWeek
+            this.dishId = Dish[dishId]
+        }
     }
 }

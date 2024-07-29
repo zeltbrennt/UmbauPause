@@ -4,6 +4,7 @@ import com.typesafe.config.ConfigFactory
 import de.pause.db.configureDatabase
 import de.pause.model.DishRepository
 import de.pause.model.MenuRepository
+import de.pause.model.OrderRepository
 import de.pause.model.UserRepository
 import de.pause.plugins.*
 import io.ktor.server.application.*
@@ -22,6 +23,7 @@ fun Application.module() {
     val articleRepository = DishRepository()
     val userRepository = UserRepository()
     val menuRepository = MenuRepository()
+    val orderRepository = OrderRepository()
     configureDatabase(appConfig)
     launch {
         userRepository.setDefaultPasswordOfPreloadedUsers()
@@ -30,6 +32,6 @@ fun Application.module() {
     configureSerialization()
     configureSecurity(appConfig)
     configureCORS()
-    configureRouting(appConfig, articleRepository, userRepository, menuRepository)
+    configureRouting(appConfig, articleRepository, userRepository, menuRepository, orderRepository)
     //configureValidation()
 }

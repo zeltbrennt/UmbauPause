@@ -11,6 +11,8 @@ import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.exceptions.ExposedSQLException
+import org.joda.time.format.DateTimeFormat
 import java.time.Instant
 import java.util.*
 
@@ -20,20 +22,30 @@ fun Application.configureRouting(
     dishRepository: DishRepository,
     userRepository: UserRepository,
     menuRepository: MenuRepository,
+    orderRepository: OrderRepository,
 ) {
 
 
     val secret = appConfig.property("ktor.jwt.secret").getString()
     val issuer = appConfig.property("ktor.jwt.issuer").getString()
     val audience = appConfig.property("ktor.jwt.audience").getString()
-    val tokenExpiration = 600L
+    val tokenExpiration = 6000000L // todo: just for debugging
 
     routing {
-        route("/current_menu") {
+        route("/menu") {
             get {
+                val from = call.request.queryParameters["from"]
+                val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+                val day = try {
+                    formatter.parseDateTime(from)
+                } catch (e: IllegalArgumentException) {
+                    return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
+                } catch (e: NullPointerException) {
+                    return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
+                }
 
-                val menu = menuRepository.getCurrentMenu()
-                call.respond(menu)
+                val menu = menuRepository.getScheduledMenuFrom(day)
+                call.respond(menu ?: HttpStatusCode.NotFound)
             }
         }
         route("/login") {
@@ -47,10 +59,10 @@ fun Application.configureRouting(
                         .withIssuer(issuer)
                         .withIssuedAt(Instant.now())
                         .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withClaim("userId", user.userId)
-                        .withClaim("role", user.role.name)
+                        .withClaim("uid", user.id)
+                        .withClaim("roles", user.roles)
                         .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, hashMapOf("accessToken" to token))
+                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to token))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }
@@ -66,11 +78,22 @@ fun Application.configureRouting(
                 }
             }
         }
-        authenticate("jwt-auth") {
+        authenticate("user") {
+            route("/order") {
+                post {
+                    val jwt = call.principal<JWTPrincipal>()
+                    val user = jwt!!.payload.getClaim("uid").asString()
+                    val temp = call.receive<List<Int>>()
+                    temp.forEach { orderRepository.addOrderByMenuId(it, user) }
+                    //call.application.environment.log.info("user: $user ordered: $temp")
+                    //todo: check if order was successful
+                    call.respond(HttpStatusCode.Created)
+                }
+            }
             route("/logout") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("userId").asString()
+                    val user = jwt!!.payload.getClaim("uid").asString()
                     val success = userRepository.logout(user)
                     when {
                         success -> call.respond(HttpStatusCode.OK)
@@ -78,46 +101,57 @@ fun Application.configureRouting(
                     }
                 }
             }
+        }
+        authenticate("admin") {
             route("/newDish") {
                 post {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        val newDish = call.receive<Dish>()
-                        dishRepository.addDish(newDish)
-                        call.respond(HttpStatusCode.Created)
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
-                    }
+                    val newDish = call.receive<DishDto>()
+                    dishRepository.addDish(newDish)
+                    call.respond(HttpStatusCode.Created)
+
                 }
             }
             route("/dishes") {
                 get {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        call.respond(HttpStatusCode.OK, dishRepository.allDishes())
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
+                    call.respond(dishRepository.allDishes())
+                }
+            }
+            route("/orderOverview") {
+                get {
+                    val from = call.request.queryParameters["from"]
+                    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+                    val day = try {
+                        formatter.parseDateTime(from)
+                    } catch (e: IllegalArgumentException) {
+                        return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
+                    } catch (e: NullPointerException) {
+                        return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
                     }
+                    val overview = orderRepository.getAllOrdersFrom(day)
+                    call.respond(overview ?: HttpStatusCode.NotFound)
                 }
             }
             route("/newMenu") {
                 post {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        val newMenu = call.receive<Menu>()
-                        menuRepository.addNewMenu(newMenu)
-                        dishRepository.addDish(Dish(newMenu.Montag))
-                        dishRepository.addDish(Dish(newMenu.Dienstag))
-                        dishRepository.addDish(Dish(newMenu.Mittwoch))
-                        dishRepository.addDish(Dish(newMenu.Donnerstag))
-                        dishRepository.addDish(Dish(newMenu.Freitag))
-                        call.respond(HttpStatusCode.Created)
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
+
+                    val newMenu = call.receive<MenuInfo>()
+                    call.application.environment.log.info(newMenu.toString())
+                    newMenu.dishes.forEach {
+                        val dish = try {
+                            dishRepository.addDish(DishDto(0, it.name))
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Dish already exists")
+                            dishRepository.findByName(it.name)
+                        }
+                        try {
+                            call.application.environment.log.info("new Menu: ${newMenu.validFrom}, ${it.day} , ${dish.id.value}")
+                            menuRepository.addNewMenu(newMenu.validFrom, newMenu.validTo, it.day, dish.id.value)
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Menu already exists")
+                            //call.respond(HttpStatusCode.Conflict)
+                        }
                     }
+                    call.respond(HttpStatusCode.Created)
                 }
             }
         }

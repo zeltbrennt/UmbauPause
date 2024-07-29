@@ -73,14 +73,14 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 ### 1.1.5 Bestellungen
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in
-  Verbindung bringt
+- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
 - [ ] Bestellungen haben einen Status
     - Bestellt
     - Storniert
     - Ausgeliefert
     - Bezahlt
 - [ ] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
+- [ ] Im Frontend wird für jedes Gericht angezeigt, ob es bestellt wurde (Kunde)
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
@@ -88,6 +88,8 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
 - [ ] Es können keine Bestellungen für andere Nutzer abgegeben werden
+- [ ] Es kann das gleiche Gericht nicht zu unterschiedlichen Zeitpunkten zweimal bestellt werden
+- [ ] es können keine Gerichte bestellt werden, die abgelaufen sind
 
 ### 1.1.6 Bestellübersicht
 

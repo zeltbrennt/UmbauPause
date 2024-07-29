@@ -1,18 +1,27 @@
-export interface IWeeklyMenu {
-    Montag: string,
-    Dienstag: string,
-    Mittwoch: string,
-    Donnerstag: string,
-    Freitag: string,
+export interface MenuInfo {
     validFrom: string,
     validTo: string,
+    dishes: MenuItem[]
+}
+
+export interface MenuItem {
+    id: number,
+    name: string,
+    day: number,
 }
 
 export enum Site {
     Landingpage,
     Register,
     Menu,
-    Schedule
+    Schedule,
+    Order
+}
+
+export enum MenuItemState {
+    AVAILABLE,
+    UNAVAILABLE,
+    SELECTED
 }
 
 export interface JWTToken {
@@ -20,15 +29,20 @@ export interface JWTToken {
     iss: string,
     iat: number,
     exp: number,
-    userId: string,
-    role: string,
+    uid: string,
+    roles: string[],
 }
 
 export enum UserRole {
-    USER = "USER", MODERATOR = "MODERATOR", ADMIN = "ADMIN"
+    ADMIN = "ADMIN", USER = "USER",
 }
 
 export interface UserPrincipal {
-    userId: string,
-    role: UserRole
+    uid: string,
+    roles: UserRole[]
+}
+
+export interface Dish {
+    id: number,
+    description: string,
 }

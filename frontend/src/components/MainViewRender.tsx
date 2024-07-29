@@ -3,6 +3,7 @@ import Landingpage from "./Landingpage.tsx";
 import ShowCurrentMenu from "./ShowCurrentMenu.tsx";
 import Register from "./Register.tsx";
 import ScheduleMenu from "./ScheduleMenu.tsx";
+import MakeOrder from "./MakeOrder.tsx";
 
 export default function MainViewRender({site, currentUser}: { site: Site, currentUser: string | undefined }) {
     switch (site) {
@@ -14,5 +15,7 @@ export default function MainViewRender({site, currentUser}: { site: Site, curren
             return <Register/>
         case Site.Schedule:
             return <ScheduleMenu/>
+        case Site.Order:
+            return <MakeOrder/>
     }
 };

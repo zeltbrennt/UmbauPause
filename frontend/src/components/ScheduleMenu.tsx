@@ -10,25 +10,23 @@ export default function ScheduleMenu() {
     const weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [start, setStart] = useState(dayjs().add(1, 'week').day(1));
     const [end, setEnd] = useState(dayjs().add(1, 'week').day(5));
-    const [monday, setMonday] = useState("");
-    const [tuesday, setTuesday] = useState("");
-    const [wednesday, setWednesday] = useState("");
-    const [thursday, setThursday] = useState("");
-    const [friday, setFriday] = useState("");
+    const [newDises, setNewDishes] = useState<string[]>(["", "", "", "", ""]);
     const [dishes, setDishes] = useState<string[]>([]);
+
+    const fetchDishes = async () => {
+        const response = await fetch("http://localhost:8080/dishes", {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            }
+        });
+        const data = await response.json();
+        setDishes(data);
+    };
+
     useEffect(() => {
         // Fetch dish names when the component mounts
-        const fetchDishes = async () => {
-            const response = await fetch("http://localhost:8080/dishes", {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
-                }
-            });
-            const data = await response.json();
-            const dishNames = data.map(dish => dish.description); // Assuming each dish object has a description field
-            setDishes(dishNames);
-        };
+
 
         fetchDishes().then(() => console.log("Fetched dishes")).catch((reason) => console.log(`could not fetch dishes: ${reason}`));
     }, []); // Empty dependency array means this effect runs once on mount
@@ -37,13 +35,9 @@ export default function ScheduleMenu() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = {
-            Montag: monday,
-            Dienstag: tuesday,
-            Mittwoch: wednesday,
-            Donnerstag: thursday,
-            Freitag: friday,
             validFrom: start.format("YYYY-MM-DD"),
             validTo: end.format("YYYY-MM-DD"),
+            dishes: newDises.map((dish, index) => ({id: 0, name: dish, day: index + 1}))
         };
         console.log(formData);
 
@@ -82,15 +76,41 @@ export default function ScheduleMenu() {
                 </Grid>
 
 
-                <WeekdayScheduler key={"Montag"} day={"Montag"} handle={(_day, value) => setMonday(value)}
+                <WeekdayScheduler key={"Montag"}
+                                  day={"Montag"}
+                                  handleChange={(newValue: String) => {
+                                      const temp = [...newDises]
+                                      temp[0] = newValue
+                                      setNewDishes(temp)
+                                  }}
                                   dishes={dishes}/>
-                <WeekdayScheduler key={"Dienstag"} day={"Dienstag"} handle={(_day, value) => setTuesday(value)}
+                <WeekdayScheduler key={"Dienstag"} day={"Dienstag"}
+                                  handleChange={(newValue: String) => {
+                                      const temp = [...newDises]
+                                      temp[1] = newValue
+                                      setNewDishes(temp)
+                                  }}
                                   dishes={dishes}/>
-                <WeekdayScheduler key={"Mittwoch"} day={"Mittwoch"} handle={(_day, value) => setWednesday(value)}
+                <WeekdayScheduler key={"Mittwoch"} day={"Mittwoch"}
+                                  handleChange={(newValue: String) => {
+                                      const temp = [...newDises]
+                                      temp[2] = newValue
+                                      setNewDishes(temp)
+                                  }}
                                   dishes={dishes}/>
-                <WeekdayScheduler key={"Donnerstag"} day={"Donnerstag"} handle={(_day, value) => setThursday(value)}
+                <WeekdayScheduler key={"Donnerstag"} day={"Donnerstag"}
+                                  handleChange={(newValue: String) => {
+                                      const temp = [...newDises]
+                                      temp[3] = newValue
+                                      setNewDishes(temp)
+                                  }}
                                   dishes={dishes}/>
-                <WeekdayScheduler key={"Freitag"} day={"Freitag"} handle={(_day, value) => setFriday(value)}
+                <WeekdayScheduler key={"Freitag"} day={"Freitag"}
+                                  handleChange={(newValue: String) => {
+                                      const temp = [...newDises]
+                                      temp[4] = newValue
+                                      setNewDishes(temp)
+                                  }}
                                   dishes={dishes}/>
 
                 <Button variant={"contained"} type={"submit"}>Speichern</Button>
@@ -99,14 +119,15 @@ export default function ScheduleMenu() {
     );
 }
 
-function WeekdayScheduler({day, handle, dishes}: {
+
+function WeekdayScheduler({day, handleChange, dishes}: {
     day: string,
-    handle: (day: string, value: string) => void
+    handleChange: (value: String) => void
     dishes: string[]
 }) {
 
     return (
-        <Autocomplete onInputChange={(_e, newVal) => handle(day, newVal)}
+        <Autocomplete onInputChange={(_e, newVal) => handleChange(newVal)}
                       options={dishes}
                       freeSolo
                       renderInput={(params) =>

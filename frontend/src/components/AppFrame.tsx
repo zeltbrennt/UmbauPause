@@ -17,6 +17,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {Site, UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import MainViewRender from './MainViewRender.tsx'
@@ -83,7 +84,7 @@ export default function AppFrame({
                                 <ListItemText primary="Wochenkarte"/>
                             </ListItemButton>
                         </ListItem>
-                        {currentUser?.role == UserRole.MODERATOR ? <>
+                        {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
                                     changeView(Site.Schedule)
@@ -112,6 +113,12 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                         </> : <></>}
+                        <ListItem disablePadding key={"order"}>
+                            <ListItemButton onClick={() => changeView(Site.Order)}>
+                                <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
+                                <ListItemText primary={"Bestellen"}></ListItemText>
+                            </ListItemButton>
+                        </ListItem>
                         <ListItem disablePadding key="login">
                             <ListItemButton onClick={() => {
                                 currentUser ? logout() : openLoginDialog()
@@ -128,7 +135,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView} currentUser={currentUser?.userId}/>
+                <MainViewRender site={currentView} currentUser={currentUser?.uid}/>
             </Box>
         </Box>
     )
