@@ -1,4 +1,3 @@
-drop schema if exists shop cascade;
 create schema shop;
 
 create table shop.user
@@ -19,36 +18,21 @@ create table shop.dish
     description varchar(250) not null
 );
 
-
-create table shop.week
-(
-    id         serial primary key,
-    week_start date not null,
-    week_end   date not null,
-    kw         int  not null,
-    year       int  not null,
-    quarter    int  not null
-);
-
-create table shop.day
-(
-    id   int primary key,
-    name varchar(10) not null
-);
-
 create table shop.menu
 (
-    id         serial primary key,
-    created_at timestamp not null,
-    updated_at timestamp not null,
-    week_id    integer   not null,
-    dish_id    integer   not null,
-    day_id     int       not null,
+    id          serial primary key,
+    created_at  timestamp not null,
+    updated_at  timestamp not null,
+    valid_from  date      not null,
+    valid_to    date      not null,
+    day_of_week int       not null,
+    dish_id     integer   not null,
     foreign key (dish_id) references shop.dish (id),
-    foreign key (week_id) references shop.week (id),
-    foreign key (day_id) references shop.day (id),
-    constraint menu_day_unique unique (week_id, day_id)
+    constraint menu_day_unique unique (valid_from, valid_to, day_of_week)
 );
+
+create index menu_valid_from on shop.menu (valid_from);
+create index menu_valid_to on shop.menu (valid_to);
 
 create table shop.order
 (
