@@ -1,7 +1,7 @@
 import {Button, List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import {useEffect, useState} from "react";
-import {MenuInfo, UserPrincipal} from "../util/Interfaces.ts";
+import {MenuInfo} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
 
 export default function MakeOrder() {
@@ -28,11 +28,19 @@ export default function MakeOrder() {
     }, [])
 
     const handleClick = () => {
-        console.log({
-            user_id: (JSON.parse(sessionStorage?.getItem("userPrincipal") || '') as UserPrincipal).uid,
-            orders: orders
-        })
+        console.log(
+            orders
+        )
+        fetch("http://localhost:8080/order", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+            },
+            body: JSON.stringify(orders)
+        }).catch((reason) => console.log(`could not fetch menu items: ${reason}`))
     }
+
     return (
         <>
             <Typography variant={"h3"} textAlign={"center"}>Bestellen</Typography>

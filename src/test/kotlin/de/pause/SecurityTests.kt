@@ -2,8 +2,8 @@ package de.pause
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.Enums
 import de.pause.model.LoginRequest
+import de.pause.model.UserRole
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -50,7 +50,7 @@ class SecurityTests {
         val token = respondBody["accessToken"]!!.jsonPrimitive.content
         val decodedJWT = JWT.decode(token)
         assertEquals("alice@example.com", decodedJWT.getClaim("email").asString())
-        assertEquals(Enums.USER.toString(), decodedJWT.getClaim("role").asString())
+        assertEquals(UserRole.USER.toString(), decodedJWT.getClaim("role").asString())
 
         val secret = System.getenv("JWT_SHARED_SECRET")
         val algorithm = Algorithm.HMAC256(secret)

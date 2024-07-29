@@ -32,3 +32,17 @@ data class UserPrincipal(
     val id: String,
     val roles: List<String>,
 )
+
+@Serializable
+data class OrderCounts(
+    val day: Int,
+    val orders: Int,
+)
+
+@Serializable
+data class OrderOverview(
+    val validFrom: String,
+    val validTo: String,
+    val timestamp: String,
+    val orders: List<OrderCounts>,
+)

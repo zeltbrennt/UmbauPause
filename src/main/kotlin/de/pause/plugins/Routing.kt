@@ -21,13 +21,14 @@ fun Application.configureRouting(
     dishRepository: DishRepository,
     userRepository: UserRepository,
     menuRepository: MenuRepository,
+    orderRepository: OrderRepository,
 ) {
 
 
     val secret = appConfig.property("ktor.jwt.secret").getString()
     val issuer = appConfig.property("ktor.jwt.issuer").getString()
     val audience = appConfig.property("ktor.jwt.audience").getString()
-    val tokenExpiration = 600L
+    val tokenExpiration = 6000000L // todo: just for debugging
 
     routing {
         route("/menu") {
@@ -76,19 +77,15 @@ fun Application.configureRouting(
                 }
             }
         }
-        authenticate("jwt-auth") {
+        authenticate("user") {
             route("/order") {
                 post {
                     val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("userId").asString()
-                    val temp = call.receive<String>()
-                    /*
-                    - get a list of dish names
-                    - get uuid from jwt
-                    - get timestamp from now
-                    - insert into order table
-                     */
+                    val user = jwt!!.payload.getClaim("uid").asString()
+                    val temp = call.receive<List<Int>>()
+                    temp.forEach { orderRepository.addOrderByMenuId(it, user) }
                     call.application.environment.log.info("user: $user ordered: $temp")
+                    //todo: check if order was successful
                     call.respond(HttpStatusCode.Created)
                 }
             }
@@ -103,28 +100,34 @@ fun Application.configureRouting(
                     }
                 }
             }
+        }
+        authenticate("admin") {
             route("/newDish") {
                 post {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val roles = jwt!!.payload.getClaim("roles").asString()
-                    if (UserRole.ADMIN.name in roles) {
-                        val newDish = call.receive<DishDto>()
-                        dishRepository.addDish(newDish)
-                        call.respond(HttpStatusCode.Created)
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
-                    }
+                    val newDish = call.receive<DishDto>()
+                    dishRepository.addDish(newDish)
+                    call.respond(HttpStatusCode.Created)
+
                 }
             }
             route("/dishes") {
                 get {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val role = UserRole.valueOf(jwt!!.payload.getClaim("role").asString())
-                    if (role == UserRole.MODERATOR) {
-                        call.respond(HttpStatusCode.OK, dishRepository.allDishes())
-                    } else {
-                        call.respond(HttpStatusCode.Forbidden)
+                    call.respond(dishRepository.allDishes())
+                }
+            }
+            route("/orderOverview") {
+                get {
+                    val from = call.request.queryParameters["from"]
+                    val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+                    val day = try {
+                        formatter.parseDateTime(from)
+                    } catch (e: IllegalArgumentException) {
+                        return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
+                    } catch (e: NullPointerException) {
+                        return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
                     }
+                    val overview = orderRepository.getAllOrdersFrom(day)
+                    call.respond(overview ?: HttpStatusCode.NotFound)
                 }
             }
             route("/newMenu") {

@@ -4,3 +4,7 @@ enum class UserRole {
     ADMIN, USER, MODERATOR;
 
 }
+
+enum class OrderStatus {
+    OPEN, DELIVERED, CANCELED;
+}
