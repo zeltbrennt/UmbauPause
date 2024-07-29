@@ -11,6 +11,7 @@ import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.joda.time.format.DateTimeFormat
 import java.time.Instant
 import java.util.*
 
@@ -29,11 +30,20 @@ fun Application.configureRouting(
     val tokenExpiration = 600L
 
     routing {
-        route("/current_menu") {
+        route("/menu") {
             get {
+                val from = call.request.queryParameters["from"]
+                val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
+                val day = try {
+                    formatter.parseDateTime(from)
+                } catch (e: IllegalArgumentException) {
+                    return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
+                } catch (e: NullPointerException) {
+                    return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
+                }
 
-                val menu = menuRepository.getCurrentMenu()
-                call.respond(menu)
+                val menu = menuRepository.getScheduledMenuFrom(day)
+                call.respond(menu ?: HttpStatusCode.NotFound)
             }
         }
         route("/login") {

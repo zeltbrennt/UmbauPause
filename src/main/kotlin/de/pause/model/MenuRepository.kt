@@ -1,35 +1,35 @@
 package de.pause.model
 
-import de.pause.db.*
+import de.pause.db.MenuEntity
+import de.pause.db.MenuTable
+import de.pause.db.suspendTransaction
 import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.selectAll
 import org.joda.time.DateTime
 
 class MenuRepository {
 
-    suspend fun getCurrentMenu(): MenuInfo = suspendTransaction {
-        val today = DateTime.now()
+    suspend fun getScheduledMenuFrom(day: DateTime): MenuInfo? = suspendTransaction {
         val validFrom: DateTime
         val validTo: DateTime
-        val info = (MenuTable innerJoin DishTable innerJoin DayTable innerJoin WeekTable)
-            .selectAll()
-            .where { (WeekTable.weekStart lessEq today) and (WeekTable.weekEnd greaterEq today) }
-            .orderBy(DayTable.id)
-            .also {
-                validFrom = it.first()[WeekTable.weekStart]
-                validTo = it.first()[WeekTable.weekEnd]
-            }
-            .map {
-                MenuItem(
-                    id = it[MenuTable.id].value,
-                    name = it[DishTable.description].toString(),
-                    day = it[DayTable.name],
-                )
-            }
+        val info = MenuEntity
+            .find { (MenuTable.validFrom lessEq day) and (MenuTable.validTo greaterEq day) }
+            .sortedBy { it.dayOfWeek }
+        if (info.isEmpty()) {
+            return@suspendTransaction null
+        } else {
+            validTo = info.first().validTo
+            validFrom = info.first().validFrom
+        }
         MenuInfo(
             validFrom = validFrom.toString("yyyy-MM-dd"),
             validTo = validTo.toString("yyyy-MM-dd"),
-            dishes = info
+            dishes = info.map {
+                MenuItem(
+                    id = it.id.value,
+                    name = it.dishId.description,
+                    day = it.dayOfWeek,
+                )
+            }
         )
     }
     /*

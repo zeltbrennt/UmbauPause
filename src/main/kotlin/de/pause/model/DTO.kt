@@ -18,7 +18,7 @@ data class MenuInfo(
 data class MenuItem(
     val id: Int,
     val name: String,
-    val day: String,
+    val day: Int,
 )
 
 @Serializable
