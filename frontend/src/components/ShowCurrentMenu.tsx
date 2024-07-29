@@ -32,7 +32,7 @@ function ShowCurrentMenu() {
                 textAlign={"center"}>vom {validFrom} bis {validTo}</Typography>
             <List>
                 {week.map((day, id) => {
-                    const dish = menu?.dishes[id].name ?? "Kantine geschlossen"
+                    const dish = menu?.dishes[id].name ?? ""
                     return (
                         <ListItem key={id} sx={{flexGrow: 1}}>
                             <MenuItemCard day={day} dish={dish}/>
