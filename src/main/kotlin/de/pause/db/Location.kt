@@ -1,0 +1,16 @@
+package de.pause.db
+
+import org.jetbrains.exposed.dao.IntEntity
+import org.jetbrains.exposed.dao.IntEntityClass
+import org.jetbrains.exposed.dao.id.EntityID
+import org.jetbrains.exposed.dao.id.IntIdTable
+
+object LocationTable : IntIdTable("shop.location") {
+    val name = varchar("name", 100)
+}
+
+class Location(id: EntityID<Int>) : IntEntity(id) {
+    companion object : IntEntityClass<Location>(LocationTable)
+
+    var name by LocationTable.name
+}
