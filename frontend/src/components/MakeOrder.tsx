@@ -9,18 +9,24 @@ export default function MakeOrder() {
     const [orders, setOrders] = useState<number[]>([])
     const [selected, setSelected] = useState([false, false, false, false, false])
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
-    const api_url = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const locationUrl = "http://localhost:8080/location"
+    const [locations, setLocations] = useState<Location[]>([])
+    const menuUrl = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        const response = await fetch(api_url + new URLSearchParams(
+        const menu: MenuInfo = await fetch(menuUrl + new URLSearchParams(
             {from: dayjs().format("YYYY-MM-DD")}))
-        const data: MenuInfo = await response.json()
-        setMenu(data)
-        console.log(data)
-        setValidFrom(dayjs(data.validFrom).format("DD.MM.YYYY"))
-        setValidTo(dayjs(data.validTo).format("DD.MM.YYYY"))
+            .then(response => response.json())
+            .catch((reason) => console.log(`could not fetch menu: ${reason}`))
+        const location = await fetch(locationUrl)
+            .then(response => response.json())
+            .catch((reason) => console.log(`could not fetch location: ${reason}`))
+        setMenu(menu)
+        setLocations(location)
+        setValidFrom(dayjs(menu.validFrom).format("DD.MM.YYYY"))
+        setValidTo(dayjs(menu.validTo).format("DD.MM.YYYY"))
     }
 
     useEffect(() => {
