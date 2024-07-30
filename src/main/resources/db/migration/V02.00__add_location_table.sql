@@ -9,6 +9,6 @@ values (0, 'Haupthaus')
 on conflict do nothing;
 
 alter table shop.order
-    add column location_id integer default 1 not null,
+    add column location_id integer default 0 not null,
     add foreign key (location_id) references shop.location (id);
 

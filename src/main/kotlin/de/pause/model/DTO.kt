@@ -46,3 +46,9 @@ data class OrderOverview(
     val timestamp: String,
     val orders: List<OrderCounts>,
 )
+
+@Serializable
+data class LocationDto(
+    val id: Int,
+    val name: String,
+)

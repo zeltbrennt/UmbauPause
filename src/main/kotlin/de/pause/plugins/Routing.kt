@@ -78,6 +78,11 @@ fun Application.configureRouting(
                 }
             }
         }
+        route("/location") {
+            get {
+                call.respond(orderRepository.getAllLocations())
+            }
+        }
         authenticate("user") {
             route("/order") {
                 post {
