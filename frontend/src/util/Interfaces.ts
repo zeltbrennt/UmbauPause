@@ -42,7 +42,12 @@ export interface UserPrincipal {
     roles: UserRole[]
 }
 
-export interface Location {
+export interface DeliveryLocation {
     id: number,
     name: string,
+}
+
+export interface Order {
+    item: number,
+    location: number,
 }

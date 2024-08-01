@@ -52,3 +52,9 @@ data class LocationDto(
     val id: Int,
     val name: String,
 )
+
+@Serializable
+data class OrderDto(
+    val item: Int,
+    val location: Int,
+)

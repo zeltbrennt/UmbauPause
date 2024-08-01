@@ -1,16 +1,16 @@
 import {Button, List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import {useEffect, useState} from "react";
-import {MenuInfo} from "../util/Interfaces.ts";
+import {DeliveryLocation, MenuInfo, Order} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
 
 export default function MakeOrder() {
 
-    const [orders, setOrders] = useState<number[]>([])
+    const [orders, setOrders] = useState<Order[]>([])
     const [selected, setSelected] = useState([false, false, false, false, false])
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const locationUrl = "http://localhost:8080/location"
-    const [locations, setLocations] = useState<Location[]>([])
+    const [locations, setLocations] = useState<DeliveryLocation[]>([])
     const menuUrl = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
@@ -31,6 +31,7 @@ export default function MakeOrder() {
 
     useEffect(() => {
         getMenu().catch((reason) => console.log(`could not fetch menu items: ${reason}`))
+        console.log(locations)
     }, [])
 
     const handleClick = () => {
@@ -57,14 +58,17 @@ export default function MakeOrder() {
                     const menuItemId = menu?.dishes[id].id ?? 0
                     return (
                         <ListItem key={id} sx={{flexGrow: 1}}>
-                            <MenuItemCard day={day} dish={dish} handleClick={() => {
+                            <MenuItemCard day={day} dish={dish} locations={locations} handleClick={() => {
                                 const newSelected = [...selected]
                                 newSelected[id] = !newSelected[id]
                                 setSelected(newSelected)
                                 if (newSelected[id]) {
-                                    setOrders([...orders, menuItemId])
+                                    setOrders([...orders, {
+                                        item: menuItemId,
+                                        location: 0 // todo: handle location selection
+                                    } as Order])
                                 } else {
-                                    setOrders(orders.filter(order => order !== menuItemId))
+                                    setOrders(orders.filter(order => order.item !== menuItemId))
                                 }
 
                             }}/>

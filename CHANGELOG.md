@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### 0.0.4
+
+- datalayer redesign
+- add functionality to make orders
+
 ### 0.0.3
 
 - menu table
