@@ -15,7 +15,8 @@ export enum Site {
     Register,
     Menu,
     Schedule,
-    Order
+    Order,
+    OrderOverview,
 }
 
 export enum MenuItemState {

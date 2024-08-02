@@ -4,6 +4,7 @@ import ShowCurrentMenu from "./ShowCurrentMenu.tsx";
 import Register from "./Register.tsx";
 import ScheduleMenu from "./ScheduleMenu.tsx";
 import MakeOrder from "./MakeOrder.tsx";
+import OrderOverview from "./OderOverview.tsx";
 
 export default function MainViewRender({site, currentUser}: { site: Site, currentUser: string | undefined }) {
     switch (site) {
@@ -17,5 +18,7 @@ export default function MainViewRender({site, currentUser}: { site: Site, curren
             return <ScheduleMenu/>
         case Site.Order:
             return <MakeOrder/>
+        case Site.OrderOverview:
+            return <OrderOverview/>
     }
 };

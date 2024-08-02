@@ -97,7 +97,10 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding key="overview">
-                                <ListItemButton onClick={() => alert("not implemented")}>
+                                <ListItemButton onClick={() => {
+                                    changeView(Site.OrderOverview)
+                                    setDrawerOpen(false)
+                                }}>
                                     <ListItemIcon>
                                         <TableViewIcon/>
                                     </ListItemIcon>
