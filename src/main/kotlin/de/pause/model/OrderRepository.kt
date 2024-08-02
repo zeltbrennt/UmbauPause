@@ -8,13 +8,14 @@ import java.util.*
 
 class OrderRepository {
 
-    suspend fun addOrderByMenuId(item: Int, user: String) = suspendTransaction {
+    suspend fun addOrderByMenuId(order: OrderDto, user: String) = suspendTransaction {
         Order.new {
-            menuId = Menu[item]
+            menuId = Menu[order.item]
             userId = User[UUID.fromString(user)]
             createdAt = DateTime.now()
             updatedAt = DateTime.now()
             status = OrderStatus.OPEN.toString()
+            location = Location[order.location]
         }
     }
 
@@ -50,6 +51,11 @@ class OrderRepository {
             timestamp = DateTime.now().toString(),
             orders = orderCounts
         )
+    }
+
+
+    suspend fun getAllLocations() = suspendTransaction {
+        Location.all().map { LocationDto(it.id.value, it.name) }
     }
 
 }

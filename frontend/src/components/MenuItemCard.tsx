@@ -1,11 +1,24 @@
-import {Box, Card, CardActions, CardContent, FormControlLabel, Switch, Typography, useTheme} from "@mui/material";
-import {MenuItemState} from "../util/Interfaces.ts";
+import {
+    Autocomplete,
+    Box,
+    Card,
+    CardActions,
+    CardContent,
+    FormControlLabel,
+    Switch,
+    TextField,
+    Typography,
+    useTheme
+} from "@mui/material";
+import {DeliveryLocation, MenuItemState} from "../util/Interfaces.ts";
 import {useState} from "react";
+import Grid2 from "@mui/material/Unstable_Grid2";
 
-function MenuItemCard({day, dish, handleClick}: {
+function MenuItemCard({day, dish, handleClick, locations}: {
     day: string,
     dish: string,
-    handleClick?: () => void
+    handleClick?: () => void,
+    locations?: DeliveryLocation[]
 }) {
 
     const [selection, setSelection] = useState(MenuItemState.AVAILABLE)
@@ -31,13 +44,31 @@ function MenuItemCard({day, dish, handleClick}: {
                 {
                     handleClick ?
                         <CardActions>
-                            <FormControlLabel
-                                sx={{marginLeft: "auto"}}
-                                control={<Switch onChange={handleClick}></Switch>}
-                                label={"Auswählen"}
-                                labelPlacement={"start"}
-                            >
-                            </FormControlLabel>
+                            <Grid2>
+
+                                <Autocomplete
+                                    options={locations}
+                                    getOptionLabel={(option) => option.name}
+                                    defaultValue={locations ? locations[0] : null}
+                                    sx={{width: "100%"}}
+                                    renderInput={params => <TextField
+                                        {...params}
+                                        label="Lieferort"
+                                        variant="standard"
+                                        defaultValue={locations ? locations[0] : "asdf"}
+                                        fullWidth
+                                    />}>
+                                </Autocomplete>
+
+                                <FormControlLabel
+                                    sx={{marginLeft: "auto"}}
+                                    control={<Switch onChange={handleClick}></Switch>}
+                                    label={"Auswählen"}
+                                    labelPlacement={"start"}
+                                >
+                                </FormControlLabel>
+                            </Grid2>
+
                         </CardActions>
                         : null
                 }

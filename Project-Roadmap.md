@@ -67,19 +67,19 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 **Nicht-Ziele**
 
-- [ ] Es ist nicht möglich Gerichte doppelt einzutragen
+- [x] Es ist nicht möglich Gerichte doppelt einzutragen
 - [ ] Es ist nicht möglich Gerichte zu löschen, die auf einer Wochenkarte stehen
 -
 
 ### 1.1.5 Bestellungen
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
-- [ ] Bestellungen haben einen Status
+- [x] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
+- [x] Bestellungen haben einen Status
     - Bestellt
     - Storniert
     - Ausgeliefert
     - Bezahlt
-- [ ] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
+- [x] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
 - [ ] Im Frontend wird für jedes Gericht angezeigt, ob es bestellt wurde (Kunde)
 - [ ] Backend Tests
 - [ ] Frontend Tests
