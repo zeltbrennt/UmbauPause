@@ -64,5 +64,5 @@ export interface OrderOverviewDta {
 export interface OrderCount {
     day: number,
     location: string,
-    orders: number,
+    orderCount: number,
 }

@@ -4,7 +4,7 @@ import ShowCurrentMenu from "./ShowCurrentMenu.tsx";
 import Register from "./Register.tsx";
 import ScheduleMenu from "./ScheduleMenu.tsx";
 import MakeOrder from "./MakeOrder.tsx";
-import OrderOverview from "./OderOverview.tsx";
+import OrderOverview from "./OrderOverview.tsx";
 
 export default function MainViewRender({site, currentUser}: { site: Site, currentUser: string | undefined }) {
     switch (site) {

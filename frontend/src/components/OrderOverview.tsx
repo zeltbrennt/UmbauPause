@@ -1,22 +1,26 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {mapDayOfWeek} from "../util/functions.ts";
 import {useEffect, useState} from "react";
-import {OrderOverviewDta} from "../util/Interfaces.ts";
+import {OrderCount, OrderOverviewDta} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
 
 export default function OrderOverview() {
     const [overview, setOverview] = useState<OrderOverviewDta>({} as OrderOverviewDta)
     const [locations, setLocations] = useState([])
-    const [transformedData, setTransformedData] = useState()
+    const [transformedData, setTransformedData] = useState<Object>({})
     const fetchOverview = async () => {
         const response = await fetch("http://localhost:8080/orderOverview?" + new URLSearchParams(
-            {from: dayjs().format("YYYY-MM-DD")}))
-        const data: OrderOverviewDta = await response.json()
-        console.log(data)
+            {from: dayjs().format("YYYY-MM-DD")}), {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
+                }
+            }
+        )
+        const data = await response.json()
         setOverview(data)
         setLocations([...new Set(data.orders.map((o, id) => o.location))])
-        const transformed: any = transformOrders(data.orders)
-        console.log(transformed)
+        const transformed = transformOrders(data.orders)
         setTransformedData(transformed)
     }
     useEffect(() => {
@@ -36,7 +40,7 @@ export default function OrderOverview() {
                 <TableBody>
                     {Object.keys(transformedData).map((day, id) => (
                         <TableRow key={id}>
-                            <TableCell>{mapDayOfWeek(parseInt(day))}</TableCell>
+                            <TableCell>{day}</TableCell>
                             {locations.map((location, id) => (
                                 <TableCell key={id}>{transformedData[day][location] ?? 0}</TableCell>
                             ))}
@@ -49,13 +53,14 @@ export default function OrderOverview() {
 }
 
 
-const transformOrders = (orders) => {
+const transformOrders = (orders: OrderCount[]) => {
     const transformed = {};
     orders.forEach(order => {
-        if (!transformed[order.day]) {
-            transformed[order.day] = {};
+        const day = mapDayOfWeek(order.day);
+        if (!transformed[day]) {
+            transformed[day] = {};
         }
-        transformed[order.day][order.location] = order.orders;
+        transformed[day][order.location] = order.orderCount;
     });
     return transformed;
 };
