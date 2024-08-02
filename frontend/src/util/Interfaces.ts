@@ -51,4 +51,18 @@ export interface DeliveryLocation {
 export interface Order {
     item: number,
     location: number,
+    orders?: number,
+}
+
+export interface OrderOverviewDta {
+    validFrom: string,
+    validTo: string,
+    timestamp: string,
+    orders: OrderCount[]
+}
+
+export interface OrderCount {
+    day: number,
+    location: string,
+    orders: number,
 }

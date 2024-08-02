@@ -1,8 +1,27 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import {mapDayOfWeek} from "../util/functions.ts";
+import {useEffect, useState} from "react";
+import {OrderOverviewDta} from "../util/Interfaces.ts";
+import dayjs from "dayjs";
 
 export default function OrderOverview() {
-    console.log(transOverview)
+    const [overview, setOverview] = useState<OrderOverviewDta>({} as OrderOverviewDta)
+    const [locations, setLocations] = useState([])
+    const [transformedData, setTransformedData] = useState()
+    const fetchOverview = async () => {
+        const response = await fetch("http://localhost:8080/orderOverview?" + new URLSearchParams(
+            {from: dayjs().format("YYYY-MM-DD")}))
+        const data: OrderOverviewDta = await response.json()
+        console.log(data)
+        setOverview(data)
+        setLocations([...new Set(data.orders.map((o, id) => o.location))])
+        const transformed: any = transformOrders(data.orders)
+        console.log(transformed)
+        setTransformedData(transformed)
+    }
+    useEffect(() => {
+        fetchOverview().catch((reason) => console.log(`could not fetch order overview: ${reason}`))
+    }, [])
     return (
         <TableContainer>
             <Table>
@@ -15,11 +34,11 @@ export default function OrderOverview() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {Object.keys(transOverview).map((day, id) => (
+                    {Object.keys(transformedData).map((day, id) => (
                         <TableRow key={id}>
                             <TableCell>{mapDayOfWeek(parseInt(day))}</TableCell>
                             {locations.map((location, id) => (
-                                <TableCell key={id}>{transOverview[day][location] ?? 0}</TableCell>
+                                <TableCell key={id}>{transformedData[day][location] ?? 0}</TableCell>
                             ))}
                         </TableRow>
                     ))}
@@ -29,35 +48,6 @@ export default function OrderOverview() {
     )
 }
 
-const overview = {
-    "validFrom": "2024-07-29",
-    "validTo": "2024-08-02",
-    "timestamp": "2024-08-02T12:53:55.276+02:00",
-    "orders": [
-        {
-            "day": 1,
-            "location": "Haupthaus",
-            "orders": 2
-        },
-        {
-            "day": 2,
-            "location": "e-werk",
-            "orders": 1
-        },
-        {
-            "day": 2,
-            "location": "Haupthaus",
-            "orders": 1
-        },
-        {
-            "day": 3,
-            "location": "Haupthaus",
-            "orders": 1
-        }
-    ]
-}
-
-const locations = [...new Set(overview.orders.map((o, id) => o.location))]
 
 const transformOrders = (orders) => {
     const transformed = {};
@@ -70,4 +60,3 @@ const transformOrders = (orders) => {
     return transformed;
 };
 
-const transOverview = transformOrders(overview.orders);
