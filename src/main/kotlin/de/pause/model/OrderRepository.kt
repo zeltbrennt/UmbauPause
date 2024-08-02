@@ -24,13 +24,20 @@ class OrderRepository {
         val validTo: String
         val orderCounts = OrderTable
             .innerJoin(MenuTable)
-            .select(MenuTable.validFrom, MenuTable.validTo, MenuTable.dayOfWeek, OrderTable.id.count())
+            .innerJoin(LocationTable)
+            .select(
+                MenuTable.validFrom,
+                MenuTable.validTo,
+                MenuTable.dayOfWeek,
+                LocationTable.name,
+                OrderTable.id.count()
+            )
             .where {
                 (MenuTable.validFrom lessEq day) and
                         (MenuTable.validTo greaterEq day) and
                         (OrderTable.status neq OrderStatus.CANCELED.name)
             }
-            .groupBy(MenuTable.dayOfWeek, MenuTable.validFrom, MenuTable.validTo)
+            .groupBy(MenuTable.dayOfWeek, MenuTable.validFrom, MenuTable.validTo, LocationTable.name)
             .orderBy(MenuTable.dayOfWeek)
             .also {
                 if (it.empty()) {
@@ -42,7 +49,8 @@ class OrderRepository {
             .map {
                 OrderCounts(
                     day = it[MenuTable.dayOfWeek],
-                    orders = it[OrderTable.id.count()].toInt()
+                    location = it[LocationTable.name],
+                    orderCount = it[OrderTable.id.count()].toInt()
                 )
             }
         OrderOverview(

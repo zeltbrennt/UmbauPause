@@ -36,7 +36,8 @@ data class UserPrincipal(
 @Serializable
 data class OrderCounts(
     val day: Int,
-    val orders: Int,
+    val location: String,
+    val orderCount: Int,
 )
 
 @Serializable
