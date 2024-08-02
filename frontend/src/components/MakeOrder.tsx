@@ -1,4 +1,16 @@
-import {Autocomplete, Box, Button, Grid, List, ListItem, ListItemText, TextField, Typography} from "@mui/material";
+import {
+    Autocomplete,
+    Box,
+    Button,
+    Card,
+    CardActionArea,
+    CardContent,
+    Grid,
+    List,
+    ListItem,
+    TextField,
+    Typography
+} from "@mui/material";
 import {useEffect, useState} from "react";
 import {DeliveryLocation, MenuInfo, MenuItem, Order} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
@@ -34,8 +46,9 @@ export default function MakeOrder() {
     }, [])
 
     const [currentSelectedMenuItem, setCurrentSelectedMenuItem] = useState<MenuItem>()
+    const [currentSelectedLocation, setCurrentSelectedLocation] = useState<DeliveryLocation>()
 
-    const handleClick = () => {
+    const sendOrder = () => {
         console.log(
             orders
         )
@@ -56,46 +69,61 @@ export default function MakeOrder() {
             <List>
                 {orders.map((order, id) => {
                     return (
-                        <ListItem key={id}>
-                            <ListItemText primary={`Day: ${order.item} Location: ${order.location}`}/>
-                            <Button
-                                onClick={() => setOrders(orders.filter(o => o.item !== order.item && o.location !== order.location))}
-                                variant={"outlined"}>remove</Button>
+
+                        <ListItem>
+                            <Card>
+                                <CardContent>
+                                    <Typography
+                                        variant={"h6"}>{week[menu?.dishes.find(d => d.id === order.item).day - 1]}</Typography>
+                                    <Typography> {menu?.dishes.find(d => d.id === order.item).name}</Typography>
+                                    <Typography
+                                        variant={"caption"}>{locations.find(l => order.location === l.id).name}</Typography>
+                                </CardContent>
+                                <CardActionArea>
+                                    <Button
+                                        onClick={() => setOrders(orders.filter(o => o.item !== order.item))}
+                                        variant={"outlined"}>entfernen</Button>
+                                </CardActionArea>
+                            </Card>
                         </ListItem>
+
+
                     )
                 })}
             </List>
             <Grid container spacing={2}>
-                <Grid sm={6}>
+                <Grid item sm={6}>
                     <Autocomplete
-                        options={[{id: 1, name: "Dish A", day: 1} as MenuItem, {
-                            id: 2,
-                            name: "Dish B",
-                            day: 2
-                        } as MenuItem]}
-                        getOptionLabel={(option: MenuItem) => `Day: ${option.day}: ${option.name}`}
+                        options={menu?.dishes ?? []}
+                        getOptionLabel={(option: MenuItem) => `${week[option.day - 1]}: ${option.name}`}
                         onChange={(event, value) => {
                             setCurrentSelectedMenuItem(value as MenuItem)
                         }}
                         renderInput={(params) => <TextField {...params}/>}>
                     </Autocomplete>
                 </Grid>
-                <Grid sm={4}>
+                <Grid item sm={4}>
                     <Autocomplete
-                        options={[{id: 1, name: "Location A"}, {id: 2, name: "Location B"}]}
+                        options={locations}
                         getOptionLabel={(option: DeliveryLocation) => option.name}
                         renderInput={(params) => <TextField {...params}/>}
                         onChange={(event, value: DeliveryLocation) => {
-                            if ("id" in currentSelectedMenuItem) {
-                                setOrders([...orders, {item: currentSelectedMenuItem.id, location: value.id}])
-                            }
-                            setCurrentSelectedMenuItem(null)
+                            setCurrentSelectedLocation(value as DeliveryLocation)
                         }}>
                     </Autocomplete>
                 </Grid>
-
+                <Grid item sm={2}>
+                    <Button onClick={() => {
+                        if (currentSelectedMenuItem && currentSelectedMenuItem) {
+                            setOrders([...orders, {
+                                item: currentSelectedMenuItem.id,
+                                location: currentSelectedLocation?.id ?? 0
+                            }].sort((a, b) => a.item - b.item))
+                        }
+                    }} variant={"outlined"}>Hinzufügen</Button>
+                </Grid>
             </Grid>
-            <Button onClick={() => console.log(orders)} variant={"outlined"}>Add</Button>
+            <Button onClick={sendOrder} variant={"outlined"}>Bestellung abschicken</Button>
         </Box>
     )
 }
