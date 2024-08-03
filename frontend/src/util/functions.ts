@@ -1,3 +1,5 @@
+import {BASE_URL} from "./constants.ts";
+
 export function mapDayOfWeek(day: number): string {
     switch (day) {
         case 1:
@@ -17,4 +19,8 @@ export function mapDayOfWeek(day: number): string {
         default:
             return "Ungültig"
     }
+}
+
+export function getUrlFrom(...path: string[]): string {
+    return BASE_URL + path.join("/")
 }

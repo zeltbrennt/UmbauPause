@@ -1,5 +1,5 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import {mapDayOfWeek} from "../util/functions.ts";
+import {getUrlFrom, mapDayOfWeek} from "../util/functions.ts";
 import {useEffect, useState} from "react";
 import {OrderCount, OrderOverviewDta} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
@@ -9,7 +9,8 @@ export default function OrderOverview() {
     const [locations, setLocations] = useState([])
     const [transformedData, setTransformedData] = useState<Object>({})
     const fetchOverview = async () => {
-        const response = await fetch("http://localhost:8080/orderOverview?" + new URLSearchParams(
+        let overviewUrl = getUrlFrom("statistics", "order-overview")
+        const response = await fetch(overviewUrl + "?" + new URLSearchParams(
             {from: dayjs().format("YYYY-MM-DD")}), {
                 method: 'GET',
                 headers: {

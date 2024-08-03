@@ -1,5 +1,6 @@
 import {Alert, AlertTitle, Box, Button, Stack, TextField, Typography} from "@mui/material";
 import {FormEvent, useState} from "react";
+import {getUrlFrom} from "../util/functions.ts";
 
 export default function Register() {
 
@@ -26,7 +27,8 @@ export default function Register() {
             setPass2("")
             return
         }
-        fetch("http://localhost:8080/register", {
+        const registerUrl = getUrlFrom("user", "register")
+        fetch(registerUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

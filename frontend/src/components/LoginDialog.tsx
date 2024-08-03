@@ -16,6 +16,7 @@ import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
+import {getUrlFrom} from "../util/functions.ts";
 
 interface LoginDialogProps {
     open: boolean,
@@ -31,11 +32,11 @@ interface LoginRequestData {
 
 export default function LoginDialog({open, handleClose, setCurrentUser, handleRegister}: LoginDialogProps) {
 
-    const api_url = "http://localhost:8080/login"
+    const loginUrl = getUrlFrom("user", "login")
     const [loginError, setLoginError] = useState(false)
 
     const getToken = async (loginData: LoginRequestData) => {
-        const response = await fetch(api_url, {
+        const response = await fetch(loginUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

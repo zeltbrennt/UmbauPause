@@ -4,6 +4,7 @@ import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import "dayjs/locale/de";
+import {getUrlFrom} from "../util/functions.ts";
 
 
 export default function ScheduleMenu() {
@@ -14,7 +15,8 @@ export default function ScheduleMenu() {
     const [dishes, setDishes] = useState<string[]>([]);
 
     const fetchDishes = async () => {
-        const response = await fetch("http://localhost:8080/dishes", {
+        let dishesUrl = getUrlFrom("info", "dishes")
+        const response = await fetch(dishesUrl, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
@@ -41,7 +43,8 @@ export default function ScheduleMenu() {
         };
         console.log(formData);
 
-        fetch("http://localhost:8080/newMenu", {
+        let menuUrl = getUrlFrom("content", "new-menu")
+        fetch(menuUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

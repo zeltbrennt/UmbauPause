@@ -7,8 +7,10 @@ import {useState} from "react";
 import {JWTToken, Site, UserPrincipal} from "./util/Interfaces.ts";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Register from "./components/Register.tsx";
+import {getUrlFrom} from "./util/functions.ts";
 
 function App() {
+
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
     const [mainView, setMainView] = useState(Site.Menu)
     const [currentUser, setCurrentUser] = useState(
@@ -17,7 +19,8 @@ function App() {
             null)
 
     const serverLogout = async (accessToken: JWTToken) => {
-        const response = await fetch("http://localhost:8080/logout", {
+        const logoutUrl = getUrlFrom("user", "logout");
+        const response = await fetch(logoutUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
