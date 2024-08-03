@@ -8,6 +8,10 @@ import io.ktor.server.auth.jwt.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.joda.time.format.DateTimeFormat
 
@@ -19,7 +23,28 @@ fun Application.configureRouting(
     orderRepository: OrderRepository,
 ) {
 
+    val orderUpdates = MutableStateFlow(value = 0)
+
+    suspend fun onOrderUpdated() {
+        val currenOrders = orderRepository.getCountCurrentOrders()
+        orderUpdates.emit(currenOrders.toInt())
+    }
+
     routing {
+
+        webSocket("/ws") {
+            val job = launch {
+                orderUpdates.collect {
+                    outgoing.send(Frame.Text(it.toString()))
+                }
+            }
+            try {
+                job.join()
+            } finally {
+                job.cancel()
+            }
+        }
+
         route("/rest/v1") {
             route("/info") {
                 route("/menu") {
@@ -97,6 +122,7 @@ fun Application.configureRouting(
                         temp.forEach { orderRepository.addOrderByMenuId(it, user) }
                         //call.application.environment.log.info("user: $user ordered: $temp")
                         //todo: check if order was successful
+                        onOrderUpdated()
                         call.respond(HttpStatusCode.Created)
                     }
                 }

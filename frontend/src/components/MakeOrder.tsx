@@ -3,7 +3,7 @@ import {
     Box,
     Button,
     Card,
-    CardActionArea,
+    CardActions,
     CardContent,
     Grid,
     List,
@@ -89,11 +89,11 @@ export default function MakeOrder() {
                                     <Typography
                                         variant={"caption"}>{locations.find(l => order.location === l.id).name}</Typography>
                                 </CardContent>
-                                <CardActionArea>
+                                <CardActions>
                                     <Button
                                         onClick={() => setOrders(orders.filter(o => o.item !== order.item))}
                                         variant={"outlined"}>entfernen</Button>
-                                </CardActionArea>
+                                </CardActions>
                             </Card>
                         </ListItem>
 
@@ -133,7 +133,7 @@ export default function MakeOrder() {
                     }} variant={"outlined"}>Hinzufügen</Button>
                 </Grid>
             </Grid>
-            <Button onClick={sendOrder} variant={"outlined"}>Bestellung abschicken</Button>
+            <Button onClick={sendOrder} variant={"contained"}>Bestellung abschicken</Button>
         </Box>
     )
 }
