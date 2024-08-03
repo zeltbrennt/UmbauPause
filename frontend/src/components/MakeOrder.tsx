@@ -14,22 +14,31 @@ import {
 import {useEffect, useState} from "react";
 import {DeliveryLocation, MenuInfo, MenuItem, Order} from "../util/Interfaces.ts";
 import dayjs from "dayjs";
+import {getUrlFrom} from "../util/functions.ts";
 
 export default function MakeOrder() {
 
     const [orders, setOrders] = useState<Order[]>([])
     const [selected, setSelected] = useState([false, false, false, false, false])
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
-    const locationUrl = "http://localhost:8080/location"
+    const locationUrl = getUrlFrom("info", "locations")
     const [locations, setLocations] = useState<DeliveryLocation[]>([])
-    const menuUrl = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const menuUrl = getUrlFrom("info", "menu")
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        const menu: MenuInfo = await fetch(menuUrl + new URLSearchParams(
+        let menu: MenuInfo = await fetch(menuUrl + "?" + new URLSearchParams(
             {from: dayjs().format("YYYY-MM-DD")}))
-            .then(response => response.json())
+            .then(resp => {
+                if (resp.status === 404) {
+                    // it's weekend, try preview next week
+                    return fetch(menuUrl + "?" + new URLSearchParams(
+                        {from: dayjs().add(3, 'days').format("YYYY-MM-DD")}))
+                }
+                return resp
+            })
+            .then(resp => resp.json())
             .catch((reason) => console.log(`could not fetch menu: ${reason}`))
         const location = await fetch(locationUrl)
             .then(response => response.json())
@@ -52,7 +61,8 @@ export default function MakeOrder() {
         console.log(
             orders
         )
-        fetch("http://localhost:8080/order", {
+        const orderUrl = getUrlFrom("order")
+        fetch(orderUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

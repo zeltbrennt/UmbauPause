@@ -3,18 +3,29 @@ import {MenuInfo} from "../util/Interfaces.ts";
 import {List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import dayjs from "dayjs";
+import {getUrlFrom} from "../util/functions.ts";
 
 
 function ShowCurrentMenu() {
 
-    const api_url = "http://localhost:8080/menu?" // TODO: URL parametrisieren, da sie in der Docker Umgebung auf das Host System verweist
+    const menuUrl = getUrlFrom("info", "menu")
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        const response = await fetch(api_url + new URLSearchParams(
+        let response = await fetch(menuUrl + "?" + new URLSearchParams(
             {from: dayjs().format("YYYY-MM-DD")}))
+        if (response.status === 404) {
+            // it's weekend, try preview next week
+            response = await fetch(menuUrl + "?" + new URLSearchParams(
+                {from: dayjs().add(3, 'days').format("YYYY-MM-DD")}))
+        }
+        if (response.status === 404) {
+            // no preview, try previous week
+            response = await fetch(menuUrl + "?" + new URLSearchParams(
+                {from: dayjs().subtract(3, 'days').format("YYYY-MM-DD")}))
+        }
         const data: MenuInfo = await response.json()
         setMenu(data)
         console.log(data)
