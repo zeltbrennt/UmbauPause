@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "de.pause"
-version = "0.0.4"
+version = "0.0.5"
 
 application {
     mainClass.set("de.pause.ApplicationKt")

@@ -37,7 +37,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [x] Sessions werden über den Besuch erhalten
 - [x] Passwortdaten werden geshasht gespeichert (bcrypt)
 - [x] Nutzer haben unterschiedliche Rollen (Nutzer, Admin, Manager)
-- [ ] Es existieren Endpunkte, die jeweils nur von Administratoren bzw. Managern aufgerufen werden können
+- [x] Es existieren Endpunkte, die jeweils nur von Administratoren bzw. Managern aufgerufen werden können
 - [ ] Frontend Tests
 - [ ] Backend Tests
 
@@ -53,13 +53,16 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Manager kann Liste aller Gerichte sehen
     - [ ] Endpunkt Backend
     - [ ] View im Frontend
-- [ ] Manager kann Gerichte hinzufügen, bearbeiten und löschen
+- [ ] Manager kann Gerichte 
+	- [x] hinzufügen
+	- [ ] bearbeiten
+	- [ ] löschen
 - [x] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage
   verteilt)
 - [x] Manager kann Wochenkarte aus Gerichten erstellen
 - [ ] Wenn kein Gericht an einem Wochentag eingetragen ist, wird die Kantine als „geschlossen“ angezeigt
 - [x] Manager kann festlegen, in welchem Zeitraum eine Wochenkarte gültig ist
-- [ ] Es existiert eine Tabelle mit Standorten
+- [x] Es existiert eine Tabelle mit Standorten
     - [ ] Maske in der Standort hinzugefügt werden können
     - [ ] Standorte können aktiviert und deaktiviert werden
 - [ ] Fronend Tests
@@ -74,11 +77,11 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 ### 1.1.5 Bestellungen
 
 - [x] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
-- [x] Bestellungen haben einen Status
-    - Bestellt
-    - Storniert
-    - Ausgeliefert
-    - Bezahlt
+- [ ] Bestellungen haben einen Status
+    - [x] Bestellt
+    - [ ] Storniert
+    - [ ] Ausgeliefert
+    - [ ] Bezahlt
 - [x] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
 - [ ] Im Frontend wird für jedes Gericht angezeigt, ob es bestellt wurde (Kunde)
 - [ ] Backend Tests
@@ -96,7 +99,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Manager kann aggregiert die Anzahl der Bestellungen je Tag einsehen
     - [ ] Alle Bestellungen
     - [ ] Bestellungen je Nutzer
-    - [ ] Bestellungen je Standort
+    - [x] Bestellungen je Standort
     - [ ] Bestellungen der Woche
 - [ ] Update der Bestellübersicht erfolgt automatisch
 - [ ] Verlauf der Bestellungen über den Tag
@@ -207,9 +210,9 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] es existiert eine Impressumseite
 
-### 3.1.5 Cookie-Banner
+### ~~3.1.5 Cookie-Banner~~
 
-- [ ] es existiert ein Cooke-Banner
+- [ ] ~~es existiert ein Cooke-Banner~~
 
 ## 3.2 Ausarbeitung
 

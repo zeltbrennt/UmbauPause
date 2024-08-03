@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### 0.0.5
+
+- add order overview
+
 ### 0.0.4
 
 - datalayer redesign
