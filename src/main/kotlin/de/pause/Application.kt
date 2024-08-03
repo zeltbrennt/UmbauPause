@@ -32,6 +32,7 @@ fun Application.module() {
     configureSerialization()
     configureSecurity(appConfig)
     configureCORS()
+    configureWebsockets()
     configureRouting(articleRepository, userRepository, menuRepository, orderRepository)
     //configureValidation()
 }
