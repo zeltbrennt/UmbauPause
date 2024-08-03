@@ -19,9 +19,9 @@ import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
-import {Site, UserPrincipal, UserRole} from "../util/Interfaces.ts";
-import MainViewRender from './MainViewRender.tsx'
-import {useState} from "react";
+import {UserPrincipal, UserRole} from "../util/Interfaces.ts";
+import {ReactNode, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 
 const drawerWidth = 240
@@ -29,23 +29,23 @@ const drawerWidth = 240
 interface AppFrameProps {
     currentUser: UserPrincipal | null,
     logout: () => void,
-    currentView: Site,
-    changeView: (site: Site) => void,
-    openLoginDialog: () => void
+    openLoginDialog: () => void,
+    children: ReactNode
 }
 
 export default function AppFrame({
                                      currentUser,
                                      logout,
-                                     currentView,
-                                     changeView,
-                                     openLoginDialog
+                                     openLoginDialog,
+                                     children
                                  }: AppFrameProps) {
 
 
     const theme = useTheme()
     const isDesktop = useMediaQuery(theme.breakpoints.up('sm'))
     const [drawerOpen, setDrawerOpen] = useState(false)
+    const navigate = useNavigate()
+
     return (
         <Box sx={{display: 'flex'}}>
 
@@ -63,7 +63,7 @@ export default function AppFrame({
                     <List>
                         <ListItem disablePadding key="home">
                             <ListItemButton onClick={() => {
-                                changeView(Site.Landingpage)
+                                navigate("/")
                                 setDrawerOpen(false)
                             }}>
                                 <ListItemIcon>
@@ -74,7 +74,7 @@ export default function AppFrame({
                         </ListItem>
                         <ListItem disablePadding key="menu">
                             <ListItemButton onClick={() => {
-                                changeView(Site.Menu)
+                                navigate("/")
                                 setDrawerOpen(false)
                             }
                             }>
@@ -87,7 +87,7 @@ export default function AppFrame({
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
-                                    changeView(Site.Schedule)
+                                    navigate("/schedule")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
@@ -98,7 +98,7 @@ export default function AppFrame({
                             </ListItem>
                             <ListItem disablePadding key="overview">
                                 <ListItemButton onClick={() => {
-                                    changeView(Site.OrderOverview)
+                                    navigate("/statistics/this-week")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
@@ -118,7 +118,7 @@ export default function AppFrame({
                         </> : <></>}
                         {currentUser?.roles.includes(UserRole.USER) ?
                             <ListItem disablePadding key={"order"}>
-                                <ListItemButton onClick={() => changeView(Site.Order)}>
+                                <ListItemButton onClick={() => navigate("/order")}>
                                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
                                     <ListItemText primary={"Bestellen"}></ListItemText>
                                 </ListItemButton>
@@ -127,6 +127,7 @@ export default function AppFrame({
                             <ListItemButton onClick={() => {
                                 currentUser ? logout() : openLoginDialog()
                                 setDrawerOpen(false)
+                                navigate("/")
                             }}>
                                 <ListItemIcon>
                                     {currentUser ? <LogoutIcon/> : <LoginIcon/>}
@@ -139,7 +140,7 @@ export default function AppFrame({
             </SwipeableDrawer>
             <Box component="main" sx={{flexGrow: 1, p: 3}}>
                 <Toolbar/>
-                <MainViewRender site={currentView} currentUser={currentUser?.uid}/>
+                {children}
             </Box>
         </Box>
     )

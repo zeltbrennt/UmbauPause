@@ -4,15 +4,18 @@ import {ThemeProvider} from "@emotion/react";
 import {lightTheme} from "./Themes.ts";
 import LoginDialog from "./components/LoginDialog.tsx";
 import {useState} from "react";
-import {JWTToken, Site, UserPrincipal} from "./util/Interfaces.ts";
+import {JWTToken, UserPrincipal} from "./util/Interfaces.ts";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
-import Register from "./components/Register.tsx";
 import {getUrlFrom} from "./util/functions.ts";
+import ShowCurrentMenu from "./components/ShowCurrentMenu.tsx";
+import ScheduleMenu from "./components/ScheduleMenu.tsx";
+import Register from "./components/Register.tsx";
+import MakeOrder from "./components/MakeOrder.tsx";
+import OrderOverview from "./components/OrderOverview.tsx";
 
 function App() {
 
     const [loginDialogOpen, setLoginDialogOpen] = useState(false)
-    const [mainView, setMainView] = useState(Site.Menu)
     const [currentUser, setCurrentUser] = useState(
         sessionStorage.getItem('userPrincipal') ?
             JSON.parse(sessionStorage?.getItem('userPrincipal') || '') as UserPrincipal :
@@ -36,29 +39,26 @@ function App() {
     return (
         <BrowserRouter>
             <ThemeProvider theme={lightTheme}>
-                <Routes>
-                    <Route path="/register" element={<Register/>}/>
-                    <Route path="/" element={
-
-                        <Container>
-                            <LoginDialog open={loginDialogOpen}
-                                         handleClose={() => setLoginDialogOpen(false)}
-                                         setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}
-                                         handleRegister={() => setMainView(Site.Register)}
-                            />
-                            <AppFrame currentUser={currentUser}
-                                      logout={() => {
-                                          serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)
-                                          setMainView(Site.Menu)
-                                      }}
-                                      currentView={mainView}
-                                      changeView={(site: Site) => {
-                                          setMainView(site)
-                                      }}
-                                      openLoginDialog={() => setLoginDialogOpen(true)}/>
-                        </Container>
-                    }/>
-                </Routes>
+                <Container>
+                    <LoginDialog open={loginDialogOpen}
+                                 handleClose={() => setLoginDialogOpen(false)}
+                                 setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}
+                                 handleRegister={() => setLoginDialogOpen(false)}
+                    />
+                    <AppFrame currentUser={currentUser}
+                              logout={() => {
+                                  serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)
+                              }}
+                              openLoginDialog={() => setLoginDialogOpen(true)}>
+                        <Routes>
+                            <Route path="/" element={<ShowCurrentMenu/>}/>
+                            <Route path="/register" element={<Register/>}/>
+                            <Route path="/schedule" element={<ScheduleMenu/>}/>
+                            <Route path="/order" element={<MakeOrder/>}/>
+                            <Route path="/statistics/this-week" element={<OrderOverview/>}/>
+                        </Routes>
+                    </AppFrame>
+                </Container>
             </ThemeProvider>
         </BrowserRouter>
     )
