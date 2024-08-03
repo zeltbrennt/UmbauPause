@@ -8,10 +8,11 @@ import {JWTToken, UserPrincipal} from "./util/Interfaces.ts";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {getUrlFrom} from "./util/functions.ts";
 import ShowCurrentMenu from "./components/ShowCurrentMenu.tsx";
-import ScheduleMenu from "./components/ScheduleMenu.tsx";
 import Register from "./components/Register.tsx";
+import ScheduleMenu from "./components/ScheduleMenu.tsx";
 import MakeOrder from "./components/MakeOrder.tsx";
 import OrderOverview from "./components/OrderOverview.tsx";
+import LiveWebSocket from "./components/LiveWebSocket.tsx";
 
 function App() {
 
@@ -56,6 +57,7 @@ function App() {
                             <Route path="/schedule" element={<ScheduleMenu/>}/>
                             <Route path="/order" element={<MakeOrder/>}/>
                             <Route path="/statistics/this-week" element={<OrderOverview/>}/>
+                            <Route path="/live" element={<LiveWebSocket/>}/>
                         </Routes>
                     </AppFrame>
                 </Container>

@@ -108,11 +108,14 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding key="dashboard">
-                                <ListItemButton onClick={() => alert("not implemented")}>
+                                <ListItemButton onClick={() => {
+                                    navigate("/live")
+                                    setDrawerOpen(false)
+                                }}>
                                     <ListItemIcon>
                                         <InsightsIcon/>
                                     </ListItemIcon>
-                                    <ListItemText primary="Dashboard"/>
+                                    <ListItemText primary="Live update"/>
                                 </ListItemButton>
                             </ListItem>
                         </> : <></>}
