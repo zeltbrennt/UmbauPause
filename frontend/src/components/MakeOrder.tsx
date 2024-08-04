@@ -91,7 +91,7 @@ export default function MakeOrder() {
                                 </CardContent>
                                 <CardActions>
                                     <Button
-                                        onClick={() => setOrders(orders.filter(o => o.item !== order.item))}
+                                        onClick={() => setOrders(orders.filter(o => !(o.item === order.item && o.location === order.location)))}
                                         variant={"outlined"}>entfernen</Button>
                                 </CardActions>
                             </Card>

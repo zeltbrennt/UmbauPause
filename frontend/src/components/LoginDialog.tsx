@@ -17,6 +17,7 @@ import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
 import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
 import {getUrlFrom} from "../util/functions.ts";
+import {useNavigate} from "react-router-dom";
 
 interface LoginDialogProps {
     open: boolean,
@@ -70,6 +71,9 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
 
         })
     };
+
+    const navigate = useNavigate()
+
     return (
         <Dialog
             open={open}
@@ -140,6 +144,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
                                 <Button variant="text" onClick={() => {
                                     handleRegister();
                                     handleClose()
+                                    navigate("/register")
                                 }}>
                                     Registrieren
                                 </Button>
