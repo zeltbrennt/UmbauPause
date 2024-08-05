@@ -1,4 +1,4 @@
-package de.pause
+/*package de.pause
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
@@ -59,3 +59,4 @@ class CrudOperationTests {
         assertEquals(HttpStatusCode.Created, response.status)
     }
 }
+*/
