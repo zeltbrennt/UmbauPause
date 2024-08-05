@@ -92,10 +92,18 @@ fun Application.configureRouting(
                 route("/register") {
                     post {
                         val loginRequest = call.receive<RegisterRequest>()
+                        if (loginRequest.email.isBlank() || loginRequest.password.isBlank()) {
+                            call.respond(HttpStatusCode.BadRequest, "Email or password is missing")
+                            return@post
+                        }
+                        if (loginRequest.email.endsWith(Constraints.VALID_USER_EMAIL_SUFFIX).not()) {
+                            call.respond(HttpStatusCode.BadRequest, "Invalid email suffix")
+                            return@post
+                        }
                         val success = userRepository.register(loginRequest)
                         when {
                             success -> call.respond(HttpStatusCode.Created)
-                            else -> call.respond(HttpStatusCode.BadRequest)
+                            else -> call.respond(HttpStatusCode.UnprocessableEntity, "User already exists")
                         }
                     }
                 }

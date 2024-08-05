@@ -22,11 +22,10 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var created_at by UserTable.created_at
     var updated_at by UserTable.updated_at
     var passwordHash by UserTable.passwordHash
-    var role by Role via UserRoleTable
+    var roles by Role via UserRoleTable
 
     fun toUserPrincipal() = UserPrincipal(
         id = id.value.toString(),
-        roles = role.map { it.role }
+        roles = roles.map { it.role }
     )
 }
-

@@ -23,6 +23,10 @@ repositories {
     mavenCentral()
 }
 
+tasks.test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation("io.ktor:ktor-server-core-jvm")
     implementation("io.ktor:ktor-client-core:$ktor_version")
@@ -45,7 +49,8 @@ dependencies {
     implementation("org.flywaydb:flyway-core:9.2.0")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    // testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     testImplementation("com.h2database:h2:2.2.224")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
