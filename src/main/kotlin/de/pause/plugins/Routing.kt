@@ -100,6 +100,12 @@ fun Application.configureRouting(
                             call.respond(HttpStatusCode.BadRequest, "Invalid email suffix")
                             return@post
                         }
+                        if (Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$")
+                                .matches(loginRequest.password).not()
+                        ) {
+                            call.respond(HttpStatusCode.BadRequest, "Password not complex enough")
+                            return@post
+                        }
                         val success = userRepository.register(loginRequest)
                         when {
                             success -> call.respond(HttpStatusCode.Created)

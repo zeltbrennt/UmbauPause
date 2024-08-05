@@ -54,7 +54,7 @@ export default function Register() {
 
     const validatePassword = (password: string) => {
         return setPassOk(
-            password.length > 0 // /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
         )
     }
 
