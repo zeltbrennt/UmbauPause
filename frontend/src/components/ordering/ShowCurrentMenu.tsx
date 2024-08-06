@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import {MenuInfo} from "../util/Interfaces.ts";
+import {MenuInfo} from "../../util/Interfaces.ts";
 import {List, ListItem, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import dayjs from "dayjs";
-import {getUrlFrom} from "../util/functions.ts";
+import {getUrlFrom} from "../../util/functions.ts";
 
 
 function ShowCurrentMenu() {

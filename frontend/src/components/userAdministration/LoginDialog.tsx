@@ -15,8 +15,8 @@ import {
 import LockPersonOutlinedIcon from '@mui/icons-material/LockPersonOutlined';
 import {FormEvent, useState} from "react";
 import {jwtDecode} from "jwt-decode";
-import {JWTToken, UserPrincipal} from "../util/Interfaces.ts";
-import {getUrlFrom} from "../util/functions.ts";
+import {JWTToken, UserPrincipal} from "../../util/Interfaces.ts";
+import {getUrlFrom} from "../../util/functions.ts";
 import {useNavigate} from "react-router-dom";
 
 interface LoginDialogProps {

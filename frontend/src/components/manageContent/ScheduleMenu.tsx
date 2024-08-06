@@ -4,7 +4,7 @@ import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import "dayjs/locale/de";
-import {getUrlFrom} from "../util/functions.ts";
+import {getUrlFrom} from "../../util/functions.ts";
 
 
 export default function ScheduleMenu() {

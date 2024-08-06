@@ -2,17 +2,17 @@ import {Container} from "@mui/material";
 import AppFrame from "./components/AppFrame.tsx";
 import {ThemeProvider} from "@emotion/react";
 import {lightTheme} from "./Themes.ts";
-import LoginDialog from "./components/LoginDialog.tsx";
+import LoginDialog from "./components/userAdministration/LoginDialog.tsx";
 import {useState} from "react";
 import {JWTToken, UserPrincipal} from "./util/Interfaces.ts";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {getUrlFrom} from "./util/functions.ts";
-import ShowCurrentMenu from "./components/ShowCurrentMenu.tsx";
-import Register from "./components/Register.tsx";
-import ScheduleMenu from "./components/ScheduleMenu.tsx";
-import MakeOrder from "./components/MakeOrder.tsx";
-import OrderOverview from "./components/OrderOverview.tsx";
-import LiveWebSocket from "./components/LiveWebSocket.tsx";
+import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
+import Register from "./components/userAdministration/Register.tsx";
+import ScheduleMenu from "./components/manageContent/ScheduleMenu.tsx";
+import MakeOrder from "./components/ordering/MakeOrder.tsx";
+import OrderOverview from "./components/dashboard/OrderOverview.tsx";
+import LiveWebSocket from "./components/dashboard/LiveWebSocket.tsx";
 
 function App() {
 

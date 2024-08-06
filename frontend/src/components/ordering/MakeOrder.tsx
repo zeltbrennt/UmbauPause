@@ -12,9 +12,9 @@ import {
     Typography
 } from "@mui/material";
 import {useEffect, useState} from "react";
-import {DeliveryLocation, MenuInfo, MenuItem, Order} from "../util/Interfaces.ts";
+import {DeliveryLocation, MenuInfo, MenuItem, Order} from "../../util/Interfaces.ts";
 import dayjs from "dayjs";
-import {getUrlFrom} from "../util/functions.ts";
+import {getUrlFrom} from "../../util/functions.ts";
 
 export default function MakeOrder() {
 

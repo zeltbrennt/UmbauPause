@@ -10,7 +10,7 @@ import {
     Typography,
     useTheme
 } from "@mui/material";
-import {DeliveryLocation, MenuItemState} from "../util/Interfaces.ts";
+import {DeliveryLocation, MenuItemState} from "../../util/Interfaces.ts";
 import {useState} from "react";
 import Grid2 from "@mui/material/Unstable_Grid2";
 

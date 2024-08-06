@@ -1,7 +1,7 @@
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
-import {getUrlFrom, mapDayOfWeek} from "../util/functions.ts";
+import {getUrlFrom, mapDayOfWeek} from "../../util/functions.ts";
 import {useEffect, useState} from "react";
-import {OrderCount, OrderOverviewDta} from "../util/Interfaces.ts";
+import {OrderCount, OrderOverviewDta} from "../../util/Interfaces.ts";
 import dayjs from "dayjs";
 
 export default function OrderOverview() {

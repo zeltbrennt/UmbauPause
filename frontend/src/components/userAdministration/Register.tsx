@@ -1,6 +1,6 @@
 import {Alert, AlertTitle, Box, Button, Stack, TextField, Typography} from "@mui/material";
 import {FormEvent, useState} from "react";
-import {getUrlFrom} from "../util/functions.ts";
+import {getUrlFrom} from "../../util/functions.ts";
 
 export default function Register() {
 
