@@ -91,7 +91,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
 - [ ] Es können keine Bestellungen für andere Nutzer abgegeben werden
-- [ ] Es kann das gleiche Gericht nicht zu unterschiedlichen Zeitpunkten zweimal bestellt werden
+- [x] Es kann das gleiche Gericht nicht zu unterschiedlichen Zeitpunkten zweimal bestellt werden
 - [ ] es können keine Gerichte bestellt werden, die abgelaufen sind
 
 ### 1.1.6 Bestellübersicht
@@ -101,7 +101,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
     - [ ] Bestellungen je Nutzer
     - [x] Bestellungen je Standort
     - [ ] Bestellungen der Woche
-- [ ] Update der Bestellübersicht erfolgt automatisch
+- [x] Update der Bestellübersicht erfolgt automatisch
 - [ ] Verlauf der Bestellungen über den Tag
 - [ ] Backend Tests
 - [ ] Frontend Tests

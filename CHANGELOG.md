@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 
+### 0.0.6
+
+- restructuring of the project
+- add tests to endpoints
+- minor fixes
+
 ### 0.0.5
 
 - add order overview
