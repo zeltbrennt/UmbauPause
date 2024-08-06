@@ -1,7 +1,7 @@
 package de.pause
 
 
-import de.pause.model.MenuInfo
+import de.pause.features.shop.data.dto.MenuInfo
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*

@@ -1,6 +1,7 @@
 package de.pause.features.shop.data.dao
 
-import de.pause.model.DishDto
+
+import de.pause.features.shop.data.dto.DishDto
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

@@ -1,4 +1,4 @@
-package de.pause.model
+package de.pause.util
 
 enum class UserRole {
     ADMIN, USER, MODERATOR;

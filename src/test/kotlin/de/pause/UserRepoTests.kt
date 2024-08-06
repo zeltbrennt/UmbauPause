@@ -2,7 +2,7 @@ package de.pause
 
 import de.pause.features.user.data.dto.RegisterRequest
 import de.pause.features.user.data.repo.UserRepository
-import de.pause.model.Constraints
+import de.pause.util.Constraints
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*

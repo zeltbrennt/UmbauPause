@@ -4,8 +4,9 @@ import de.pause.database.suspendTransaction
 import de.pause.features.shop.data.dao.Dish
 import de.pause.features.shop.data.dao.Menu
 import de.pause.features.shop.data.dao.MenuTable
-import de.pause.model.MenuInfo
-import de.pause.model.MenuItem
+import de.pause.features.shop.data.dto.MenuInfo
+import de.pause.features.shop.data.dto.MenuItem
+
 import org.jetbrains.exposed.sql.and
 import org.joda.time.DateTime
 

@@ -1,13 +1,16 @@
 package de.pause.plugins
 
+import de.pause.features.shop.data.dto.OrderDto
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
 import de.pause.features.shop.data.repo.OrderRepository
-import de.pause.features.user.data.dto.LoginRequest
-import de.pause.features.user.data.dto.RegisterRequest
-import de.pause.features.user.data.dto.UserDto
+import de.pause.features.shop.routes.auth.dashboardRoutes
+import de.pause.features.shop.routes.auth.manageShopContent
+import de.pause.features.shop.routes.shopPublicRoutes
 import de.pause.features.user.data.repo.UserRepository
-import de.pause.model.*
+import de.pause.features.user.routes.auth.adminManageUsers
+import de.pause.features.user.routes.auth.userManageUsers
+import de.pause.features.user.routes.userAuthentication
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -19,9 +22,6 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.jetbrains.exposed.exceptions.ExposedSQLException
-import org.joda.time.format.DateTimeFormat
-import java.util.*
 
 
 fun Application.configureRouting(
@@ -41,6 +41,7 @@ fun Application.configureRouting(
     routing {
 
         webSocket("/ws") {
+            onOrderUpdated()
             val job = launch {
                 orderUpdates.collect {
                     outgoing.send(Frame.Text(it.toString()))
@@ -54,111 +55,15 @@ fun Application.configureRouting(
         }
 
         route("/rest/v1") {
-            route("/info") {
-                route("/menu") {
-                    get {
-                        val from = call.request.queryParameters["from"]
-                        val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
-                        val day = try {
-                            formatter.parseDateTime(from)
-                        } catch (e: IllegalArgumentException) {
-                            return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
-                        } catch (e: NullPointerException) {
-                            return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
-                        }
 
-                        val menu = menuRepository.getScheduledMenuFrom(day)
-                        call.respond(menu ?: HttpStatusCode.NotFound)
-                    }
-                }
-                route("/locations") {
-                    get {
-                        call.respond(orderRepository.getAllLocations())
-                    }
-                }
-                authenticate("admin") {
-                    route("/dishes") {
-                        get {
-                            call.respond(dishRepository.allDishes())
-                        }
-                    }
-                }
-            }
-            route("/user") {
-                route("/login") {
-                    post {
-                        val loginRequest = call.receive<LoginRequest>()
-                        val user = userRepository.login(loginRequest)
-                        if (user != null) {
-                            val token = createJWT(user)
-                            call.respond(HttpStatusCode.OK, mapOf("accessToken" to token))
-                        } else {
-                            call.respond(HttpStatusCode.Unauthorized)
-                        }
-                    }
-                }
-                route("/register") {
-                    post {
-                        val loginRequest = call.receive<RegisterRequest>()
-                        if (loginRequest.email.isBlank() || loginRequest.password.isBlank()) {
-                            call.respond(HttpStatusCode.BadRequest, "Email or password is missing")
-                            return@post
-                        }
-                        if (loginRequest.email.endsWith(Constraints.VALID_USER_EMAIL_SUFFIX).not()) {
-                            call.respond(HttpStatusCode.BadRequest, "Invalid email suffix")
-                            return@post
-                        }
-                        if (Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}\$")
-                                .matches(loginRequest.password).not()
-                        ) {
-                            call.respond(HttpStatusCode.BadRequest, "Password not complex enough")
-                            return@post
-                        }
-                        val success = userRepository.register(loginRequest)
-                        when {
-                            success -> call.respond(HttpStatusCode.Created)
-                            else -> call.respond(HttpStatusCode.UnprocessableEntity, "User already exists")
-                        }
-                    }
-                }
-                authenticate("user") {
-                    route("/logout") {
-                        post {
-                            val jwt = call.principal<JWTPrincipal>()
-                            val id = jwt!!.payload.getClaim("uid").asString()
-                            val success = userRepository.logout(id)
-                            when {
-                                success -> call.respond(HttpStatusCode.OK)
-                                else -> call.respond(HttpStatusCode.BadRequest)
-                            }
-                        }
-                    }
-                    route("/manage") {
-                        route("/password") {
-                            put {
-                                val jwt = call.principal<JWTPrincipal>()
-                                val id = jwt!!.payload.getClaim("uid").asString()
-                                val newPassword = call.receive<String>()
-                                val success = userRepository.updateUserPassword(UUID.fromString(id), newPassword)
-                                when {
-                                    success -> call.respond(HttpStatusCode.OK)
-                                    else -> call.respond(HttpStatusCode.NotFound)
-                                }
-                            }
-                        }
-                        route("/profile") {
-                            put {
-                                val userData = call.receive<UserDto>()
-                                val success = userRepository.updateUserData(userData)
-                                when {
-                                    success -> call.respond(HttpStatusCode.OK)
-                                    else -> call.respond(HttpStatusCode.NotFound)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            shopPublicRoutes(menuRepository, orderRepository)
+            manageShopContent(dishRepository, menuRepository)
+            dashboardRoutes(orderRepository)
+
+            adminManageUsers(userRepository)
+            userManageUsers(userRepository)
+            userAuthentication(userRepository)
+
             authenticate("user") {
                 route("/order") {
                     post {
@@ -173,90 +78,7 @@ fun Application.configureRouting(
                     }
                 }
             }
-            authenticate("admin") {
-                route("/content") {
-                    route("/add-dish") {
-                        post {
-                            val newDish = call.receive<DishDto>()
-                            dishRepository.addDish(newDish)
-                            call.respond(HttpStatusCode.Created)
 
-                        }
-                    }
-                    route("/new-menu") {
-                        post {
-
-                            val newMenu = call.receive<MenuInfo>()
-                            call.application.environment.log.info(newMenu.toString())
-                            newMenu.dishes.forEach {
-                                val dish = try {
-                                    dishRepository.addDish(DishDto(0, it.name))
-                                } catch (e: ExposedSQLException) {
-                                    call.application.environment.log.info("Dish already exists")
-                                    dishRepository.findByName(it.name)
-                                }
-                                try {
-                                    call.application.environment.log.info("new Menu: ${newMenu.validFrom}, ${it.day} , ${dish.id.value}")
-                                    menuRepository.addNewMenu(newMenu.validFrom, newMenu.validTo, it.day, dish.id.value)
-                                } catch (e: ExposedSQLException) {
-                                    call.application.environment.log.info("Menu already exists")
-                                    //call.respond(HttpStatusCode.Conflict)
-                                }
-                            }
-                            call.respond(HttpStatusCode.Created)
-                        }
-                    }
-                }
-                route("/statistics") {
-                    route("/order-overview") {
-                        get {
-                            val from = call.request.queryParameters["from"]
-                            val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
-                            val day = try {
-                                formatter.parseDateTime(from)
-                            } catch (e: IllegalArgumentException) {
-                                return@get call.respond(HttpStatusCode.BadRequest, "Invalid date format")
-                            } catch (e: NullPointerException) {
-                                return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
-                            }
-                            val overview = orderRepository.getAllOrdersFrom(day)
-                            call.respond(overview ?: HttpStatusCode.NotFound)
-                        }
-                    }
-                }
-                route("/user") {
-                    route("/{id}") {
-                        get {
-                            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
-                            val user = userRepository.getUserByMail(id)
-                            when {
-                                user != null -> call.respond(user.toUserPrincipal())
-                                else -> call.respond(HttpStatusCode.NotFound)
-                            }
-                        }
-                        delete {
-                            val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
-                            val success = userRepository.deleteUserById(UUID.fromString(id))
-                            when {
-                                success -> call.respond(HttpStatusCode.OK)
-                                else -> call.respond(HttpStatusCode.NotFound)
-                            }
-                        }
-                        route("/roles") {
-                            put {
-                                val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest)
-                                val roles = call.receive<List<String>>()
-                                val success = userRepository.updateUserRoles(UUID.fromString(id), roles)
-                                when {
-                                    success -> call.respond(HttpStatusCode.OK)
-                                    else -> call.respond(HttpStatusCode.NotFound)
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
         }
     }
 }
