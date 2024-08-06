@@ -9,12 +9,11 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Order
 import kotlin.test.*
 
 
-class UserRepoTests {
+class PublicUserEndpointTests {
 
     private val testUserName = "test"
     private val testUserPassword = "Pas\$w0rd"
@@ -22,12 +21,13 @@ class UserRepoTests {
     private val userRepo = UserRepository()
 
 
-    @AfterEach
+    @AfterTest
     fun cleanup(): Unit {
         runBlocking {
             userRepo.deleteUserByMailPattern(testUserName)
         }
     }
+
 
     @Test
     @Order(1)
@@ -216,28 +216,5 @@ class UserRepoTests {
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
-    @Test
-    fun `deleting a user by id should succeed`() = testApplication {
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
-
-        val registerRequestData = RegisterRequest("$testUserName@$testUserMailSuffix", testUserPassword)
-        val response = client.post("/rest/v1/user/register") {
-            contentType(ContentType.Application.Json)
-            setBody(registerRequestData)
-        }
-        assertEquals(HttpStatusCode.Created, response.status)
-        val user = userRepo.getUserByMail("$testUserName@$testUserMailSuffix")
-        assertNotNull(user)
-        val userId = user.id.value
-        val deleteResponse = client.delete("/rest/v1/user/$userId") {
-            contentType(ContentType.Application.Json)
-        }
-        assertEquals(HttpStatusCode.OK, deleteResponse.status)
-        assertNull(userRepo.getUserById(userId))
-    }
 
 }

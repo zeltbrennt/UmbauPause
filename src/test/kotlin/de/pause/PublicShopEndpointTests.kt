@@ -1,6 +1,7 @@
 package de.pause
 
 
+import de.pause.features.shop.data.dto.LocationDto
 import de.pause.features.shop.data.dto.MenuInfo
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
@@ -11,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PublicApiTests {
+class PublicShopEndpointTests {
 
     @Test
     fun `current menu endpoint is publicly available`() = testApplication {
@@ -71,6 +72,14 @@ class PublicApiTests {
     fun `current menu endpoint returns 404 when no menu is available for the given date`() = testApplication {
         val response = client.get("/rest/v1/info/menu?from=9999-12-31")
         assertEquals(HttpStatusCode.NotFound, response.status)
+    }
+
+    @Test
+    fun `location data is not null`() = testApplication {
+        val response = client.get("/rest/v1/info/locations")
+        assertEquals(HttpStatusCode.OK, response.status)
+        val locations: List<LocationDto> = Json.decodeFromString(response.bodyAsText())
+        assertTrue { locations.isNotEmpty() }
     }
 
 }
