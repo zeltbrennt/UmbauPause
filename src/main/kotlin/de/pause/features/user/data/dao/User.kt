@@ -1,6 +1,6 @@
-package de.pause.db
+package de.pause.features.user.data.dao
 
-import de.pause.model.UserPrincipal
+import de.pause.features.user.data.dto.UserPrincipal
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

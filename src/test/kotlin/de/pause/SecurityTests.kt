@@ -2,7 +2,7 @@ package de.pause
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.LoginRequest
+import de.pause.features.user.data.dto.LoginRequest
 import de.pause.model.UserRole
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*

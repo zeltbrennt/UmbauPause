@@ -1,11 +1,7 @@
-package de.pause.model
+package de.pause.features.shop.data.dto
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-data class LoginRequest(val email: String, val password: String)
-
-typealias RegisterRequest = LoginRequest
 
 @Serializable
 data class MenuInfo(
@@ -25,12 +21,6 @@ data class MenuItem(
 data class DishDto(
     val id: Int,
     val description: String,
-)
-
-@Serializable
-data class UserPrincipal(
-    val id: String,
-    val roles: List<String>,
 )
 
 @Serializable
@@ -58,9 +48,4 @@ data class LocationDto(
 data class OrderDto(
     val item: Int,
     val location: Int,
-)
-
-@Serializable
-data class UserDto(
-    val email: String,
 )

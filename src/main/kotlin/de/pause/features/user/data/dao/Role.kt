@@ -1,4 +1,4 @@
-package de.pause.db
+package de.pause.features.user.data.dao
 
 import org.jetbrains.exposed.dao.IntEntity
 import org.jetbrains.exposed.dao.IntEntityClass

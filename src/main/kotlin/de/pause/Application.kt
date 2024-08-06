@@ -1,11 +1,11 @@
 package de.pause
 
 import com.typesafe.config.ConfigFactory
-import de.pause.db.configureDatabase
-import de.pause.model.DishRepository
-import de.pause.model.MenuRepository
-import de.pause.model.OrderRepository
-import de.pause.model.UserRepository
+import de.pause.database.configureDatabase
+import de.pause.features.shop.data.repo.DishRepository
+import de.pause.features.shop.data.repo.MenuRepository
+import de.pause.features.shop.data.repo.OrderRepository
+import de.pause.features.user.data.repo.UserRepository
 import de.pause.plugins.*
 import io.ktor.server.application.*
 import io.ktor.server.config.*

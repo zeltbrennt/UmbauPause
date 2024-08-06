@@ -1,9 +1,11 @@
-package de.pause.model
+package de.pause.features.shop.data.repo
 
-import de.pause.db.Dish
-import de.pause.db.Menu
-import de.pause.db.MenuTable
-import de.pause.db.suspendTransaction
+import de.pause.database.suspendTransaction
+import de.pause.features.shop.data.dao.Dish
+import de.pause.features.shop.data.dao.Menu
+import de.pause.features.shop.data.dao.MenuTable
+import de.pause.model.MenuInfo
+import de.pause.model.MenuItem
 import org.jetbrains.exposed.sql.and
 import org.joda.time.DateTime
 

@@ -1,9 +1,10 @@
-package de.pause.model
+package de.pause.features.shop.data.repo
 
 
-import de.pause.db.Dish
-import de.pause.db.DishTable
-import de.pause.db.suspendTransaction
+import de.pause.database.suspendTransaction
+import de.pause.features.shop.data.dao.Dish
+import de.pause.features.shop.data.dao.DishTable
+import de.pause.model.DishDto
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.joda.time.DateTime

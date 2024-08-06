@@ -1,4 +1,4 @@
-package de.pause.db
+package de.pause.database
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource

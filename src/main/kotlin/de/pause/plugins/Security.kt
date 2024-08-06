@@ -2,7 +2,7 @@ package de.pause.plugins
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.UserPrincipal
+import de.pause.features.user.data.dto.UserPrincipal
 import de.pause.model.UserRole
 import io.ktor.server.application.*
 import io.ktor.server.auth.*

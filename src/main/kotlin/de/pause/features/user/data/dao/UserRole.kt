@@ -1,4 +1,4 @@
-package de.pause.db
+package de.pause.features.user.data.dao
 
 import org.jetbrains.exposed.sql.Table
 

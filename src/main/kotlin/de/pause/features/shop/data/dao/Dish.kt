@@ -1,4 +1,4 @@
-package de.pause.db
+package de.pause.features.shop.data.dao
 
 import de.pause.model.DishDto
 import org.jetbrains.exposed.dao.IntEntity

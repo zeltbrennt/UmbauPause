@@ -1,5 +1,12 @@
 package de.pause.plugins
 
+import de.pause.features.shop.data.repo.DishRepository
+import de.pause.features.shop.data.repo.MenuRepository
+import de.pause.features.shop.data.repo.OrderRepository
+import de.pause.features.user.data.dto.LoginRequest
+import de.pause.features.user.data.dto.RegisterRequest
+import de.pause.features.user.data.dto.UserDto
+import de.pause.features.user.data.repo.UserRepository
 import de.pause.model.*
 import io.ktor.http.*
 import io.ktor.server.application.*

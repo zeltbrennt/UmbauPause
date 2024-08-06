@@ -1,5 +1,7 @@
-package de.pause.db
+package de.pause.features.shop.data.dao
 
+import de.pause.features.user.data.dao.User
+import de.pause.features.user.data.dao.UserTable
 import org.jetbrains.exposed.dao.UUIDEntity
 import org.jetbrains.exposed.dao.UUIDEntityClass
 import org.jetbrains.exposed.dao.id.EntityID

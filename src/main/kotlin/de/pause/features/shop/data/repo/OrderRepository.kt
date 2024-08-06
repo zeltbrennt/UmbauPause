@@ -1,6 +1,10 @@
-package de.pause.model
+package de.pause.features.shop.data.repo
 
-import de.pause.db.*
+import de.pause.database.*
+import de.pause.features.shop.data.*
+import de.pause.features.shop.data.dao.*
+import de.pause.features.user.data.dao.User
+import de.pause.model.*
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
 import org.joda.time.DateTime
