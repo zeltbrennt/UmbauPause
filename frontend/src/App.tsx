@@ -7,12 +7,13 @@ import {useState} from "react";
 import {JWTToken, UserPrincipal} from "./util/Interfaces.ts";
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {getUrlFrom} from "./util/functions.ts";
-import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
 import Register from "./components/userAdministration/Register.tsx";
 import ScheduleMenu from "./components/manageContent/ScheduleMenu.tsx";
 import MakeOrder from "./components/ordering/MakeOrder.tsx";
 import OrderOverview from "./components/dashboard/OrderOverview.tsx";
 import LiveWebSocket from "./components/dashboard/LiveWebSocket.tsx";
+import Landingpage from "./components/Landingpage.tsx";
+import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
 
 function App() {
 
@@ -52,7 +53,8 @@ function App() {
                               }}
                               openLoginDialog={() => setLoginDialogOpen(true)}>
                         <Routes>
-                            <Route path="/" element={<ShowCurrentMenu/>}/>
+                            <Route path="/" element={<Landingpage/>}/>
+                            <Route path="/menu" element={<ShowCurrentMenu/>}/>
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/schedule" element={<ScheduleMenu/>}/>
                             <Route path="/order" element={<MakeOrder/>}/>

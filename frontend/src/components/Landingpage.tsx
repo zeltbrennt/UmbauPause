@@ -1,12 +1,11 @@
-import {Box, Typography} from "@mui/material";
+import {Box} from "@mui/material";
+import pauseBanner from "/Pause_Banner.png";
 
-function Landingpage({currentUser}: { currentUser: string | undefined }) {
+function Landingpage() {
 
     return (
-        <Box>
-            <Typography sx={{typography: {sm: 'h1', xs: 'h3'}}}>
-                {currentUser == undefined ? "Hier entsteht in Zukunft eine Website..." : `Willkommen ${currentUser}!`}
-            </Typography>
+        <Box justifyContent={"center"} display={"flex"}>
+            <img src={pauseBanner} alt="Pause Banner" style={{maxWidth: '100%', height: 'auto'}}/>
         </Box>
     )
 }

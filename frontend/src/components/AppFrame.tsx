@@ -74,7 +74,7 @@ export default function AppFrame({
                         </ListItem>
                         <ListItem disablePadding key="menu">
                             <ListItemButton onClick={() => {
-                                navigate("/")
+                                navigate("/menu")
                                 setDrawerOpen(false)
                             }
                             }>
