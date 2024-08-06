@@ -9,24 +9,26 @@ export default function OrderOverview() {
     const [locations, setLocations] = useState([])
     const [transformedData, setTransformedData] = useState<Object>({})
     const fetchOverview = async () => {
-        let overviewUrl = getUrlFrom("statistics", "order-overview")
-        const data = await fetch(overviewUrl + "?" + new URLSearchParams(
-            {from: dayjs().format("YYYY-MM-DD")}), {
+        let overviewUrl = getUrlFrom("statistics", "order-overview", dayjs().format("YYYY-MM-DD"))
+        const data = await fetch(overviewUrl, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             }
         })
             .then(resp => {
+                console.log("found orders")
                 if (resp.status === 404) {
-                    return fetch(overviewUrl + "?" + new URLSearchParams(
-                        {from: dayjs().subtract(3, "days").format("YYYY-MM-DD")}), {
+                    overviewUrl = getUrlFrom("statistics", "order-overview", dayjs().subtract(3, 'days').format("YYYY-MM-DD"))
+                    return fetch(overviewUrl, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
                         }
                     })
                 }
+                return resp
+
             })
             .then(resp => resp.json())
         setOverview(data)

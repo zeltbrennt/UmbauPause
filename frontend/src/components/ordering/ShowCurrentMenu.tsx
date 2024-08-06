@@ -8,23 +8,22 @@ import {getUrlFrom} from "../../util/functions.ts";
 
 function ShowCurrentMenu() {
 
-    const menuUrl = getUrlFrom("info", "menu")
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        let response = await fetch(menuUrl + "?" + new URLSearchParams(
-            {from: dayjs().format("YYYY-MM-DD")}))
+        let menuUrl = getUrlFrom("info", "menu", dayjs().format("YYYY-MM-DD"))
+        let response = await fetch(menuUrl)
         if (response.status === 404) {
             // it's weekend, try preview next week
-            response = await fetch(menuUrl + "?" + new URLSearchParams(
-                {from: dayjs().add(3, 'days').format("YYYY-MM-DD")}))
+            menuUrl = getUrlFrom("info", "menu", dayjs().add(3, 'days').format("YYYY-MM-DD"))
+            response = await fetch(menuUrl)
         }
         if (response.status === 404) {
             // no preview, try previous week
-            response = await fetch(menuUrl + "?" + new URLSearchParams(
-                {from: dayjs().subtract(3, 'days').format("YYYY-MM-DD")}))
+            menuUrl = getUrlFrom("info", "menu", dayjs().subtract(3, 'days').format("YYYY-MM-DD"))
+            response = await fetch(menuUrl)
         }
         const data: MenuInfo = await response.json()
         setMenu(data)

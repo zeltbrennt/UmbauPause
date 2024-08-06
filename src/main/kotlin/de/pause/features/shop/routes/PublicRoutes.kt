@@ -10,9 +10,9 @@ import org.joda.time.format.DateTimeFormat
 
 fun Route.shopPublicRoutes(menuRepository: MenuRepository, orderRepository: OrderRepository) {
     route("/info") {
-        route("/menu") {
+        route("/menu/{from}") {
             get {
-                val from = call.request.queryParameters["from"]
+                val from = call.parameters["from"]
                 val formatter = DateTimeFormat.forPattern("yyyy-MM-dd")
                 val day = try {
                     formatter.parseDateTime(from)

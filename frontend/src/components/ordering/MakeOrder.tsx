@@ -23,18 +23,17 @@ export default function MakeOrder() {
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const locationUrl = getUrlFrom("info", "locations")
     const [locations, setLocations] = useState<DeliveryLocation[]>([])
-    const menuUrl = getUrlFrom("info", "menu")
     const [menu, setMenu] = useState<MenuInfo>()
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
     const getMenu = async () => {
-        let menu: MenuInfo = await fetch(menuUrl + "?" + new URLSearchParams(
-            {from: dayjs().format("YYYY-MM-DD")}))
+        let menuUrl = getUrlFrom("info", "menu", dayjs().format("YYYY-MM-DD"))
+        let menu: MenuInfo = await fetch(menuUrl)
             .then(resp => {
                 if (resp.status === 404) {
                     // it's weekend, try preview next week
-                    return fetch(menuUrl + "?" + new URLSearchParams(
-                        {from: dayjs().add(3, 'days').format("YYYY-MM-DD")}))
+                    menuUrl = getUrlFrom("info", "menu", dayjs().add(3, 'days').format("YYYY-MM-DD"))
+                    return fetch(menuUrl)
                 }
                 return resp
             })
