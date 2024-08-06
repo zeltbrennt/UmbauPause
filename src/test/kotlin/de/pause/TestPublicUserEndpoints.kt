@@ -1,8 +1,11 @@
 package de.pause
 
+import com.auth0.jwt.JWT
+import de.pause.features.user.data.dto.LoginRequest
 import de.pause.features.user.data.dto.RegisterRequest
 import de.pause.features.user.data.repo.UserRepository
 import de.pause.util.Constraints
+import io.ktor.client.call.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -10,10 +13,12 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.assertDoesNotThrow
+import java.util.*
 import kotlin.test.*
 
 
-class PublicUserEndpointTests {
+class TestPublicUserEndpoints {
 
     private val testUserName = "test"
     private val testUserPassword = "Pas\$w0rd"
@@ -216,5 +221,75 @@ class PublicUserEndpointTests {
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
+    @Test
+    fun `login with valid credentials should succeed`() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        val registerRequestData = RegisterRequest("$testUserName@$testUserMailSuffix", testUserPassword)
+        client.post("/rest/v1/user/register") {
+            contentType(ContentType.Application.Json)
+            setBody(registerRequestData)
+        }
+        val loginRequest = LoginRequest("$testUserName@$testUserMailSuffix", testUserPassword)
+        val response = client.post("/rest/v1/user/login") {
+            contentType(ContentType.Application.Json)
+            setBody(loginRequest)
+        }
+        assertEquals(HttpStatusCode.OK, response.status)
+        val token = response.body<Map<String, String>>()["accessToken"]
+        assertNotNull(token)
+        val decodedJWT = assertDoesNotThrow {
+            JWT.decode(token)
+        }
+        assertContains(decodedJWT.claims.keys, "uid")
+        assertContains(decodedJWT.claims.keys, "roles")
+        assertContains(decodedJWT.getClaim("roles").asList(String::class.java), "USER")
+        assertDoesNotThrow {
+            UUID.fromString(decodedJWT.getClaim("uid").asString())
+        }
+    }
+
+    @Test
+    fun `login with invalid emails should fail`() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        val registerRequestData = RegisterRequest("wrong@user.com", testUserPassword)
+        client.post("/rest/v1/user/register") {
+            contentType(ContentType.Application.Json)
+            setBody(registerRequestData)
+        }
+        val loginRequest = LoginRequest("$testUserName@$testUserMailSuffix", testUserPassword)
+        val response = client.post("/rest/v1/user/login") {
+            contentType(ContentType.Application.Json)
+            setBody(loginRequest)
+        }
+        assertEquals(HttpStatusCode.Unauthorized, response.status)
+    }
+
+    @Test
+    fun `login with invalid password should fail`() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+        val registerRequestData = RegisterRequest("$testUserName@$testUserMailSuffix", "wrongpassword")
+        client.post("/rest/v1/user/register") {
+            contentType(ContentType.Application.Json)
+            setBody(registerRequestData)
+        }
+        val loginRequest = LoginRequest("$testUserName@$testUserMailSuffix", testUserPassword)
+        val response = client.post("/rest/v1/user/login") {
+            contentType(ContentType.Application.Json)
+            setBody(loginRequest)
+        }
+        assertEquals(HttpStatusCode.Unauthorized, response.status)
+    }
 
 }
