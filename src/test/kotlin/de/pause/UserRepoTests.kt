@@ -216,4 +216,28 @@ class UserRepoTests {
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
+    @Test
+    fun `deleting a user by id should succeed`() = testApplication {
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        val registerRequestData = RegisterRequest("$testUserName@$testUserMailSuffix", testUserPassword)
+        val response = client.post("/rest/v1/user/register") {
+            contentType(ContentType.Application.Json)
+            setBody(registerRequestData)
+        }
+        assertEquals(HttpStatusCode.Created, response.status)
+        val user = userRepo.getUserByMail("$testUserName@$testUserMailSuffix")
+        assertNotNull(user)
+        val userId = user.id.value
+        val deleteResponse = client.delete("/rest/v1/user/$userId") {
+            contentType(ContentType.Application.Json)
+        }
+        assertEquals(HttpStatusCode.OK, deleteResponse.status)
+        assertNull(userRepo.getUserById(userId))
+    }
+
 }

@@ -59,3 +59,8 @@ data class OrderDto(
     val item: Int,
     val location: Int,
 )
+
+@Serializable
+data class UserDto(
+    val email: String,
+)

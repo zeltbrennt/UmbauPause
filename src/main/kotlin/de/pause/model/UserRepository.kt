@@ -5,7 +5,6 @@ import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.selectAll
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
 import java.util.*
@@ -64,13 +63,7 @@ class UserRepository {
     }
 
     suspend fun getUserRolesByUserId(userId: UUID) = suspendTransaction {
-        UserRoleTable
-            .innerJoin(RoleTable)
-            .selectAll()
-            .where { UserRoleTable.user eq userId }
-            .map {
-                it[RoleTable.role]
-            }
+        User.findById(userId)?.roles?.map { it.role } ?: emptyList()
     }
 
     suspend fun deleteUserByMailPattern(email: String) = suspendTransaction {
@@ -82,7 +75,52 @@ class UserRepository {
         } else {
             return@suspendTransaction false
         }
-
     }
 
+
+    suspend fun deleteUserById(userId: UUID) = suspendTransaction {
+        val user = User.findById(userId)
+        if (user != null) {
+            UserRoleTable.deleteWhere { UserRoleTable.user eq user.id }
+            user.delete()
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
+
+    suspend fun getUserById(userId: UUID): User? = suspendTransaction {
+        User.findById(userId)
+    }
+
+    suspend fun updateUserRoles(userId: UUID, roles: List<String>) = suspendTransaction {
+        val user = User.findById(userId)
+        if (user != null) {
+            val newRoles = Role.find { RoleTable.role inList roles }.toList()
+            user.roles = SizedCollection(newRoles)
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
+
+    suspend fun updateUserPassword(id: UUID, newPassword: String) = suspendTransaction {
+        val user = User.findById(id)
+        if (user != null) {
+            user.passwordHash = BCrypt.hashpw(newPassword, BCrypt.gensalt())
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
+
+    suspend fun updateUserData(userDto: UserDto) = suspendTransaction {
+        val user = User.find { UserTable.email eq userDto.email }.firstOrNull()
+        if (user != null) {
+            user.email = userDto.email
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
 }

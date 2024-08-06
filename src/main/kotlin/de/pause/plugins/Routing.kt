@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import org.joda.time.format.DateTimeFormat
+import java.util.*
 
 
 fun Application.configureRouting(
@@ -117,11 +118,35 @@ fun Application.configureRouting(
                     route("/logout") {
                         post {
                             val jwt = call.principal<JWTPrincipal>()
-                            val user = jwt!!.payload.getClaim("uid").asString()
-                            val success = userRepository.logout(user)
+                            val id = jwt!!.payload.getClaim("uid").asString()
+                            val success = userRepository.logout(id)
                             when {
                                 success -> call.respond(HttpStatusCode.OK)
                                 else -> call.respond(HttpStatusCode.BadRequest)
+                            }
+                        }
+                    }
+                    route("/manage") {
+                        route("/password") {
+                            put {
+                                val jwt = call.principal<JWTPrincipal>()
+                                val id = jwt!!.payload.getClaim("uid").asString()
+                                val newPassword = call.receive<String>()
+                                val success = userRepository.updateUserPassword(UUID.fromString(id), newPassword)
+                                when {
+                                    success -> call.respond(HttpStatusCode.OK)
+                                    else -> call.respond(HttpStatusCode.NotFound)
+                                }
+                            }
+                        }
+                        route("/profile") {
+                            put {
+                                val userData = call.receive<UserDto>()
+                                val success = userRepository.updateUserData(userData)
+                                when {
+                                    success -> call.respond(HttpStatusCode.OK)
+                                    else -> call.respond(HttpStatusCode.NotFound)
+                                }
                             }
                         }
                     }
@@ -189,6 +214,37 @@ fun Application.configureRouting(
                             }
                             val overview = orderRepository.getAllOrdersFrom(day)
                             call.respond(overview ?: HttpStatusCode.NotFound)
+                        }
+                    }
+                }
+                route("/user") {
+                    route("/{id}") {
+                        get {
+                            val id = call.parameters["id"] ?: return@get call.respond(HttpStatusCode.BadRequest)
+                            val user = userRepository.getUserByMail(id)
+                            when {
+                                user != null -> call.respond(user.toUserPrincipal())
+                                else -> call.respond(HttpStatusCode.NotFound)
+                            }
+                        }
+                        delete {
+                            val id = call.parameters["id"] ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                            val success = userRepository.deleteUserById(UUID.fromString(id))
+                            when {
+                                success -> call.respond(HttpStatusCode.OK)
+                                else -> call.respond(HttpStatusCode.NotFound)
+                            }
+                        }
+                        route("/roles") {
+                            put {
+                                val id = call.parameters["id"] ?: return@put call.respond(HttpStatusCode.BadRequest)
+                                val roles = call.receive<List<String>>()
+                                val success = userRepository.updateUserRoles(UUID.fromString(id), roles)
+                                when {
+                                    success -> call.respond(HttpStatusCode.OK)
+                                    else -> call.respond(HttpStatusCode.NotFound)
+                                }
+                            }
                         }
                     }
                 }
