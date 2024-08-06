@@ -16,7 +16,7 @@ class PublicShopEndpointTests {
 
     @Test
     fun `current menu endpoint is publicly available`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-01-03")
+        val response = client.get("/rest/v1/info/menu/9999-01-03")
         assertEquals(HttpStatusCode.OK, response.status)
         val menuInfo: MenuInfo = Json.decodeFromString(response.bodyAsText())
         assertEquals("9999-01-01", menuInfo.validFrom)
@@ -28,7 +28,7 @@ class PublicShopEndpointTests {
 
     @Test
     fun `current menu endpoint returns valid menu if one day is blank`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-01-10")
+        val response = client.get("/rest/v1/info/menu/9999-01-10")
         assertEquals(HttpStatusCode.OK, response.status)
         val menuInfo: MenuInfo = Json.decodeFromString(response.bodyAsText())
         assertEquals("9999-01-08", menuInfo.validFrom)
@@ -40,7 +40,7 @@ class PublicShopEndpointTests {
 
     @Test
     fun `current menu endpoint returns valid menu if every day is blank`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-01-15")
+        val response = client.get("/rest/v1/info/menu/9999-01-15")
         assertEquals(HttpStatusCode.OK, response.status)
         val menuInfo: MenuInfo = Json.decodeFromString(response.bodyAsText())
         assertEquals("9999-01-15", menuInfo.validFrom)
@@ -52,25 +52,25 @@ class PublicShopEndpointTests {
 
     @Test
     fun `current menu endpoint returns 400 on invalid date format`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-01-03T00:00:00")
+        val response = client.get("/rest/v1/info/menu/9999-01-03T00:00:00")
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
     @Test
     fun `current menu endpoint returns 400 on invalid date`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-13-00")
+        val response = client.get("/rest/v1/info/menu/9999-13-00")
         assertEquals(HttpStatusCode.BadRequest, response.status)
     }
 
     @Test
-    fun `current menu endpoint returns 400 on missing parameter 'from'`() = testApplication {
+    fun `current menu endpoint returns 404 on missing parameter 'from'`() = testApplication {
         val response = client.get("/rest/v1/info/menu")
-        assertEquals(HttpStatusCode.BadRequest, response.status)
+        assertEquals(HttpStatusCode.NotFound, response.status)
     }
 
     @Test
     fun `current menu endpoint returns 404 when no menu is available for the given date`() = testApplication {
-        val response = client.get("/rest/v1/info/menu?from=9999-12-31")
+        val response = client.get("/rest/v1/info/menu/9999-12-31")
         assertEquals(HttpStatusCode.NotFound, response.status)
     }
 
