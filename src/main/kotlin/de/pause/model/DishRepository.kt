@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 
 class DishRepository {
     suspend fun allDishes(): List<String> = suspendTransaction {
-        Dish.all().map { it.description }
+        Dish.all().map { it.description }.sorted()
     }
 
     suspend fun findByName(name: String): Dish = suspendTransaction {
