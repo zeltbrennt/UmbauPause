@@ -103,7 +103,7 @@ export default function MakeOrder() {
                 {orders.map((order, id) => {
                     return (
 
-                        <Card sx={{width: '100%'}}>
+                        <Card key={id} sx={{width: '100%'}}>
                             <CardContent>
                                 <Typography
                                     variant={"h6"}>{week[menu?.dishes.find(d => d.id === order.item).day - 1]}</Typography>
