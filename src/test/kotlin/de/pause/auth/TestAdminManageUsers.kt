@@ -15,7 +15,7 @@ import java.time.Instant
 import java.util.*
 import kotlin.test.*
 
-class AdminAuthUserEndpointTest {
+class TestAdminManageUsers {
 
     private val testUserName = "test"
     private val testUserPassword = "Pas\$w0rd"
@@ -32,9 +32,9 @@ class AdminAuthUserEndpointTest {
             .withAudience(System.getenv("JWT_AUDIENCE"))
             .withIssuer(System.getenv("JWT_ISSUER"))
             .withIssuedAt(Instant.now())
-            .withExpiresAt(Instant.now().plusSeconds(60))
-            .withClaim("email", "mod@example.com")
-            .withClaim("role", UserRole.MODERATOR.toString())
+            .withExpiresAt(Instant.now().plusSeconds(10))
+            .withClaim("uid", "irrelevant")
+            .withClaim("role", listOf(UserRole.ADMIN.toString()))
             .sign(Algorithm.HMAC256(secret))
     }
 

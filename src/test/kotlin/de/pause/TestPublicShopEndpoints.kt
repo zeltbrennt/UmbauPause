@@ -12,7 +12,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-class PublicShopEndpointTests {
+class TestPublicShopEndpoints {
 
     @Test
     fun `current menu endpoint is publicly available`() = testApplication {

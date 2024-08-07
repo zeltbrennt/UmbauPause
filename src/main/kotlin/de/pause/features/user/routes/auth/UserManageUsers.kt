@@ -25,6 +25,7 @@ fun Route.userManageUsers(userRepository: UserRepository) {
                     }
                 }
             }
+
             route("/manage") {
                 route("/password") {
                     put {
