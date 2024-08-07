@@ -22,7 +22,7 @@ export default function MakeOrder() {
     const week = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const locationUrl = getUrlFrom("info", "locations")
     const [locations, setLocations] = useState<DeliveryLocation[]>([])
-    const [menu, setMenu] = useState<MenuInfo>()
+    const [menu, setMenu] = useState<MenuInfo>({} as MenuInfo)
     const [validFrom, setValidFrom] = useState("")
     const [validTo, setValidTo] = useState("")
 
@@ -125,7 +125,7 @@ export default function MakeOrder() {
             <Grid container spacing={2}>
                 <Grid item sm={6}>
                     <Autocomplete
-                        options={menu?.dishes ?? []}
+                        options={filterDishesByDay(menu?.dishes)}
                         getOptionLabel={(option: MenuItem) => `${week[option.day - 1]}: ${option.name}`}
                         onChange={(event, value) => {
                             setCurrentSelectedMenuItem(value as MenuItem)
@@ -155,7 +155,8 @@ export default function MakeOrder() {
                 </Grid>
             </Grid>
 
-            <Button fullWidth sx={{marginTop: 2, marginBottom: 2}} onClick={handleSubmit} variant={"contained"}>Bestellung
+            <Button fullWidth sx={{marginTop: 2, marginBottom: 2}} onClick={handleSubmit} variant={"contained"}
+                    disabled={orders.length === 0}>Bestellung
                 abschicken</Button>
             <Stack spacing={2}>
                 {(hasOrdered && success) ? <Alert severity="success">Bestellung erfolgreich</Alert> : null}
@@ -168,3 +169,10 @@ export default function MakeOrder() {
     )
 }
 
+function filterDishesByDay(dishes?: MenuItem[]) {
+    if (!dishes) return []
+    console.log("filtering....")
+    const day = dayjs().day()
+    const cutoff = dayjs().hour(10).minute(30)
+    return dishes.filter(d => d.day > day || (d.day === day && dayjs().isBefore(cutoff)))
+}

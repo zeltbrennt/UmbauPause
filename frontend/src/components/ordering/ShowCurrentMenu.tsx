@@ -45,7 +45,8 @@ function ShowCurrentMenu() {
                     const dish = menu?.dishes[id].name ?? ""
                     return (
                         <ListItem key={id} sx={{flexGrow: 1}}>
-                            <MenuItemCard day={day} dish={dish}/>
+                            <MenuItemCard day={day} dish={dish}
+                                          available={dayjs().day() <= id + 1}/>
                         </ListItem>
                     )
                 })}
