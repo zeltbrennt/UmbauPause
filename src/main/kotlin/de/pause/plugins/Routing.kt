@@ -1,95 +1,86 @@
 package de.pause.plugins
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import de.pause.model.DishRepository
-import de.pause.model.LoginRequest
-import de.pause.model.RegisterRequest
-import de.pause.model.UserRepository
+import de.pause.features.shop.data.dto.OrderDto
+import de.pause.features.shop.data.repo.DishRepository
+import de.pause.features.shop.data.repo.MenuRepository
+import de.pause.features.shop.data.repo.OrderRepository
+import de.pause.features.shop.routes.auth.dashboardRoutes
+import de.pause.features.shop.routes.auth.manageShopContent
+import de.pause.features.shop.routes.shopPublicRoutes
+import de.pause.features.user.data.repo.UserRepository
+import de.pause.features.user.routes.auth.adminManageUsers
+import de.pause.features.user.routes.auth.userManageUsers
+import de.pause.features.user.routes.userAuthentication
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
-import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import java.time.Instant
-import java.util.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 
 fun Application.configureRouting(
-    appConfig: HoconApplicationConfig,
     dishRepository: DishRepository,
-    userRepository: UserRepository
+    userRepository: UserRepository,
+    menuRepository: MenuRepository,
+    orderRepository: OrderRepository,
 ) {
 
+    val orderUpdates = MutableStateFlow(value = 0)
 
-    val secret = appConfig.property("ktor.jwt.secret").getString()
-    val issuer = appConfig.property("ktor.jwt.issuer").getString()
-    val audience = appConfig.property("ktor.jwt.audience").getString()
-    val tokenExpiration = 600L
+    suspend fun onOrderUpdated() {
+        val currenOrders = orderRepository.getCountCurrentOrders()
+        orderUpdates.emit(currenOrders.toInt())
+    }
 
     routing {
-        route("/weekly") {
-            get {
 
-                val articles = dishRepository.getAvailableDishes().sortedBy { it.order }
-                call.respond(
-                    articles
-                )
-            }
-        }
-        route("/login") {
-            post {
-                val loginRequest = call.receive<LoginRequest>()
-                val user = userRepository.login(loginRequest)
-                if (user != null) {
-                    val token = JWT.create()
-                        .withJWTId(UUID.randomUUID().toString())
-                        .withAudience(audience)
-                        .withIssuer(issuer)
-                        .withIssuedAt(Instant.now())
-                        .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
-                        .withClaim("email", user.email)
-                        .withClaim("role", user.role.name)
-                        .sign(Algorithm.HMAC256(secret))
-                    call.respond(HttpStatusCode.OK, hashMapOf("accessToken" to token))
-                } else {
-                    call.respond(HttpStatusCode.Unauthorized)
+        webSocket("/ws") {
+            onOrderUpdated()
+            val job = launch {
+                orderUpdates.collect {
+                    outgoing.send(Frame.Text(it.toString()))
                 }
             }
+            try {
+                job.join()
+            } finally {
+                job.cancel()
+            }
         }
-        authenticate("jwt-auth") {
-            route("/logout") {
-                post {
-                    val jwt = call.principal<JWTPrincipal>()
-                    val user = jwt!!.payload.getClaim("email").asString()
-                    val success = userRepository.logout(user)
-                    when {
-                        success -> call.respond(HttpStatusCode.OK)
-                        else -> call.respond(HttpStatusCode.BadRequest)
+
+        route("/rest/v1") {
+
+            shopPublicRoutes(menuRepository, orderRepository)
+            manageShopContent(dishRepository, menuRepository)
+            dashboardRoutes(orderRepository)
+
+            adminManageUsers(userRepository)
+            userManageUsers(userRepository)
+            userAuthentication(userRepository)
+
+            authenticate("user") {
+                route("/order") {
+                    post {
+                        val jwt = call.principal<JWTPrincipal>()
+                        val user = jwt!!.payload.getClaim("uid").asString()
+                        val temp = call.receive<List<OrderDto>>()
+                        temp.forEach { orderRepository.addOrderByMenuId(it, user) }
+                        //call.application.environment.log.info("user: $user ordered: $temp")
+                        //todo: check if order was successful
+                        onOrderUpdated()
+                        call.respond(HttpStatusCode.Created)
                     }
                 }
             }
-        }
-        route("/register") {
-            post {
-                //TODO: handle Deserialization of Register request
-                val loginRequest = call.receive<RegisterRequest>()
-                val success = userRepository.register(loginRequest)
-                when {
-                    success -> call.respond(HttpStatusCode.Created)
-                    else -> call.respond(HttpStatusCode.BadRequest)
-                }
-            }
-        }
-        authenticate("basic-auth") {
-            route("/newMenu") {
-                get {
-                    call.respond(HttpStatusCode.OK)
-                }
-            }
+
         }
     }
 }
+
+

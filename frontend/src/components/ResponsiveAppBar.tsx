@@ -1,6 +1,6 @@
 import {AppBar, Avatar, Box, IconButton, Toolbar, Typography} from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
-import pauseLogo from "/pause_logo.png";
+import pauseLogo from "/Pause_Logo.jpg";
 
 
 interface AppBarProps {

@@ -37,7 +37,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [x] Sessions werden über den Besuch erhalten
 - [x] Passwortdaten werden geshasht gespeichert (bcrypt)
 - [x] Nutzer haben unterschiedliche Rollen (Nutzer, Admin, Manager)
-- [ ] Es existieren Endpunkte, die jeweils nur von Administratoren bzw. Managern aufgerufen werden können
+- [x] Es existieren Endpunkte, die jeweils nur von Administratoren bzw. Managern aufgerufen werden können
 - [ ] Frontend Tests
 - [ ] Backend Tests
 
@@ -53,28 +53,37 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Manager kann Liste aller Gerichte sehen
     - [ ] Endpunkt Backend
     - [ ] View im Frontend
-- [ ] Manager kann Gerichte hinzufügen, bearbeiten und löschen
-- [ ] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage
+- [ ] Manager kann Gerichte 
+	- [x] hinzufügen
+	- [ ] bearbeiten
+	- [ ] löschen
+- [x] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage
   verteilt)
-- [ ] Manager kann Wochenkarte aus Gerichten erstellen
+- [x] Manager kann Wochenkarte aus Gerichten erstellen
 - [ ] Wenn kein Gericht an einem Wochentag eingetragen ist, wird die Kantine als „geschlossen“ angezeigt
-- [ ] Manager kann festlegen, in welchem Zeitraum eine Wochenkarte gültig ist
-- [ ] Es existiert eine Tabelle mit Standorten
+- [x] Manager kann festlegen, in welchem Zeitraum eine Wochenkarte gültig ist
+- [x] Es existiert eine Tabelle mit Standorten
     - [ ] Maske in der Standort hinzugefügt werden können
     - [ ] Standorte können aktiviert und deaktiviert werden
 - [ ] Fronend Tests
 - [ ] Backend Tests
 
+**Nicht-Ziele**
+
+- [x] Es ist nicht möglich Gerichte doppelt einzutragen
+- [ ] Es ist nicht möglich Gerichte zu löschen, die auf einer Wochenkarte stehen
+-
+
 ### 1.1.5 Bestellungen
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in
-  Verbindung bringt
+- [x] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
 - [ ] Bestellungen haben einen Status
-    - Bestellt
-    - Storniert
-    - Ausgeliefert
-    - Bezahlt
-- [ ] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
+    - [x] Bestellt
+    - [ ] Storniert
+    - [ ] Ausgeliefert
+    - [ ] Bezahlt
+- [x] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
+- [ ] Im Frontend wird für jedes Gericht angezeigt, ob es bestellt wurde (Kunde)
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
@@ -82,15 +91,17 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
 - [ ] Es können keine Bestellungen für andere Nutzer abgegeben werden
+- [x] Es kann das gleiche Gericht nicht zu unterschiedlichen Zeitpunkten zweimal bestellt werden
+- [ ] es können keine Gerichte bestellt werden, die abgelaufen sind
 
 ### 1.1.6 Bestellübersicht
 
 - [ ] Manager kann aggregiert die Anzahl der Bestellungen je Tag einsehen
     - [ ] Alle Bestellungen
     - [ ] Bestellungen je Nutzer
-    - [ ] Bestellungen je Standort
+    - [x] Bestellungen je Standort
     - [ ] Bestellungen der Woche
-- [ ] Update der Bestellübersicht erfolgt automatisch
+- [x] Update der Bestellübersicht erfolgt automatisch
 - [ ] Verlauf der Bestellungen über den Tag
 - [ ] Backend Tests
 - [ ] Frontend Tests
@@ -159,10 +170,10 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Admin hat die Μöglichkeit, alle Nutzer auszuloggen
 - [ ] Admin kann Nutzer sperren / entsperren
 - [ ] Loging
-	- [ ] angemeldete Nutzer
-	- [ ] Durchgeführte Bestellungen, Stornierungen
-	- [ ] Durchgeführte Änderungen an der Datenbank
-	- [ ] Loginversuche
+    - [ ] angemeldete Nutzer
+    - [ ] Durchgeführte Bestellungen, Stornierungen
+    - [ ] Durchgeführte Änderungen an der Datenbank
+    - [ ] Loginversuche
 
 ## 2.2 Ausarbeitung
 
@@ -177,14 +188,15 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
 - [ ] Admin kann neuen Manager hinzufügen
 - [ ] rateLimit für Zugriffe auf die Login-Ressource
-- [ ] Benutzer werden nach 5 fehlerhaften Loginversuchen für eine exponentiell steigende Zeit an einem weiteren Loginversuch gehindert
-
+- [ ] Benutzer werden nach 5 fehlerhaften Loginversuchen für eine exponentiell steigende Zeit an einem weiteren
+  Loginversuch gehindert
 
 **Nicht-Ziele**
 
 - [ ] Manager kann keine Manger oder Admin Accounts hinzufügen
 - [ ] es ist nicht möglich beliebig viele Login versuche auszulösen
 - [ ] der Server gibt möglich wenig Informationen preis, also auch nicht, ob Benutzername vergeben ist, oder nicht
+
 ### 3.1.2 Zwei-Faktor-Authentifikation
 
 - [ ] Anbindung von 2FA
@@ -198,9 +210,9 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 - [ ] es existiert eine Impressumseite
 
-### 3.1.5 Cookie-Banner
+### ~~3.1.5 Cookie-Banner~~
 
-- [ ] es existiert ein Cooke-Banner
+- [ ] ~~es existiert ein Cooke-Banner~~
 
 ## 3.2 Ausarbeitung
 

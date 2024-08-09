@@ -8,5 +8,6 @@ export const lightTheme = createTheme({
         secondary: {
             main: '#6F5767',
         },
+
     },
 });

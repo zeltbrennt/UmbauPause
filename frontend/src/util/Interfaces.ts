@@ -1,14 +1,28 @@
-export interface IMenuItem {
-    description: string,
-    available: boolean,
-    price: number,
-    scheduled: string
+export interface MenuInfo {
+    validFrom: string,
+    validTo: string,
+    dishes: MenuItem[]
+}
+
+export interface MenuItem {
+    id: number,
+    name: string,
+    day: number,
 }
 
 export enum Site {
     Landingpage,
     Register,
     Menu,
+    Schedule,
+    Order,
+    OrderOverview,
+}
+
+export enum MenuItemState {
+    AVAILABLE,
+    UNAVAILABLE,
+    SELECTED
 }
 
 export interface JWTToken {
@@ -16,15 +30,39 @@ export interface JWTToken {
     iss: string,
     iat: number,
     exp: number,
-    email: string,
-    role: string,
+    uid: string,
+    roles: string[],
 }
 
 export enum UserRole {
-    USER = "USER", MODERATOR = "MODERATOR", ADMIN = "ADMIN"
+    ADMIN = "ADMIN", USER = "USER",
 }
 
 export interface UserPrincipal {
-    email: string,
-    role: UserRole
+    uid: string,
+    roles: UserRole[]
+}
+
+export interface DeliveryLocation {
+    id: number,
+    name: string,
+}
+
+export interface Order {
+    item: number,
+    location: number,
+    orders?: number,
+}
+
+export interface OrderOverviewDta {
+    validFrom: string,
+    validTo: string,
+    timestamp: string,
+    orders: OrderCount[]
+}
+
+export interface OrderCount {
+    day: number,
+    location: string,
+    orderCount: number,
 }
