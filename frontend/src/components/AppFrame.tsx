@@ -121,7 +121,10 @@ export default function AppFrame({
                         </> : <></>}
                         {currentUser?.roles.includes(UserRole.USER) ?
                             <ListItem disablePadding key={"order"}>
-                                <ListItemButton onClick={() => navigate("/order")}>
+                                <ListItemButton onClick={() => {
+                                    navigate("/order")
+                                    setDrawerOpen(false)
+                                }}>
                                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
                                     <ListItemText primary={"Bestellen"}></ListItemText>
                                 </ListItemButton>

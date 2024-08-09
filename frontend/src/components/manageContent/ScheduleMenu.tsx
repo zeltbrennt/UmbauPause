@@ -8,7 +8,6 @@ import {getUrlFrom} from "../../util/functions.ts";
 
 
 export default function ScheduleMenu() {
-    const weekdays = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]
     const [start, setStart] = useState(dayjs().add(1, 'week').day(1));
     const [end, setEnd] = useState(dayjs().add(1, 'week').day(5));
     const [newDises, setNewDishes] = useState<string[]>(["", "", "", "", ""]);
@@ -81,35 +80,35 @@ export default function ScheduleMenu() {
 
                 <WeekdayScheduler key={"Montag"}
                                   day={"Montag"}
-                                  handleChange={(newValue: String) => {
+                                  handleChange={(newValue: string) => {
                                       const temp = [...newDises]
                                       temp[0] = newValue
                                       setNewDishes(temp)
                                   }}
                                   dishes={dishes}/>
                 <WeekdayScheduler key={"Dienstag"} day={"Dienstag"}
-                                  handleChange={(newValue: String) => {
+                                  handleChange={(newValue: string) => {
                                       const temp = [...newDises]
                                       temp[1] = newValue
                                       setNewDishes(temp)
                                   }}
                                   dishes={dishes}/>
                 <WeekdayScheduler key={"Mittwoch"} day={"Mittwoch"}
-                                  handleChange={(newValue: String) => {
+                                  handleChange={(newValue: string) => {
                                       const temp = [...newDises]
                                       temp[2] = newValue
                                       setNewDishes(temp)
                                   }}
                                   dishes={dishes}/>
                 <WeekdayScheduler key={"Donnerstag"} day={"Donnerstag"}
-                                  handleChange={(newValue: String) => {
+                                  handleChange={(newValue: string) => {
                                       const temp = [...newDises]
                                       temp[3] = newValue
                                       setNewDishes(temp)
                                   }}
                                   dishes={dishes}/>
                 <WeekdayScheduler key={"Freitag"} day={"Freitag"}
-                                  handleChange={(newValue: String) => {
+                                  handleChange={(newValue: string) => {
                                       const temp = [...newDises]
                                       temp[4] = newValue
                                       setNewDishes(temp)
@@ -125,7 +124,7 @@ export default function ScheduleMenu() {
 
 function WeekdayScheduler({day, handleChange, dishes}: {
     day: string,
-    handleChange: (value: String) => void
+    handleChange: (value: string) => void
     dishes: string[]
 }) {
 
@@ -135,7 +134,7 @@ function WeekdayScheduler({day, handleChange, dishes}: {
                       freeSolo
                       renderInput={(params) =>
                           <TextField {...params}
-                                     variant={"outlined"}
+                                     variant="outlined"
                                      margin={"normal"}
                                      fullWidth
                                      label={day}

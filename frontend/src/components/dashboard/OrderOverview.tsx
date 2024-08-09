@@ -4,9 +4,10 @@ import {useEffect, useState} from "react";
 import {OrderCount, OrderOverviewDta} from "../../util/Interfaces.ts";
 import dayjs from "dayjs";
 
+
 export default function OrderOverview() {
     const [overview, setOverview] = useState<OrderOverviewDta>({} as OrderOverviewDta)
-    const [locations, setLocations] = useState([])
+    const [locations, setLocations] = useState<string[]>([])
     const [transformedData, setTransformedData] = useState<Object>({})
     const fetchOverview = async () => {
         let overviewUrl = getUrlFrom("statistics", "order-overview", dayjs().format("YYYY-MM-DD"))
@@ -32,7 +33,7 @@ export default function OrderOverview() {
             })
             .then(resp => resp.json())
         setOverview(data)
-        setLocations([...new Set(data.orders.map((o, id) => o.location))])
+        setLocations([...new Set(data.orders.map((o: any) => o.location))])
         const transformed = transformOrders(data.orders)
         setTransformedData(transformed)
     }
@@ -67,7 +68,7 @@ export default function OrderOverview() {
 
 
 const transformOrders = (orders: OrderCount[]) => {
-    const transformed = {};
+    const transformed: any = {};
     orders.forEach(order => {
         const day = mapDayOfWeek(order.day);
         if (!transformed[day]) {

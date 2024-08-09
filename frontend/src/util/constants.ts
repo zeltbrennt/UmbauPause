@@ -1,1 +1,2 @@
-export const BASE_URL = "http://localhost:8080/rest/v1/"
+export const BASE_URL = import.meta.env.VITE_BASE_URL;
+export const WS_URL = import.meta.env.VITE_WS_URL;

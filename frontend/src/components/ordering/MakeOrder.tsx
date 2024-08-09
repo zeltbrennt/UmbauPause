@@ -96,9 +96,9 @@ export default function MakeOrder() {
     }
 
     return (
-        <Box>
-            <Typography variant={"h3"} textAlign={"center"}>Bestellen</Typography>
-            <Typography textAlign={"center"}>vom {validFrom} bis {validTo} </Typography>
+        <Box margin={"none"}>
+            <Typography variant="h3" textAlign="center">Bestellen</Typography>
+            <Typography textAlign="center">vom {validFrom} bis {validTo} </Typography>
             <Stack spacing={2} sx={{marginBottom: 2}}>
                 {orders.map((order, id) => {
                     return (
@@ -106,15 +106,15 @@ export default function MakeOrder() {
                         <Card key={id} sx={{width: '100%'}}>
                             <CardContent>
                                 <Typography
-                                    variant={"h6"}>{week[menu?.dishes.find(d => d.id === order.item).day - 1]}</Typography>
+                                    variant="h6">{week ? "" : week[menu.dishes.find(d => d.id === order.item).day - 1]}</Typography>
                                 <Typography> {menu?.dishes.find(d => d.id === order.item).name}</Typography>
                                 <Typography
-                                    variant={"caption"}>{locations.find(l => order.location === l.id).name}</Typography>
+                                    variant="caption">{locations.find(l => order.location === l.id).name}</Typography>
                             </CardContent>
                             <CardActions>
                                 <Button
                                     onClick={() => setOrders(orders.filter(o => !(o.item === order.item && o.location === order.location)))}
-                                    variant={"outlined"}>entfernen</Button>
+                                    variant="outlined">entfernen</Button>
                             </CardActions>
                         </Card>
 
@@ -123,7 +123,7 @@ export default function MakeOrder() {
                 })}
             </Stack>
             <Grid container spacing={2}>
-                <Grid item sm={6}>
+                <Grid item sm={6} xs={12}>
                     <Autocomplete
                         options={filterDishesByDay(menu?.dishes)}
                         getOptionLabel={(option: MenuItem) => `${week[option.day - 1]}: ${option.name}`}
@@ -133,7 +133,7 @@ export default function MakeOrder() {
                         renderInput={(params) => <TextField {...params} size={'small'}/>}>
                     </Autocomplete>
                 </Grid>
-                <Grid item sm={4}>
+                <Grid item sm={4} xs={12}>
                     <Autocomplete
                         options={locations}
                         getOptionLabel={(option: DeliveryLocation) => option.name}
@@ -143,8 +143,8 @@ export default function MakeOrder() {
                         }}>
                     </Autocomplete>
                 </Grid>
-                <Grid item sm={2}>
-                    <Button onClick={() => {
+                <Grid item sm={2} xs={12}>
+                    <Button fullWidth onClick={() => {
                         if (currentSelectedMenuItem && currentSelectedMenuItem) {
                             setOrders([...orders, {
                                 item: currentSelectedMenuItem.id,

@@ -1,10 +1,10 @@
 import useWebSocket from "react-use-websocket";
 import {useState} from "react";
+import {WS_URL} from "../../util/constants.ts";
 
 export default function LiveWebSocket() {
 
-    const [message, setMessages] = useState<string>(null)
-    const WS_URL = "ws://localhost:8080/ws"
+    const [message, setMessages] = useState<string>("")
 
     useWebSocket(WS_URL, {
         onOpen: () => console.log('opened'),
