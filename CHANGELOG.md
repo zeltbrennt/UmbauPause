@@ -1,5 +1,11 @@
 # Changelog
 
+## [soft release]
+
+### 0.1.0
+
+- deploy to uberspace
+
 ## [Unreleased]
 
 ### 0.0.6
