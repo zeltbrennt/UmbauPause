@@ -32,6 +32,8 @@ fun Application.configureRouting(
 ) {
 
     val orderUpdates = MutableStateFlow(value = 0)
+    val version = this::class.java.classLoader.getResource("version.properties")?.readText() ?: "unknown"
+
 
     suspend fun onOrderUpdated() {
         val currenOrders = orderRepository.getCountCurrentOrders()
@@ -54,7 +56,14 @@ fun Application.configureRouting(
             }
         }
 
+
         route("/rest/v1") {
+            route("/app-version") {
+                get {
+
+                    call.respondText(version.substringAfter("="))
+                }
+            }
 
             shopPublicRoutes(menuRepository, orderRepository)
             manageShopContent(dishRepository, menuRepository)

@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "de.pause"
-version = "0.1.0"
+version = "alpha-0.1.1"
 
 application {
     mainClass.set("de.pause.ApplicationKt")
@@ -25,6 +25,17 @@ repositories {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register("generateVersionProperties") {
+    doLast {
+        val versionProperties = file("src/main/resources/version.properties")
+        versionProperties.writeText("backend=${project.version}")
+    }
+}
+
+tasks.getByName("processResources") {
+    dependsOn("generateVersionProperties")
 }
 
 dependencies {

@@ -14,12 +14,18 @@ import io.ktor.server.netty.*
 import kotlinx.coroutines.launch
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "0.0.0.0", module = Application::module)
+    val appConfig = HoconApplicationConfig(ConfigFactory.load())
+    val port = appConfig.property("ktor.deployment.port").getString().toInt()
+    embeddedServer(
+        Netty,
+        port = port,
+        host = "0.0.0.0",
+        module = { module(appConfig) }
+    )
         .start(wait = true)
 }
 
-fun Application.module() {
-    val appConfig = HoconApplicationConfig(ConfigFactory.load())
+fun Application.module(appConfig: HoconApplicationConfig) {
     val articleRepository = DishRepository()
     val userRepository = UserRepository()
     val menuRepository = MenuRepository()
