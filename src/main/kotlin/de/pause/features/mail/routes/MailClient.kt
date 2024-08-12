@@ -13,6 +13,7 @@ object NoReplyEmailClient {
     val username = appConfig.property("ktor.email.username").getString()
     val password = appConfig.property("ktor.email.password").getString()
     val from = appConfig.property("ktor.email.from").getString()
+    val domain = appConfig.property("ktor.server.domain").getString()
 
     fun sendTestMail(to: String) {
         sendVerificationMail(to, "test1234")
@@ -25,8 +26,11 @@ object NoReplyEmailClient {
         email.setAuthenticator(DefaultAuthenticator(username, password))
         email.isSSLOnConnect = true
         email.setFrom(from)
-        email.subject = "testMail"
-        email.setMsg("Das ist ein Test <br><a href='http://localhost:8080/verify/$id'>Verify</a>")
+        email.subject = "Anmeldung abschließen"
+        email.setMsg(
+            "Klicke auf diesen Link, um deine Registrierung " +
+                    "abzuschließen: \n$domain/user/verify?id=$id"
+        )
         email.addTo(to)
         email.send()
     }

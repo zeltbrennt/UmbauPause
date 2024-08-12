@@ -9,7 +9,7 @@ export default function ValidateEmail() {
     const [success, setSuccess] = useState(false)
 
     async function verify() {
-        const verifyUrl = `${BASE_URL}/user/verify?id=${userId}`
+        const verifyUrl = `${BASE_URL}user/verify?id=${userId}`
         const response = await fetch(verifyUrl, {
             method: 'POST'
         })
@@ -28,7 +28,7 @@ export default function ValidateEmail() {
             {success ? (
                 <p>Erfolgreich validiert</p>
             ) : (
-                <p>No User ID provided</p>
+                <p>Validierung nicht erfolgreich</p>
             )}
         </div>
     )

@@ -129,4 +129,20 @@ class UserRepository {
             return@suspendTransaction false
         }
     }
+
+    suspend fun validateEmail(id: String): Boolean = suspendTransaction {
+        val uuid: UUID
+        try {
+            uuid = UUID.fromString(id)
+        } catch (e: IllegalArgumentException) {
+            return@suspendTransaction false
+        }
+        val user = User.find { UserTable.id eq uuid }.firstOrNull()
+        if (user != null) {
+            user.emailVerified = true
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
 }

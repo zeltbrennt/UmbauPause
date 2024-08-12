@@ -39,5 +39,20 @@ fun Route.userAuthentication(userRepository: UserRepository) {
                 }
             }
         }
+        route("/verify") {
+            post {
+                val id = call.parameters["id"]
+                if (id != null) {
+                    val success = userRepository.validateEmail(id)
+                    if (success) {
+                        call.respond(HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
+                    }
+                } else {
+                    call.respond(HttpStatusCode.BadRequest)
+                }
+            }
+        }
     }
 }
