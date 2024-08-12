@@ -18,7 +18,7 @@ export default function Register() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 
-        console.log(`email: ${email}, pass: ${pass}, pass2: ${pass2}`)
+        // console.log(`email: ${email}, pass: ${pass}, pass2: ${pass2}`)
         event.preventDefault()
         validateEmail(email)
         validatePassword(pass)

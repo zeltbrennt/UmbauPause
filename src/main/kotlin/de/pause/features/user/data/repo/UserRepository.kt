@@ -47,7 +47,7 @@ class UserRepository {
         }
     }
 
-    suspend fun register(loginRequest: RegisterRequest): Boolean = suspendTransaction {
+    suspend fun register(loginRequest: RegisterRequest): User? = suspendTransaction {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
         try {
             val user = User.new {
@@ -58,9 +58,9 @@ class UserRepository {
             }
             val roles = Role.find { RoleTable.role eq "USER" }.toList()
             user.roles = SizedCollection(roles)
-            return@suspendTransaction user.id.value.toString().isNotBlank()
+            return@suspendTransaction user
         } catch (e: Exception) {
-            return@suspendTransaction false
+            return@suspendTransaction null
         }
     }
 

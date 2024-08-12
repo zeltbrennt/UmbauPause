@@ -15,6 +15,10 @@ object NoReplyEmailClient {
     val from = appConfig.property("ktor.email.from").getString()
 
     fun sendTestMail(to: String) {
+        sendVerificationMail(to, "test1234")
+    }
+
+    fun sendVerificationMail(to: String, id: String) {
         val email = SimpleEmail()
         email.hostName = hostName
         email.setSmtpPort(smtpPort)
@@ -22,7 +26,7 @@ object NoReplyEmailClient {
         email.isSSLOnConnect = true
         email.setFrom(from)
         email.subject = "testMail"
-        email.setMsg("Das ist ein Test")
+        email.setMsg("Das ist ein Test <br><a href='http://localhost:8080/verify/$id'>Verify</a>")
         email.addTo(to)
         email.send()
     }

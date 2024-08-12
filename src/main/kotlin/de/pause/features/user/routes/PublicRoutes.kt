@@ -1,5 +1,6 @@
 package de.pause.features.user.routes
 
+import de.pause.features.mail.routes.NoReplyEmailClient
 import de.pause.features.user.data.dto.LoginRequest
 import de.pause.features.user.data.dto.RegisterRequest
 import de.pause.features.user.data.repo.UserRepository
@@ -26,10 +27,14 @@ fun Route.userAuthentication(userRepository: UserRepository) {
         }
         route("/register") {
             post {
-                val loginRequest = call.receive<RegisterRequest>()
-                val success = userRepository.register(loginRequest)
+                val registerRequest = call.receive<RegisterRequest>()
+                val success = userRepository.register(registerRequest)
                 when {
-                    success -> call.respond(HttpStatusCode.Created)
+                    success != null -> {
+                        NoReplyEmailClient.sendVerificationMail(registerRequest.email, success.id.toString())
+                        call.respond(HttpStatusCode.Created)
+                    }
+
                     else -> call.respond(HttpStatusCode.UnprocessableEntity, "User already exists")
                 }
             }
