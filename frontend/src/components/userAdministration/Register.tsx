@@ -10,6 +10,7 @@ export default function Register() {
     const [emailOk, setEmailOk] = useState(true)
     const [passOk, setPassOk] = useState(true)
     const [success, setSuccess] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     interface RegisterRequestData {
         email: string,
@@ -54,7 +55,7 @@ export default function Register() {
 
     const validatePassword = (password: string) => {
         return setPassOk(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/.test(password)
         )
     }
 
@@ -107,7 +108,8 @@ export default function Register() {
                 sx={{mt: 3, mb: 2}}
             >Registrieren</Button>
             <Stack spacing={2}>
-                {success ? <Alert severity="success">Registrierung erfolgreich</Alert> : null}
+                {success ?
+                    <Alert severity="success">Registrierung erfolgreich, bitte überprüfe deine Mails</Alert> : null}
                 {emailOk ? null : <Alert severity="error"><AlertTitle>Email Adresse ungültig</AlertTitle>
                     Email Adresse gehört nicht zu einem gültigen Format.
                 </Alert>}
