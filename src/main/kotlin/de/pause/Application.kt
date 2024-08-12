@@ -34,5 +34,5 @@ fun Application.module() {
     configureCORS()
     configureWebsockets()
     configureRouting(articleRepository, userRepository, menuRepository, orderRepository)
-    //configureValidation()
+    configureValidation()
 }
