@@ -14,6 +14,7 @@ import OrderOverview from "./components/dashboard/OrderOverview.tsx";
 import LiveWebSocket from "./components/dashboard/LiveWebSocket.tsx";
 import Landingpage from "./components/Landingpage.tsx";
 import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
+import ValidateEmail from "./components/userAdministration/ValidateEmail.tsx";
 
 function App() {
 
@@ -60,6 +61,7 @@ function App() {
                             <Route path="/order" element={<MakeOrder/>}/>
                             <Route path="/statistics/this-week" element={<OrderOverview/>}/>
                             <Route path="/live" element={<LiveWebSocket/>}/>
+                            <Route path="/user/verify" element={<ValidateEmail/>}/>
                         </Routes>
                     </AppFrame>
                 </Container>
