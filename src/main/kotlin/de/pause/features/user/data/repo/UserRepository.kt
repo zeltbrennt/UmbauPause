@@ -9,6 +9,7 @@ import de.pause.features.user.data.dto.UserPrincipal
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
@@ -27,7 +28,7 @@ class UserRepository {
 
     suspend fun login(req: LoginRequest): UserPrincipal? = suspendTransaction {
         val user = User
-            .find { UserTable.email eq req.email }
+            .find { (UserTable.email eq req.email) and (UserTable.emailVerified eq true) }
             .firstOrNull()
         when {
             user != null && BCrypt.checkpw(req.password, user.passwordHash) ->
