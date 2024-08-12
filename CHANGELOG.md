@@ -2,6 +2,10 @@
 
 ## [soft release]
 
+### 0.1.1
+
+- add mail verification for user registration
+
 ### 0.1.0
 
 - deploy to uberspace
