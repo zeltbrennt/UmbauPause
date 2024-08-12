@@ -13,6 +13,7 @@ object UserTable : UUIDTable("user.account") {
     val created_at = datetime("created_at")
     val updated_at = datetime("updated_at")
     val passwordHash = varchar("password_hash", 250)
+    val emailVerified = bool("email_verified").default(false)
 }
 
 class User(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -23,6 +24,7 @@ class User(id: EntityID<UUID>) : UUIDEntity(id) {
     var updated_at by UserTable.updated_at
     var passwordHash by UserTable.passwordHash
     var roles by Role via UserRoleTable
+    var emailVerified by UserTable.emailVerified
 
     fun toUserPrincipal() = UserPrincipal(
         id = id.value.toString(),
