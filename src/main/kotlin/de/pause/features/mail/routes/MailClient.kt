@@ -8,16 +8,26 @@ import org.apache.commons.mail.SimpleEmail
 object NoReplyEmailClient {
     private val appConfig = HoconApplicationConfig(ConfigFactory.load())
 
-    val hostName = appConfig.property("ktor.email.hostName").getString()
-    val smtpPort = 465
-    val username = appConfig.property("ktor.email.username").getString()
-    val password = appConfig.property("ktor.email.password").getString()
-    val from = appConfig.property("ktor.email.from").getString()
-    val domain = appConfig.property("ktor.server.domain").getString()
+    private val hostName = appConfig.property("ktor.email.hostName").getString()
+    private val smtpPort = 465
+    private val username = appConfig.property("ktor.email.username").getString()
+    private val password = appConfig.property("ktor.email.password").getString()
+    private val from = appConfig.property("ktor.email.from").getString()
+    private val domain = appConfig.property("ktor.server.domain").getString()
 
-    fun sendTestMail(to: String) {
-        sendVerificationMail(to, "test1234")
-    }
+    private val validationMailText = """
+    Willkommen bei beim Online-Bestellsystem der Kantine im DNT!
+    
+    klicke auf folgenden Link, um deine Registrierung abzuschließen:
+    
+    ${domain}/user/verify?id=%s
+    
+    (falls du dich nicht registriert hast, kannst du diese E-Mail ignorieren)
+    
+    Viel Spaß beim Bestellen!
+    
+    Dein Pause-Team
+""".trimIndent()
 
     fun sendVerificationMail(to: String, id: String) {
         val email = SimpleEmail()
@@ -27,10 +37,7 @@ object NoReplyEmailClient {
         email.isSSLOnConnect = true
         email.setFrom(from)
         email.subject = "Anmeldung abschließen"
-        email.setMsg(
-            "Klicke auf diesen Link, um deine Registrierung " +
-                    "abzuschließen: \n$domain/user/verify?id=$id"
-        )
+        email.setMsg(validationMailText.format(id))
         email.addTo(to)
         email.send()
     }
