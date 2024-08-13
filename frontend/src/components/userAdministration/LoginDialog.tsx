@@ -6,9 +6,14 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    FormControl,
     FormControlLabel,
     Grid,
+    IconButton,
+    InputAdornment,
+    InputLabel,
     Link,
+    OutlinedInput,
     TextField,
     Typography
 } from "@mui/material";
@@ -18,6 +23,8 @@ import {jwtDecode} from "jwt-decode";
 import {JWTToken, UserPrincipal} from "../../util/Interfaces.ts";
 import {getUrlFrom} from "../../util/functions.ts";
 import {useNavigate} from "react-router-dom";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 interface LoginDialogProps {
     open: boolean,
@@ -35,6 +42,7 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
 
     const loginUrl = getUrlFrom("user", "login")
     const [loginError, setLoginError] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
 
     const getToken = async (loginData: LoginRequestData) => {
         const response = await fetch(loginUrl, {
@@ -111,17 +119,27 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
                             autoFocus
                             error={loginError}
                         />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Passwort"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                            error={loginError}
-                        />
+                        <FormControl fullWidth variant="outlined" margin={"normal"} required>
+                            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                            <OutlinedInput
+                                id="password"
+                                name="password"
+                                type={showPassword ? 'text' : 'password'}
+                                error={loginError}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            edge="end"
+                                        >
+                                            {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                label="Passwort"
+                            />
+                        </FormControl>
                         <FormControlLabel
                             control={<Checkbox value="remember" color="primary"/>}
                             label="Remember me"

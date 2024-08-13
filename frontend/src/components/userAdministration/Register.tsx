@@ -1,12 +1,24 @@
-import {Alert, AlertTitle, Box, Button, Stack, TextField, Typography} from "@mui/material";
+import {
+    Alert,
+    AlertTitle,
+    Box,
+    Button,
+    FormControl,
+    IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    Stack,
+    TextField,
+    Typography
+} from "@mui/material";
 import {FormEvent, useState} from "react";
 import {getUrlFrom} from "../../util/functions.ts";
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function Register() {
 
-    const [email, setEmail] = useState("")
-    const [pass, setPass] = useState("")
-    const [pass2, setPass2] = useState("")
     const [emailOk, setEmailOk] = useState(true)
     const [passOk, setPassOk] = useState(true)
     const [success, setSuccess] = useState(false)
@@ -21,11 +33,12 @@ export default function Register() {
 
         // console.log(`email: ${email}, pass: ${pass}, pass2: ${pass2}`)
         event.preventDefault()
+        const data = new FormData(event.currentTarget)
+        const email = data.get('email') as string
+        const pass = data.get('password') as string
         validateEmail(email)
         validatePassword(pass)
-
-        if (!emailOk || !passOk || pass !== pass2) {
-            setPass2("")
+        if (!emailOk || !passOk) {
             return
         }
         const registerUrl = getUrlFrom("user", "register")
@@ -73,34 +86,33 @@ export default function Register() {
                 name="email"
                 autoComplete="email"
                 autoFocus
-                onChange={(e) => {
-                    setEmail(e.target.value)
-                }}
+                error={!emailOk}
             />
-            <TextField
-                margin="normal"
-                required
+            <FormControl
                 fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
-                onChange={(e) => {
-                    setPass(e.target.value)
-                }}
-            />
-            <TextField
-                margin="normal"
+                variant="outlined"
+                margin={"normal"}
                 required
-                fullWidth
-                name="password2"
-                label="Password wiederholen"
-                type="password"
-                id="password2"
-                autoComplete="current-password"
-                onChange={(e) => setPass2(e.target.value)}
-            />
+                error={!passOk}>
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="toggle password visibility"
+                                onClick={() => setShowPassword(!showPassword)}
+                                edge="end"
+                            >
+                                {showPassword ? <Visibility/> : <VisibilityOff/>}
+                            </IconButton>
+                        </InputAdornment>
+                    }
+                    label="Passwort"
+                />
+            </FormControl>
             <Button
                 type="submit"
                 fullWidth
@@ -113,9 +125,8 @@ export default function Register() {
                 {emailOk ? null : <Alert severity="error"><AlertTitle>Email Adresse ungültig</AlertTitle>
                     Email Adresse gehört nicht zu einem gültigen Format.
                 </Alert>}
-                {pass === pass2 ? null : <Alert severity="error">Beide Passwörter sind nicht identisch</Alert>}
                 {passOk ? null :
-                    <Alert severity="error" hidden={pass !== pass2}><AlertTitle>Passwort unsicher</AlertTitle>
+                    <Alert severity="error"><AlertTitle>Passwort unsicher</AlertTitle>
                         Das Passwort muss mindestens 8 Zeichen haben, aus Groß- und Kleinbuchstaben, Zahlen und
                         Sonderzeichen bestehen.
                     </Alert>}
