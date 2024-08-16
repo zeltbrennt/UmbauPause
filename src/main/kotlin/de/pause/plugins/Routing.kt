@@ -1,5 +1,7 @@
 package de.pause.plugins
 
+import de.pause.features.app.data.AppRepository
+import de.pause.features.app.routes.sendAppFeedback
 import de.pause.features.shop.data.dto.OrderDto
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
@@ -29,6 +31,7 @@ fun Application.configureRouting(
     userRepository: UserRepository,
     menuRepository: MenuRepository,
     orderRepository: OrderRepository,
+    appRepository: AppRepository,
 ) {
 
     val orderUpdates = MutableStateFlow(value = 0)
@@ -72,6 +75,7 @@ fun Application.configureRouting(
             adminManageUsers(userRepository)
             userManageUsers(userRepository)
             userAuthentication(userRepository)
+            sendAppFeedback(appRepository)
 
             authenticate("user") {
                 route("/order") {

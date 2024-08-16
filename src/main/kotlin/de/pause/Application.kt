@@ -2,6 +2,7 @@ package de.pause
 
 import com.typesafe.config.ConfigFactory
 import de.pause.database.configureDatabase
+import de.pause.features.app.data.AppRepository
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
 import de.pause.features.shop.data.repo.OrderRepository
@@ -30,6 +31,7 @@ fun Application.module(appConfig: HoconApplicationConfig) {
     val userRepository = UserRepository()
     val menuRepository = MenuRepository()
     val orderRepository = OrderRepository()
+    val appRepository = AppRepository()
     configureDatabase(appConfig)
     launch {
         userRepository.setDefaultPasswordOfPreloadedUsers()
@@ -39,6 +41,6 @@ fun Application.module(appConfig: HoconApplicationConfig) {
     configureSecurity(appConfig)
     configureCORS()
     configureWebsockets()
-    configureRouting(articleRepository, userRepository, menuRepository, orderRepository)
+    configureRouting(articleRepository, userRepository, menuRepository, orderRepository, appRepository)
     configureValidation()
 }
