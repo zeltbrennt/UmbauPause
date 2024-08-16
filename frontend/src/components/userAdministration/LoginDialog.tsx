@@ -2,12 +2,10 @@ import {
     Avatar,
     Box,
     Button,
-    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     FormControl,
-    FormControlLabel,
     Grid,
     IconButton,
     InputAdornment,
@@ -95,7 +93,6 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
             <DialogContent>
                 <Box
                     sx={{
-                        marginTop: 8,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -140,10 +137,6 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
                                 label="Passwort"
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={<Checkbox value="remember" color="primary"/>}
-                            label="Remember me"
-                        />
                         <Button
                             type="submit"
                             fullWidth
