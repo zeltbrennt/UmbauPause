@@ -106,6 +106,15 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Backend Tests
 - [ ] Frontend Tests
 
+### TODOs
+ - [ ] Requests mit abgelaufenem Token führen zu logout
+ - [ ] alternativ refresh token
+ - [ ] passwort reset link
+ - [ ] Email Bestätigung bei Bestellung
+ - [x] Feedback Feld
+ - [ ] Caches in Frontend und Backend
+ - [ ] Validierung für Bestellungen
+
 ## 1.2 Ausarbeitung
 
 - [ ] Hintergrund

@@ -60,7 +60,7 @@ export default function Feedback() {
             <Box component={"form"} onSubmit={handleSubmit}>
                 <Stack spacing={2}>
                     <Tooltip placement={"top-start"} arrow title={"Frei lassen für anonymes Feedback"}>
-                        <TextField label={"Name"} placeholder={name} name="name" error={!name.trim()}></TextField>
+                        <TextField label={"Name"} placeholder={"Anonym"} name="name" error={!name.trim()}></TextField>
                     </Tooltip>
                     <TextField multiline
                                minRows={4}
