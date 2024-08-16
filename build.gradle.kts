@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "de.pause"
-version = "alpha-0.1.1"
+version = "alpha-0.1.2"
 
 application {
     mainClass.set("de.pause.ApplicationKt")
@@ -57,7 +57,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jodatime:$exposed_version")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.flywaydb:flyway-core:9.2.0")
+    implementation("org.flywaydb:flyway-database-postgresql:10.17.1")
     implementation("org.apache.commons:commons-email:1.5")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
