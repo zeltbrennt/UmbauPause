@@ -1,4 +1,4 @@
-import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
+import {Alert, Autocomplete, Box, Button, Fade, Stack, TextField, Typography} from "@mui/material";
 import {FormEvent, useEffect, useState} from "react";
 import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
@@ -12,6 +12,8 @@ export default function ScheduleMenu() {
     const [end, setEnd] = useState(dayjs().add(1, 'week').day(5));
     const [newDises, setNewDishes] = useState<string[]>(["", "", "", "", ""]);
     const [dishes, setDishes] = useState<string[]>([]);
+    const [submitted, setSubmitted] = useState(false)
+    const [error, setError] = useState(false)
 
     const fetchDishes = async () => {
         let dishesUrl = getUrlFrom("info", "dishes")
@@ -32,6 +34,14 @@ export default function ScheduleMenu() {
         fetchDishes().then(() => console.log("Fetched dishes")).catch((reason) => console.log(`could not fetch dishes: ${reason}`));
     }, []); // Empty dependency array means this effect runs once on mount
 
+    useEffect(() => {
+        if (submitted) {
+            const timer = setTimeout(() => {
+                setSubmitted(false)
+            }, 10000)
+            return () => clearTimeout(timer)
+        }
+    }, [submitted])
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -50,32 +60,39 @@ export default function ScheduleMenu() {
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             },
             body: JSON.stringify(formData)
-        }).catch((reason) => console.log(`could not save menu: ${reason}`));
+        })
+            .then(resp => {
+                if (resp.status !== 201) {
+                    setError(true)
+                } else {
+                    setError(false)
+                    setSubmitted(true)
+                }
+            })
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="de">
-            <Box component={"form"} onSubmit={handleSubmit} sx={{mt: 1}}>
+            <Stack component={"form"} onSubmit={handleSubmit}
+                   sx={{display: 'flex', flexDirection: 'column'}}>
 
                 <Typography variant={"h2"}>Neues Menü planen</Typography>
-                <Grid container spacing={2} sx={{width: '100%', justifyContent: 'space-between'}}>
-                    <Grid item style={{flexGrow: 1}}>
-                        <DatePicker label={"Start"}
-                                    value={start}
-                                    onChange={(newValue) => {
-                                        setStart(newValue);
-                                        setEnd(newValue.add(4, 'day'))
 
-                                    }}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <DatePicker label={"Ende"}
-                                    value={end}
-                                    onChange={(newValue) => setEnd(newValue)}
-                        />
-                    </Grid>
-                </Grid>
+                <Stack spacing={2} direction={"row"}>
+                    <DatePicker label={"Start"}
+                                value={start}
+                                onChange={(newValue) => {
+                                    setStart(newValue);
+                                    setEnd(newValue.add(4, 'day'))
+
+                                }}
+                    />
+                    <Box sx={{flexGrow: 1}}/>
+                    <DatePicker label={"Ende"}
+                                value={end}
+                                onChange={(newValue) => setEnd(newValue)}
+                    />
+                </Stack>
 
 
                 <WeekdayScheduler key={"Montag"}
@@ -115,8 +132,14 @@ export default function ScheduleMenu() {
                                   }}
                                   dishes={dishes}/>
 
-                <Button variant={"contained"} type={"submit"}>Speichern</Button>
-            </Box>
+                <Button variant={"contained"} type={"submit"} sx={{mt: 2, mb: 3}}>Speichern</Button>
+                {submitted && <Fade in={submitted}>
+                    <Alert severity="success">Menü gespeichert</Alert>
+                </Fade>}
+                {error && <Fade in={error}>
+                    <Alert severity="error">Fehler beim Speichern</Alert>
+                </Fade>}
+            </Stack>
         </LocalizationProvider>
     );
 }

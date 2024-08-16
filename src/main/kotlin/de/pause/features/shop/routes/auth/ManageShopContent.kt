@@ -43,6 +43,7 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                             //call.respond(HttpStatusCode.Conflict)
                         }
                     }
+                    //todo: this should not always return 201
                     call.respond(HttpStatusCode.Created)
                 }
             }
