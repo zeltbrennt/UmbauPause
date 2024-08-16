@@ -1,6 +1,7 @@
-import {Alert, Box, Button, Container, Fade, Stack, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, Container, Fade, Stack, TextField, Tooltip, Typography} from "@mui/material";
 import {FormEvent, useEffect, useState} from "react";
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import {getUrlFrom} from "../util/functions.ts";
 
 export default function Feedback() {
 
@@ -11,9 +12,25 @@ export default function Feedback() {
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const data = new FormData(event.currentTarget)
-        const feedback = data.get("feedback")
-        setSubmitted(true)
-        //todo: send feedback to server
+        const name = data.get("name")?.toString() || "Anonym"
+        setName(name)
+        setFeedback(data.get("feedback") as string)
+
+        fetch(getUrlFrom("feedback", name), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/text'
+            },
+            body: feedback
+        })
+            .then(response => {
+                if (response.status !== 200) {
+                    setError(true)
+                } else {
+                    setError(false)
+                    setSubmitted(true)
+                }
+            })
         console.log(`${name} submitted: ${feedback}`)
     }
 
@@ -21,32 +38,35 @@ export default function Feedback() {
         if (submitted) {
             const timer = setTimeout(() => {
                 setSubmitted(false)
-            }, 3000)
+            }, 10000)
             return () => clearTimeout(timer)
         }
     }, [submitted])
 
     return (
-        <Container>
+        <Container disableGutters maxWidth="md">
             <Typography variant="h3">Feedback</Typography>
             <Typography marginTop={2} marginBottom={2}>
-                Hallo, ich bin Konrad, der Entwickler dieser Webseite. Falls du Anregungen oder Kritik hast, dir
-                bestimmte Funktionen fehlen
-                oder du bei der Bedienung Schwierigkeiten hast, lass gerne ein Feedback da. Ich freue mich über jeden
+                Hi 👋 Ich bin Konrad, der Entwickler dieser Webseite. Hast du Anregungen oder Kritik,
+                fehlen dir bestimmte Funktionen, oder du hast bei der Bedienung Schwierigkeiten?
+                Hast du vielleicht sogar einen Fehler gefunden?
+                Dann lass gerne ein Feedback da. Ich freue mich über jeden
                 Hinweis, wie ich die Webseite besser machen kann.
             </Typography>
             <Typography marginBottom={4}>
-                Falls sie dir besonders gut gefällt, freue ich mich natürlich auch über ein Lob, oder eine kleine
-                Spende.
+                Falls es dir hier besonders gut gefällt, freue ich mich natürlich auch über ein Lob, oder eine kleine
+                Spende 🥰
             </Typography>
             <Box component={"form"} onSubmit={handleSubmit}>
                 <Stack spacing={2}>
-
-                    <TextField label={"Name"} defaultValue={name} name="name"></TextField>
+                    <Tooltip placement={"top-start"} arrow title={"Frei lassen für anonymes Feedback"}>
+                        <TextField label={"Name"} placeholder={name} name="name" error={!name.trim()}></TextField>
+                    </Tooltip>
                     <TextField multiline
-                               rows={10}
+                               minRows={4}
+                               maxRows={10}
                                label={"Feedback"}
-                               placeholder={"I like the app!"}
+                               placeholder={"Ich habe folgende Verbesserungsvorschläge..."}
                                name="feedback"
                                onChange={(event) => setFeedback(event.target.value)}
                     />
@@ -59,12 +79,13 @@ export default function Feedback() {
                             window.open("https://paypal.me/zeltbrennt/5")
                         }}>Buy me a coffee</Button>
                     </Stack>
-                    <Fade in={submitted}>
-                        <Alert severity="success">Vielen Dank für dein Feedback!</Alert>
-                    </Fade>
-                    <Fade in={error}>
+                    {submitted &&
+                        <Fade in={submitted}>
+                            <Alert severity="success">Vielen Dank für dein Feedback!</Alert>
+                        </Fade>}
+                    {error && <Fade in={error}>
                         <Alert severity="error">Es ist ein Fehler aufgetreten</Alert>
-                    </Fade>
+                    </Fade>}
                 </Stack>
             </Box>
         </Container>

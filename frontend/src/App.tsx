@@ -1,4 +1,3 @@
-import {Container} from "@mui/material";
 import AppFrame from "./components/AppFrame.tsx";
 import {ThemeProvider} from "@emotion/react";
 import {lightTheme} from "./Themes.ts";
@@ -16,6 +15,7 @@ import Landingpage from "./components/Landingpage.tsx";
 import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
 import ValidateEmail from "./components/userAdministration/ValidateEmail.tsx";
 import Feedback from "./components/Feedback.tsx";
+import {Container} from "@mui/material";
 
 function App() {
 
@@ -43,7 +43,7 @@ function App() {
     return (
         <BrowserRouter>
             <ThemeProvider theme={lightTheme}>
-                <Container>
+                <Container disableGutters>
                     <LoginDialog open={loginDialogOpen}
                                  handleClose={() => setLoginDialogOpen(false)}
                                  setCurrentUser={(user: UserPrincipal) => setCurrentUser(user)}
@@ -51,7 +51,8 @@ function App() {
                     />
                     <AppFrame currentUser={currentUser}
                               logout={() => {
-                                  serverLogout(sessionStorage.getItem("accessToken") as unknown as JWTToken)
+                                  sessionStorage.clear()
+                                  setCurrentUser(null)
                               }}
                               openLoginDialog={() => setLoginDialogOpen(true)}>
                         <Routes>
