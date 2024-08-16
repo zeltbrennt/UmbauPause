@@ -15,6 +15,7 @@ import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -59,7 +60,7 @@ export default function AppFrame({
                                  flexShrink: 0,
                              }}>
                 <Toolbar/>
-                <Box sx={{overflow: 'auto'}}>
+                <Box sx={{overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%'}}>
                     <List>
                         <ListItem disablePadding key="home">
                             <ListItemButton onClick={() => {
@@ -139,6 +140,20 @@ export default function AppFrame({
                                     {currentUser ? <LogoutIcon/> : <LoginIcon/>}
                                 </ListItemIcon>
                                 <ListItemText primary={currentUser ? "Logout" : "Login"}/>
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                    <Box sx={{flexGrow: 1}}></Box>
+                    <List>
+                        <ListItem disablePadding key="feedback">
+                            <ListItemButton onClick={() => {
+                                setDrawerOpen(false)
+                                navigate("/feedback")
+                            }}>
+                                <ListItemIcon>
+                                    <FeedbackIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={"Feedback"}/>
                             </ListItemButton>
                         </ListItem>
                     </List>
