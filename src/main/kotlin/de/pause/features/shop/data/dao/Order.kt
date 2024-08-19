@@ -17,6 +17,8 @@ object OrderTable : UUIDTable("shop.order") {
     val menuId = reference("menu_id", MenuTable)
     val status = varchar("status", 50)
     val location = reference("location_id", LocationTable)
+    val validFrom = reference("valid_from", MenuTable)
+    val validTo = reference("valid_to", MenuTable)
 }
 
 class Order(id: EntityID<UUID>) : UUIDEntity(id) {
@@ -28,5 +30,7 @@ class Order(id: EntityID<UUID>) : UUIDEntity(id) {
     var menuId by Menu referencedOn OrderTable.menuId
     var status by OrderTable.status
     var location by Location referencedOn OrderTable.location
+    var validFrom by Menu referencedOn OrderTable.validFrom
+    var validTo by Menu referencedOn OrderTable.validTo
 }
 
