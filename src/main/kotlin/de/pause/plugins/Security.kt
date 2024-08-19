@@ -16,6 +16,7 @@ lateinit var secret: String
 lateinit var issuer: String
 lateinit var audience: String
 var tokenExpiration by Delegates.notNull<Long>()
+var refreshTokenExpiration by Delegates.notNull<Long>()
 
 fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
 
@@ -23,6 +24,7 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
     issuer = appConfig.property("ktor.jwt.issuer").getString()
     audience = appConfig.property("ktor.jwt.audience").getString()
     tokenExpiration = appConfig.property("ktor.jwt.expiration").getString().toLong()
+    refreshTokenExpiration = appConfig.property("ktor.jwt.refreshExpiration").getString().toLong()
 
     install(Authentication) {
 
@@ -64,12 +66,28 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
                 }
             }
         }
-
+        jwt("refresh") {
+            realm = "refresh"
+            verifier(
+                JWT
+                    .require(Algorithm.HMAC256(secret))
+                    .withAudience(audience)
+                    .withIssuer(issuer)
+                    .build()
+            )
+            validate { credential ->
+                when {
+                    credential.payload.getClaim("uid").asString().isBlank() -> null
+                    credential.payload.getClaim("roles").isMissing.not() -> null// access tokens can not be uses as refresh tokens
+                    else -> JWTPrincipal(credential.payload)
+                }
+            }
+        }
     }
 
 }
 
-fun createJWT(user: UserPrincipal): String = JWT.create()
+fun createAccessToken(user: UserPrincipal): String = JWT.create()
     .withJWTId(UUID.randomUUID().toString())
     .withAudience(audience)
     .withIssuer(issuer)
@@ -77,4 +95,13 @@ fun createJWT(user: UserPrincipal): String = JWT.create()
     .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
     .withClaim("uid", user.id)
     .withClaim("roles", user.roles)
+    .sign(Algorithm.HMAC256(secret))
+
+fun createRefreshToken(user: UserPrincipal): String = JWT.create()
+    .withJWTId(UUID.randomUUID().toString())
+    .withAudience(audience)
+    .withIssuer(issuer)
+    .withIssuedAt(Instant.now())
+    .withExpiresAt(Instant.now().plusSeconds(refreshTokenExpiration))
+    .withClaim("uid", user.id)
     .sign(Algorithm.HMAC256(secret))

@@ -1,6 +1,7 @@
 package de.pause.plugins
 
 import de.pause.features.app.data.AppRepository
+import de.pause.features.app.refresh.routes.refreshToken
 import de.pause.features.app.routes.sendAppFeedback
 import de.pause.features.shop.data.dto.OrderDto
 import de.pause.features.shop.data.repo.DishRepository
@@ -67,6 +68,8 @@ fun Application.configureRouting(
                     call.respondText(version.substringAfter("="))
                 }
             }
+
+            refreshToken(userRepository)
 
             shopPublicRoutes(menuRepository, orderRepository)
             manageShopContent(dishRepository, menuRepository)
