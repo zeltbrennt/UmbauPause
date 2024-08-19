@@ -21,16 +21,24 @@ fun Application.configureValidation() {
             ValidationResult.Valid
         }
         validate<OrderDto> {
-            when {
-                it.orders.isEmpty() -> ValidationResult.Invalid("orders cannot be empty")
-                it.validFrom.isBlank() || it.validTo.isBlank() -> ValidationResult.Invalid("validFrom or validTo cannot be blank")
-                it.validTo <= it.validFrom -> ValidationResult.Invalid("validTo cannot be before validFrom")
-                DateTime(it.validTo) < DateTime.now() -> ValidationResult.Invalid("validTo cannot be in the past")
-                DateTime(it.validTo) == DateTime.now() && DateTime.now().isAfter(
-                    DateTime.now().withTime(10, 30, 0, 0)
-                ) -> ValidationResult.Invalid("validTo cannot be in the past")
-
-                else -> ValidationResult.Valid
+            try {
+                val validFromDate = DateTime(it.validFrom)
+                val validToDate = DateTime(it.validTo)
+                when {
+                    it.orders.isEmpty() -> ValidationResult.Invalid("orders cannot be empty")
+                    validToDate.isAfter(validFromDate) -> ValidationResult.Invalid("validTo cannot be before validFrom")
+                    validToDate.isAfterNow -> ValidationResult.Invalid("validTo cannot be in the past")
+                    else -> {
+                        it.orders.forEach { order ->
+                            if (validFromDate.plusDays(order.day - 1).withTime(10, 30, 0, 0).isAfterNow) {
+                                return@validate ValidationResult.Invalid("order cannot be placed after 10:30")
+                            }
+                        }
+                        ValidationResult.Valid
+                    }
+                }
+            } catch (e: IllegalArgumentException) {
+                ValidationResult.Invalid("validFrom or validTo is not a valid date")
             }
         }
         validate<String> {

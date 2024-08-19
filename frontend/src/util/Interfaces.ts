@@ -51,7 +51,7 @@ export interface DeliveryLocation {
 export interface Order {
     item: number,
     location: number,
-    orders?: number,
+    day: number,
 }
 
 export interface OrderOverviewDta {

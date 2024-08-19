@@ -48,6 +48,7 @@ data class LocationDto(
 data class SingleOrderDto(
     val item: Int,
     val location: Int,
+    val day: Int,
 )
 
 @Serializable

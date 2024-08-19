@@ -149,7 +149,8 @@ export default function MakeOrder() {
                         if (currentSelectedMenuItem && currentSelectedMenuItem) {
                             setOrders([...orders, {
                                 item: currentSelectedMenuItem.id,
-                                location: currentSelectedLocation?.id ?? 0
+                                location: currentSelectedLocation?.id ?? 0,
+                                day: currentSelectedMenuItem.day
                             }].sort((a, b) => a.item - b.item))
                         }
                     }} variant={"outlined"} size={"medium"}>Hinzufügen</Button>
