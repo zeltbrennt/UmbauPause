@@ -1,6 +1,5 @@
 package de.pause.features.shop.routes.auth
 
-import de.pause.features.shop.data.dto.DishDto
 import de.pause.features.shop.data.dto.MenuInfo
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
@@ -16,13 +15,6 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
 
     authenticate("admin") {
         route("/content") {
-            route("/add-dish") {
-                post {
-                    val newDish = call.receive<DishDto>()
-                    dishRepository.addDish(newDish)
-                    call.respond(HttpStatusCode.Created)
-                }
-            }
             route("/new-menu") {
                 post {
 
@@ -30,7 +22,7 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                     call.application.environment.log.info(newMenu.toString())
                     newMenu.dishes.forEach {
                         val dish = try {
-                            dishRepository.addDish(DishDto(0, it.name))
+                            dishRepository.addDishByName(it.name)
                         } catch (e: ExposedSQLException) {
                             call.application.environment.log.info("Dish already exists")
                             dishRepository.findByName(it.name)
@@ -40,10 +32,9 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                             menuRepository.addNewMenu(newMenu.validFrom, newMenu.validTo, it.day, dish.id.value)
                         } catch (e: ExposedSQLException) {
                             call.application.environment.log.info("Menu already exists")
-                            //call.respond(HttpStatusCode.Conflict)
+                            call.respond(HttpStatusCode.BadRequest)
                         }
                     }
-                    //todo: this should not always return 201
                     call.respond(HttpStatusCode.Created)
                 }
             }

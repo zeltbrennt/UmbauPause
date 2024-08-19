@@ -18,10 +18,10 @@ class DishRepository {
         Dish.find { DishTable.description eq name }.first()
     }
 
-    suspend fun addDish(dish: DishDto) = suspendTransaction {
+    suspend fun addDishByName(dish: String) = suspendTransaction {
 
         Dish.new {
-            description = dish.description
+            description = dish
             createdAt = DateTime.now()
             updatedAt = DateTime.now()
         }

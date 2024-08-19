@@ -18,7 +18,22 @@ fun Application.configureValidation() {
             }
         }
         validate<MenuInfo> {
-            ValidationResult.Valid
+            try {
+                val validFromDate = DateTime(it.validFrom)
+                val validToDate = DateTime(it.validTo)
+                when {
+                    it.dishes
+                        .map { dish -> dish.day }
+                        .sorted() != IntRange(1, 5)
+                        .toList() -> ValidationResult.Invalid("days must be distinct days of week")
+
+                    validToDate.isBefore(validFromDate) -> ValidationResult.Invalid("validTo cannot be before validFrom")
+                    validFromDate.isBeforeNow -> ValidationResult.Invalid("validFrom cannot be in the past")
+                    else -> ValidationResult.Valid
+                }
+            } catch (e: IllegalArgumentException) {
+                ValidationResult.Invalid("validFrom or validTo is not a valid date")
+            }
         }
         validate<OrderDto> {
             try {
@@ -26,11 +41,11 @@ fun Application.configureValidation() {
                 val validToDate = DateTime(it.validTo)
                 when {
                     it.orders.isEmpty() -> ValidationResult.Invalid("orders cannot be empty")
-                    validToDate.isAfter(validFromDate) -> ValidationResult.Invalid("validTo cannot be before validFrom")
-                    validToDate.isAfterNow -> ValidationResult.Invalid("validTo cannot be in the past")
+                    validToDate.isBefore(validFromDate) -> ValidationResult.Invalid("validTo cannot be before validFrom")
+                    validToDate.isBeforeNow -> ValidationResult.Invalid("validTo cannot be in the past")
                     else -> {
                         it.orders.forEach { order ->
-                            if (validFromDate.plusDays(order.day - 1).withTime(10, 30, 0, 0).isAfterNow) {
+                            if (validFromDate.plusDays(order.day - 1).withTime(10, 30, 0, 0).isBeforeNow) {
                                 return@validate ValidationResult.Invalid("order cannot be placed after 10:30")
                             }
                         }
