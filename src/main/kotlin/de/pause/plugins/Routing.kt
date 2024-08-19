@@ -82,8 +82,15 @@ fun Application.configureRouting(
                     post {
                         val jwt = call.principal<JWTPrincipal>()
                         val user = jwt!!.payload.getClaim("uid").asString()
-                        val temp = call.receive<List<OrderDto>>()
-                        temp.forEach { orderRepository.addOrderByMenuId(it, user) }
+                        val orderRequest = call.receive<OrderDto>()
+                        orderRequest.orders.forEach {
+                            orderRepository.addOrderByMenuId(
+                                it,
+                                user,
+                                orderRequest.validFrom,
+                                orderRequest.validTo
+                            )
+                        }
                         //call.application.environment.log.info("user: $user ordered: $temp")
                         //todo: check if order was successful
                         onOrderUpdated()

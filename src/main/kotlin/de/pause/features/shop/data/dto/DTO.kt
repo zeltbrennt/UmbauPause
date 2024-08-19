@@ -45,7 +45,14 @@ data class LocationDto(
 )
 
 @Serializable
-data class OrderDto(
+data class SingleOrderDto(
     val item: Int,
     val location: Int,
+)
+
+@Serializable
+data class OrderDto(
+    val validFrom: String,
+    val validTo: String,
+    val orders: List<SingleOrderDto>
 )

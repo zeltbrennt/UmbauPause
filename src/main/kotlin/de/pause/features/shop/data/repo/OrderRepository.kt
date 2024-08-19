@@ -4,8 +4,8 @@ import de.pause.database.suspendTransaction
 import de.pause.features.shop.data.dao.*
 import de.pause.features.shop.data.dto.LocationDto
 import de.pause.features.shop.data.dto.OrderCounts
-import de.pause.features.shop.data.dto.OrderDto
 import de.pause.features.shop.data.dto.OrderOverview
+import de.pause.features.shop.data.dto.SingleOrderDto
 import de.pause.features.user.data.dao.User
 import de.pause.util.OrderStatus
 import org.jetbrains.exposed.sql.and
@@ -15,7 +15,7 @@ import java.util.*
 
 class OrderRepository {
 
-    suspend fun addOrderByMenuId(order: OrderDto, user: String) = suspendTransaction {
+    suspend fun addOrderByMenuId(order: SingleOrderDto, user: String, from: String, to: String) = suspendTransaction {
         Order.new {
             menuId = Menu[order.item]
             userId = User[UUID.fromString(user)]
@@ -23,6 +23,8 @@ class OrderRepository {
             updatedAt = DateTime.now()
             status = OrderStatus.OPEN.toString()
             location = Location[order.location]
+            validFrom = DateTime(from)
+            validTo = DateTime(to)
         }
     }
 

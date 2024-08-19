@@ -61,8 +61,9 @@ export default function MakeOrder() {
     const [currentSelectedLocation, setCurrentSelectedLocation] = useState<DeliveryLocation>()
 
     const sendOrder = () => {
+        const completeOrder = {validFrom: menu.validFrom, validTo: menu.validTo, orders: orders}
         console.log(
-            orders
+            completeOrder
         )
         const orderUrl = getUrlFrom("order")
         fetch(orderUrl, {
@@ -71,7 +72,7 @@ export default function MakeOrder() {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             },
-            body: JSON.stringify(orders)
+            body: JSON.stringify(completeOrder)
         })
             .then(resp => {
                 if (resp.status === 201) {
