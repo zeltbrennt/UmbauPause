@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import de.pause.features.user.data.dto.UserPrincipal
 import de.pause.util.UserRole
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 import io.ktor.server.config.*
+import java.security.MessageDigest
+import java.security.SecureRandom
 import java.time.Instant
 import java.util.*
 import kotlin.properties.Delegates
@@ -17,6 +20,7 @@ lateinit var issuer: String
 lateinit var audience: String
 var tokenExpiration by Delegates.notNull<Long>()
 var refreshTokenExpiration by Delegates.notNull<Long>()
+var cookieSecure by Delegates.notNull<Boolean>()
 
 fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
 
@@ -25,6 +29,7 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
     audience = appConfig.property("ktor.jwt.audience").getString()
     tokenExpiration = appConfig.property("ktor.jwt.expiration").getString().toLong()
     refreshTokenExpiration = appConfig.property("ktor.jwt.refreshExpiration").getString().toLong()
+    cookieSecure = appConfig.property("ktor.cookie.secure").getString().toBoolean()
 
     install(Authentication) {
 
@@ -87,7 +92,7 @@ fun Application.configureSecurity(appConfig: HoconApplicationConfig) {
 
 }
 
-fun createAccessToken(user: UserPrincipal): String = JWT.create()
+private fun createAccessToken(user: UserPrincipal, fingerprintHash: String): String = JWT.create()
     .withJWTId(UUID.randomUUID().toString())
     .withAudience(audience)
     .withIssuer(issuer)
@@ -95,9 +100,10 @@ fun createAccessToken(user: UserPrincipal): String = JWT.create()
     .withExpiresAt(Instant.now().plusSeconds(tokenExpiration))
     .withClaim("uid", user.id)
     .withClaim("roles", user.roles)
+    .withClaim("fingerprint", fingerprintHash)
     .sign(Algorithm.HMAC256(secret))
 
-fun createRefreshToken(user: UserPrincipal): String = JWT.create()
+private fun createRefreshToken(user: UserPrincipal): String = JWT.create()
     .withJWTId(UUID.randomUUID().toString())
     .withAudience(audience)
     .withIssuer(issuer)
@@ -105,3 +111,36 @@ fun createRefreshToken(user: UserPrincipal): String = JWT.create()
     .withExpiresAt(Instant.now().plusSeconds(refreshTokenExpiration))
     .withClaim("uid", user.id)
     .sign(Algorithm.HMAC256(secret))
+
+fun createUserTokens(user: UserPrincipal): UserTokens {
+    val fingerprint = createFingerprint()
+    val accessToken = createAccessToken(user, fingerprint.hash)
+    val cookie = Cookie(
+        name = "access_fingerprint",
+        value = fingerprint.value,
+        maxAge = refreshTokenExpiration.toInt(),
+        path = "/",
+        secure = cookieSecure,
+        httpOnly = true
+    )
+    return UserTokens(accessToken, cookie)
+}
+
+data class UserTokens(val accessToken: String, val cookie: Cookie)
+data class Fingerprint(val value: String, val hash: String)
+
+private fun createFingerprint(): Fingerprint {
+    val random = SecureRandom.getInstanceStrong()
+    val bytes = ByteArray(64)
+    random.nextBytes(bytes)
+    val value = bytes.joinToString("") { "%02x".format(it) }
+    val md = MessageDigest.getInstance("SHA-256")
+    val hash = md.digest(value.toByteArray()).joinToString("") { "%02x".format(it) }
+    return Fingerprint(value, hash)
+}
+
+fun validateFingerprint(fingerprint: Fingerprint): Boolean {
+    val md = MessageDigest.getInstance("SHA-256")
+    val hash = md.digest(fingerprint.value.toByteArray()).joinToString("") { "%02x".format(it) }
+    return hash == fingerprint.hash
+}

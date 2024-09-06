@@ -27,7 +27,7 @@ export function getUrlFrom(...path: string[]): string {
     return BASE_URL + path.join("/")
 }
 
-function isAccessTokenValid() {
+export function isAccessTokenValid() {
     if (!sessionStorage.getItem("accessToken")) {
         console.log("has no token")
         return false
@@ -38,7 +38,7 @@ function isAccessTokenValid() {
     }
 }
 
-function saveNewAccessToken() {
+export function saveNewAccessToken() {
     fetch(getUrlFrom("refresh"), {
         method: 'POST',
         headers: {

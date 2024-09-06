@@ -4,8 +4,7 @@ import de.pause.features.mail.routes.NoReplyEmailClient
 import de.pause.features.user.data.dto.LoginRequest
 import de.pause.features.user.data.dto.RegisterRequest
 import de.pause.features.user.data.repo.UserRepository
-import de.pause.plugins.createAccessToken
-import de.pause.plugins.createRefreshToken
+import de.pause.plugins.createUserTokens
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -19,9 +18,9 @@ fun Route.userAuthentication(userRepository: UserRepository) {
                 val loginRequest = call.receive<LoginRequest>()
                 val user = userRepository.login(loginRequest)
                 if (user != null) {
-                    val accessToken = createAccessToken(user)
-                    val refreshToken = createRefreshToken(user)
-                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to accessToken, "refreshToken" to refreshToken))
+                    val userTokens = createUserTokens(user)
+                    call.response.cookies.append(userTokens.cookie)
+                    call.respond(HttpStatusCode.OK, mapOf("accessToken" to userTokens.accessToken))
                 } else {
                     call.respond(HttpStatusCode.Unauthorized)
                 }

@@ -48,7 +48,8 @@ export default function LoginDialog({open, handleClose, setCurrentUser, handleRe
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(loginData)
+            body: JSON.stringify(loginData),
+            credentials: 'include'
         })
         return await response.json()
     }
