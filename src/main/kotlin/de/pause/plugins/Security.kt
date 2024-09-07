@@ -118,11 +118,12 @@ fun createUserTokens(user: UserPrincipal): UserTokens {
     val cookie = Cookie(
         name = "access_fingerprint",
         value = fingerprint.value,
-        maxAge = refreshTokenExpiration.toInt(),
+        maxAge = tokenExpiration.toInt(),
         path = "/",
         secure = cookieSecure,
-        httpOnly = true
+        httpOnly = true,
     )
+    // TODO: cookie.extensions["SameSite"] = "Strict"
     return UserTokens(accessToken, cookie)
 }
 
