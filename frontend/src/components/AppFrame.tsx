@@ -19,6 +19,7 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import {ReactNode, useState} from "react";
@@ -85,6 +86,18 @@ export default function AppFrame({
                                 <ListItemText primary="Wochenkarte"/>
                             </ListItemButton>
                         </ListItem>
+                        <ListItem disablePadding key="orders">
+                            <ListItemButton onClick={() => {
+                                navigate("/myorders")
+                                setDrawerOpen(false)
+                            }
+                            }>
+                                <ListItemIcon>
+                                    <ReceiptLongIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary="Meine Bestellungen"/>
+                            </ListItemButton>
+                        </ListItem>
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
@@ -123,7 +136,7 @@ export default function AppFrame({
                         {currentUser?.roles.includes(UserRole.USER) ?
                             <ListItem disablePadding key={"order"}>
                                 <ListItemButton onClick={() => {
-                                    navigate("/order")
+                                    navigate("/neworder")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
