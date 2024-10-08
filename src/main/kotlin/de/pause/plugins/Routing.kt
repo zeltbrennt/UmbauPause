@@ -100,6 +100,21 @@ fun Application.configureRouting(
                         onOrderUpdated()
                         call.respond(HttpStatusCode.Created)
                     }
+                    route("/cancel") {
+                        patch("/{id}") {
+                            try {
+                                val success = orderRepository.cancelOrderById(UUID.fromString(call.parameters["id"]!!))
+                                if (success) {
+                                    onOrderUpdated()
+                                    call.respond(HttpStatusCode.OK)
+                                } else {
+                                    call.respond(HttpStatusCode.NotFound)
+                                }
+                            } catch (e: IllegalArgumentException) {
+                                call.respond(HttpStatusCode.BadRequest)
+                            }
+                        }
+                    }
                 }
 
                 route("/myorders") {

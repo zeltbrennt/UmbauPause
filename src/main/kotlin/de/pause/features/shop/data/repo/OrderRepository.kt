@@ -104,4 +104,14 @@ class OrderRepository {
         Order.count()
     }
 
+    suspend fun cancelOrderById(uuid: UUID) = suspendTransaction {
+        val order = Order.findById(uuid) ?: return@suspendTransaction false
+        try {
+            order.status = OrderStatus.CANCELED.toString()
+        } catch (e: Exception) {
+            return@suspendTransaction false
+        }
+        return@suspendTransaction true
+    }
+
 }

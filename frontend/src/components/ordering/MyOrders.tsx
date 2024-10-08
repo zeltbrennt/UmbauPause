@@ -30,6 +30,17 @@ export default function MyOrders() {
     const [orders, setOrders] = useState<Order[]>([])
     const [displayAll, setDisplayAll] = useState(false)
 
+    const cancelOrder = (orderId: string) => {
+        orders.find(order => order.id === orderId)!.status = "CANCELED"
+        setOrders([...orders])
+        fetch(getUrlFrom("order", "cancel", orderId), {
+            method: 'PATCH',
+            headers: {
+                'Authorization': `Bearer ${sessionStorage.getItem('accessToken')}`
+            }
+        }).catch(reason => console.log(`could not cancel order: ${reason}`))
+    }
+
     useEffect(() => {
         fetch(getUrlFrom("myorders"),
             {
@@ -57,15 +68,16 @@ export default function MyOrders() {
             <List>
                 {orders
                     .filter(order => order.status === "OPEN" || displayAll)
-                    .map((order) => <OrderListItem order={order}/>)}
+                    .map((order) => <OrderListItem handleClick={cancelOrder} order={order}/>)}
             </List>
         </Box>
     )
 }
 
-function OrderListItem({order}: { order: Order }) {
+function OrderListItem({order, handleClick}: { order: Order, handleClick: (id: string) => void }) {
     return (
-        <ListItem key={order.id} secondaryAction={<Button disabled={order.status !== "OPEN"}>stornieren</Button>}>
+        <ListItem key={order.id} secondaryAction={
+            <Button disabled={order.status !== "OPEN"} onClick={() => handleClick(order.id)}>stornieren</Button>}>
             <ListItemIcon>
                 {order.status === "OPEN" ? <ShoppingCartIcon/> :
                     order.status === "DELIVERED" ? <LocalDiningIcon/> : <CancelIcon/>}
