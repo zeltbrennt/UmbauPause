@@ -2,6 +2,11 @@
 
 ## [soft release]
 
+### 0.1.3
+
+- users can view their orders
+- users can cancel their orders
+
 ### 0.1.2
 
 - add Feedback form and donation link
