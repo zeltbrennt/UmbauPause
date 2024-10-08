@@ -25,6 +25,7 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 fun Application.configureRouting(
@@ -98,6 +99,15 @@ fun Application.configureRouting(
                         //todo: check if order was successful
                         onOrderUpdated()
                         call.respond(HttpStatusCode.Created)
+                    }
+                }
+
+                route("/myorders") {
+                    get {
+                        val jwt = call.principal<JWTPrincipal>()
+                        val id = jwt!!.payload.getClaim("uid").asString()
+                        val orders = orderRepository.getAllOrdersByUser(UUID.fromString(id))
+                        call.respond(orders)
                     }
                 }
             }
