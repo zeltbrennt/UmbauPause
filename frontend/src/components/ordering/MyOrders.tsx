@@ -17,6 +17,7 @@ import {useEffect, useState} from "react";
 import {getUrlFrom} from "../../util/functions.ts";
 
 type Order = {
+    id: string,
     date: string,
     dish: string,
     location: string,
@@ -55,16 +56,16 @@ export default function MyOrders() {
             </FormGroup>
             <List>
                 {orders
-                    .filter(x => x.status === "OPEN" || displayAll)
-                    .map((order, id) => <OrderListItem id={id} order={order}/>)}
+                    .filter(order => order.status === "OPEN" || displayAll)
+                    .map((order) => <OrderListItem order={order}/>)}
             </List>
         </Box>
     )
 }
 
-function OrderListItem({order, id}: { order: Order, id: number }) {
+function OrderListItem({order}: { order: Order }) {
     return (
-        <ListItem key={id} secondaryAction={<Button disabled={order.status !== "OPEN"}>stornieren</Button>}>
+        <ListItem key={order.id} secondaryAction={<Button disabled={order.status !== "OPEN"}>stornieren</Button>}>
             <ListItemIcon>
                 {order.status === "OPEN" ? <ShoppingCartIcon/> :
                     order.status === "DELIVERED" ? <LocalDiningIcon/> : <CancelIcon/>}

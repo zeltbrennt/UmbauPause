@@ -73,6 +73,7 @@ class OrderRepository {
             .innerJoin(LocationTable)
             .innerJoin(DishTable)
             .select(
+                OrderTable.id,
                 MenuTable.validFrom,
                 MenuTable.dayOfWeek,
                 LocationTable.name,
@@ -83,6 +84,7 @@ class OrderRepository {
             }
             .map {
                 UserOrderDto(
+                    id = it[OrderTable.id].value.toString(),
                     date = it[MenuTable.validFrom].plusDays(it[MenuTable.dayOfWeek] - 1).toString("yyyy-MM-dd"),
                     dish = it[DishTable.description],
                     location = it[LocationTable.name],
