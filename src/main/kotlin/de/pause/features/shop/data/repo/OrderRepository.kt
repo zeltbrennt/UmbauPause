@@ -68,7 +68,7 @@ class OrderRepository {
     }
 
     suspend fun getAllOrdersByUser(user: UUID) = suspendTransaction {
-        OrderTable
+        return@suspendTransaction OrderTable
             .innerJoin(MenuTable)
             .innerJoin(LocationTable)
             .innerJoin(DishTable)
@@ -78,7 +78,9 @@ class OrderRepository {
                 LocationTable.name,
                 DishTable.description,
                 OrderTable.status,
-            )
+            ).where {
+                OrderTable.userId eq user
+            }
             .map {
                 UserOrderDto(
                     date = it[MenuTable.validFrom].plusDays(it[MenuTable.dayOfWeek] - 1).toString("yyyy-MM-dd"),
@@ -87,7 +89,8 @@ class OrderRepository {
                     status = it[OrderTable.status]
                 )
             }
-
+            .sortedBy { it.date }
+            .reversed()
     }
 
 
