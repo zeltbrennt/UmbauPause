@@ -60,6 +60,7 @@ data class OrderDto(
 
 @Serializable
 data class UserOrderDto(
+    val id: String,
     val date: String,
     val dish: String,
     val location: String,
