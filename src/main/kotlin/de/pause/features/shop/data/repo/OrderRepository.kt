@@ -2,10 +2,7 @@ package de.pause.features.shop.data.repo
 
 import de.pause.database.suspendTransaction
 import de.pause.features.shop.data.dao.*
-import de.pause.features.shop.data.dto.LocationDto
-import de.pause.features.shop.data.dto.OrderCounts
-import de.pause.features.shop.data.dto.OrderOverview
-import de.pause.features.shop.data.dto.SingleOrderDto
+import de.pause.features.shop.data.dto.*
 import de.pause.features.user.data.dao.User
 import de.pause.util.OrderStatus
 import org.jetbrains.exposed.sql.and
@@ -28,7 +25,7 @@ class OrderRepository {
         }
     }
 
-    suspend fun getAllOrdersFrom(day: DateTime) = suspendTransaction {
+    suspend fun getAllOrdersByDate(day: DateTime) = suspendTransaction {
         val validFrom: String
         val validTo: String
         val orderCounts = OrderTable
@@ -68,6 +65,29 @@ class OrderRepository {
             timestamp = DateTime.now().toString(),
             orders = orderCounts
         )
+    }
+
+    suspend fun getAllOrdersByUser(user: UUID) = suspendTransaction {
+        OrderTable
+            .innerJoin(MenuTable)
+            .innerJoin(LocationTable)
+            .innerJoin(DishTable)
+            .select(
+                MenuTable.validFrom,
+                MenuTable.dayOfWeek,
+                LocationTable.name,
+                DishTable.description,
+                OrderTable.status,
+            )
+            .map {
+                UserOrderDto(
+                    date = it[MenuTable.validFrom].plusDays(it[MenuTable.dayOfWeek] - 1).toString("yyyy-MM-dd"),
+                    dish = it[DishTable.description],
+                    location = it[LocationTable.name],
+                    status = it[OrderTable.status]
+                )
+            }
+
     }
 
 

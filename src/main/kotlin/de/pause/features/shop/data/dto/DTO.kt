@@ -57,3 +57,11 @@ data class OrderDto(
     val validTo: String,
     val orders: List<SingleOrderDto>
 )
+
+@Serializable
+data class UserOrderDto(
+    val date: String,
+    val dish: String,
+    val location: String,
+    val status: String,
+)
