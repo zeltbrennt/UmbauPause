@@ -16,6 +16,7 @@ import ShowCurrentMenu from "./components/ordering/ShowCurrentMenu.tsx";
 import ValidateEmail from "./components/userAdministration/ValidateEmail.tsx";
 import Feedback from "./components/Feedback.tsx";
 import {Container} from "@mui/material";
+import MyOrders from "./components/ordering/MyOrders.tsx";
 
 function App() {
 
@@ -60,7 +61,8 @@ function App() {
                             <Route path="/menu" element={<ShowCurrentMenu/>}/>
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/schedule" element={<ScheduleMenu/>}/>
-                            <Route path="/order" element={<MakeOrder/>}/>
+                            <Route path="/neworder" element={<MakeOrder/>}/>
+                            <Route path="/myorders" element={<MyOrders/>}/>
                             <Route path="/statistics/this-week" element={<OrderOverview/>}/>
                             <Route path="/live" element={<LiveWebSocket/>}/>
                             <Route path="/user/verify" element={<ValidateEmail/>}/>
