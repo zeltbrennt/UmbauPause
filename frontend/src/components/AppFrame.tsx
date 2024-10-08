@@ -86,18 +86,6 @@ export default function AppFrame({
                                 <ListItemText primary="Wochenkarte"/>
                             </ListItemButton>
                         </ListItem>
-                        <ListItem disablePadding key="orders">
-                            <ListItemButton onClick={() => {
-                                navigate("/myorders")
-                                setDrawerOpen(false)
-                            }
-                            }>
-                                <ListItemIcon>
-                                    <ReceiptLongIcon/>
-                                </ListItemIcon>
-                                <ListItemText primary="Meine Bestellungen"/>
-                            </ListItemButton>
-                        </ListItem>
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
@@ -133,7 +121,7 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                         </> : <></>}
-                        {currentUser?.roles.includes(UserRole.USER) ?
+                        {currentUser?.roles.includes(UserRole.USER) ? <>
                             <ListItem disablePadding key={"order"}>
                                 <ListItemButton onClick={() => {
                                     navigate("/neworder")
@@ -142,7 +130,18 @@ export default function AppFrame({
                                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
                                     <ListItemText primary={"Bestellen"}></ListItemText>
                                 </ListItemButton>
-                            </ListItem> : <></>}
+                            </ListItem>
+                            <ListItem disablePadding key="orders">
+                                <ListItemButton onClick={() => {
+                                    navigate("/myorders")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <ReceiptLongIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Meine Bestellungen"/>
+                                </ListItemButton>
+                            </ListItem> </> : <></>}
                         <ListItem disablePadding key="login">
                             <ListItemButton onClick={() => {
                                 currentUser ? logout() : openLoginDialog()
