@@ -23,7 +23,7 @@ fun Route.dashboardRoutes(orderRepository: OrderRepository) {
                     } catch (e: NullPointerException) {
                         return@get call.respond(HttpStatusCode.BadRequest, "Missing parameter 'from'")
                     }
-                    val overview = orderRepository.getAllOrdersFrom(day)
+                    val overview = orderRepository.getAllOrdersByDate(day)
                     call.respond(overview ?: HttpStatusCode.NotFound)
                 }
             }
