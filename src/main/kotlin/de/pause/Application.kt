@@ -39,7 +39,7 @@ fun Application.module(appConfig: HoconApplicationConfig) {
     configureHTTP()
     configureSerialization()
     configureSecurity(appConfig)
-    configureCORS()
+    //configureCORS()
     configureWebsockets()
     configureRouting(articleRepository, userRepository, menuRepository, orderRepository, appRepository)
     configureValidation()
