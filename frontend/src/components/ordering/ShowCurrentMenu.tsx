@@ -46,7 +46,7 @@ function ShowCurrentMenu() {
                     return (
 
                         <MenuItemCard key={day} day={day} dish={dish}
-                                      available={dayjs().day() <= id + 1}/>
+                                      available={dayjs().day() <= id + 1 && dayjs().day() > 0}/>
 
                     )
                 })}
