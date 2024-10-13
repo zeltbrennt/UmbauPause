@@ -28,7 +28,10 @@ fun Application.configureValidation() {
                         .toList() -> ValidationResult.Invalid("days must be distinct days of week")
 
                     validToDate.isBefore(validFromDate) -> ValidationResult.Invalid("validTo cannot be before validFrom")
-                    validFromDate.isBeforeNow -> ValidationResult.Invalid("validFrom cannot be in the past")
+                    validFromDate.isBefore(
+                        DateTime.now().withTimeAtStartOfDay()
+                    ) -> ValidationResult.Invalid("validFrom cannot be in the past")
+
                     else -> ValidationResult.Valid
                 }
             } catch (e: IllegalArgumentException) {

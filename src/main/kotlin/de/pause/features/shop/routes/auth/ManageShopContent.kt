@@ -38,6 +38,28 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                     call.respond(HttpStatusCode.Created)
                 }
             }
+            route("/edit-menu") {
+                put {
+                    val updatedMenu = call.receive<MenuInfo>()
+                    call.application.environment.log.info(updatedMenu.toString())
+                    updatedMenu.dishes.forEach {
+                        val dish = try {
+                            dishRepository.addDishByName(it.name)
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Dish already exists")
+                            dishRepository.findByName(it.name)
+                        }
+                        try {
+                            call.application.environment.log.info("new Menu: ${updatedMenu.validFrom}, ${it.day} , ${dish.id.value}")
+                            menuRepository.updateMenu(updatedMenu.validFrom, updatedMenu.validTo, it.day, dish.id.value)
+                        } catch (e: ExposedSQLException) {
+                            call.application.environment.log.info("Failed to update menu")
+                            call.respond(HttpStatusCode.BadRequest)
+                        }
+                    }
+                    call.respond(HttpStatusCode.Created)
+                }
+            }
         }
         route("/info") {
             route("/dishes") {

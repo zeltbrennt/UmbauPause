@@ -47,4 +47,21 @@ class MenuRepository {
             this.dishId = Dish[dishId]
         }
     }
+
+    suspend fun updateMenu(validFrom: String, validTo: String, dayOfWeek: Int, dishId: Int) = suspendTransaction {
+
+        val menu = Menu
+            .find {
+                (MenuTable.validFrom lessEq DateTime.parse(validFrom)) and (MenuTable.validTo eq DateTime.parse(
+                    validTo
+                )) and (MenuTable.dayOfWeek eq dayOfWeek)
+            }
+            .firstOrNull()
+        if (menu != null) {
+            menu.updatedAt = DateTime.now()
+            menu.validFrom = DateTime.parse(validFrom)
+            menu.validTo = DateTime.parse(validTo)
+            menu.dishId = Dish[dishId]
+        }
+    }
 }
