@@ -8,6 +8,7 @@ import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {getUrlFrom} from "./util/functions.ts";
 import Register from "./components/userAdministration/Register.tsx";
 import ScheduleMenu from "./components/manageContent/ScheduleMenu.tsx";
+import EditMenu from "./components/manageContent/EditMenu.tsx";
 import MakeOrder from "./components/ordering/MakeOrder.tsx";
 import OrderOverview from "./components/dashboard/OrderOverview.tsx";
 import LiveWebSocket from "./components/dashboard/LiveWebSocket.tsx";
@@ -59,6 +60,7 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Landingpage/>}/>
                             <Route path="/menu" element={<ShowCurrentMenu/>}/>
+                            <Route path="/edit" element={<EditMenu/>}/>
                             <Route path="/register" element={<Register/>}/>
                             <Route path="/schedule" element={<ScheduleMenu/>}/>
                             <Route path="/neworder" element={<MakeOrder/>}/>

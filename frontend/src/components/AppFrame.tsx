@@ -20,6 +20,7 @@ import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import NotesIcon from '@mui/icons-material/Notes';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import {ReactNode, useState} from "react";
@@ -89,13 +90,24 @@ export default function AppFrame({
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
                             <ListItem disablePadding key="edit">
                                 <ListItemButton onClick={() => {
-                                    navigate("/schedule")
+                                    navigate("/edit")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
                                         <EditNoteIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="Karte bearbeiten"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding key="new">
+                                <ListItemButton onClick={() => {
+                                    navigate("/schedule")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <NotesIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Neue Wochenkarte"/>
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding key="overview">
