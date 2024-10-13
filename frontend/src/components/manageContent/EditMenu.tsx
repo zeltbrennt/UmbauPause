@@ -9,7 +9,6 @@ import {MenuInfo, MenuItem} from "../../util/Interfaces.ts";
 
 
 export default function EditMenu() {
-    const [start, setStart] = useState("");
     const [end, setEnd] = useState("");
     const [newDishes, setNewDishes] = useState<string[]>(["", "", "", "", ""]);
     const [dishes, setDishes] = useState<string[]>([]);
@@ -33,6 +32,7 @@ export default function EditMenu() {
             let menuUrl = getUrlFrom("info", "menu", dayjs().format("YYYY-MM-DD"))
             let response = await fetch(menuUrl)
             const data: MenuInfo = await response.json()
+            setEnd(data.validTo)
             setNewDishes(data.dishes.map(dish => dish.name))
             console.log(newDishes)
         } catch (e) {
@@ -58,19 +58,19 @@ export default function EditMenu() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(`start: ${start}, end: ${end}`)
+        console.log(`start: ${dayjs()}, end: ${end}`)
         console.log(`new dishes: ${newDishes}`)
         const nextDishes: MenuItem[] = newDishes.map((dish, index) => ({id: 0, name: dish, day: index + 1} as MenuItem))
         const formData: MenuInfo = {
-            validFrom: start,
+            validFrom: dayjs().format("YYYY-MM-DD"),
             validTo: end,
             dishes: nextDishes
         };
         console.log("new menu is this: " + formData.dishes);
 
-        let menuUrl = getUrlFrom("content", "new-menu")
+        let menuUrl = getUrlFrom("content", "edit-menu")
         fetch(menuUrl, {
-            method: 'PATCH',
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
