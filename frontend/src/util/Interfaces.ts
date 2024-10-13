@@ -10,21 +10,6 @@ export interface MenuItem {
     day: number,
 }
 
-export enum Site {
-    Landingpage,
-    Register,
-    Menu,
-    Schedule,
-    Order,
-    OrderOverview,
-}
-
-export enum MenuItemState {
-    AVAILABLE,
-    UNAVAILABLE,
-    SELECTED
-}
-
 export interface JWTToken {
     aud: string,
     iss: string,

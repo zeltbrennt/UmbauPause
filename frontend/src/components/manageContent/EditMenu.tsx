@@ -1,15 +1,16 @@
-import {Alert, Autocomplete, Box, Button, Fade, Stack, TextField, Typography} from "@mui/material";
+import {Alert, Autocomplete, Button, Fade, Stack, TextField, Typography} from "@mui/material";
 import {FormEvent, useEffect, useState} from "react";
-import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import {LocalizationProvider} from "@mui/x-date-pickers";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs"
 import "dayjs/locale/de";
 import {getUrlFrom} from "../../util/functions.ts";
+import {MenuInfo, MenuItem} from "../../util/Interfaces.ts";
 
 
-export default function ScheduleMenu() {
-    const [start, setStart] = useState(dayjs().add(6, 'day').day(1));
-    const [end, setEnd] = useState(dayjs().add(6, 'day').day(5));
+export default function EditMenu() {
+    const [start, setStart] = useState("");
+    const [end, setEnd] = useState("");
     const [newDishes, setNewDishes] = useState<string[]>(["", "", "", "", ""]);
     const [dishes, setDishes] = useState<string[]>([]);
     const [submitted, setSubmitted] = useState(false)
@@ -27,12 +28,24 @@ export default function ScheduleMenu() {
         setDishes(data);
     };
 
+    const getMenu = async () => {
+        try {
+            let menuUrl = getUrlFrom("info", "menu", dayjs().format("YYYY-MM-DD"))
+            let response = await fetch(menuUrl)
+            const data: MenuInfo = await response.json()
+            setNewDishes(data.dishes.map(dish => dish.name))
+            console.log(newDishes)
+        } catch (e) {
+            console.error(`could not fetch menu: ${e}`)
+        }
+        //setValidFrom(dayjs(data.validFrom).format("DD.MM.YYYY"))
+        //setValidTo(dayjs(data.validTo).format("DD.MM.YYYY"))
+    }
+
     useEffect(() => {
-        // Fetch dish names when the component mounts
-
-
-        fetchDishes().then(() => console.log("Fetched dishes")).catch((reason) => console.log(`could not fetch dishes: ${reason}`));
-    }, []); // Empty dependency array means this effect runs once on mount
+        getMenu()
+        fetchDishes()
+    }, []);
 
     useEffect(() => {
         if (submitted) {
@@ -45,16 +58,19 @@ export default function ScheduleMenu() {
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = {
-            validFrom: start.format("YYYY-MM-DD"),
-            validTo: end.format("YYYY-MM-DD"),
-            dishes: newDishes.map((dish, index) => ({id: 0, name: dish, day: index + 1}))
+        console.log(`start: ${start}, end: ${end}`)
+        console.log(`new dishes: ${newDishes}`)
+        const nextDishes: MenuItem[] = newDishes.map((dish, index) => ({id: 0, name: dish, day: index + 1} as MenuItem))
+        const formData: MenuInfo = {
+            validFrom: start,
+            validTo: end,
+            dishes: nextDishes
         };
-        console.log(formData);
+        console.log("new menu is this: " + formData.dishes);
 
         let menuUrl = getUrlFrom("content", "new-menu")
         fetch(menuUrl, {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
@@ -76,28 +92,12 @@ export default function ScheduleMenu() {
             <Stack component={"form"} onSubmit={handleSubmit}
                    sx={{display: 'flex', flexDirection: 'column'}}>
 
-                <Typography variant={"h2"}>Neues Menü planen</Typography>
-
-                <Stack spacing={2} direction={"row"}>
-                    <DatePicker label={"Start"}
-                                value={start}
-                                onChange={(newValue) => {
-                                    setStart(newValue);
-                                    setEnd(newValue.add(5 - start.day(), 'day'))
-
-                                }}
-                    />
-                    <Box sx={{flexGrow: 1}}/>
-                    <DatePicker label={"Ende"}
-                                value={end}
-                                onChange={(newValue) => setEnd(newValue)}
-                    />
-                </Stack>
-
+                <Typography variant={"h2"}>Aktuelles Menu bearbeiten</Typography>
 
                 {["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"].map((day, idx) => (
                     <WeekdayScheduler key={day}
                                       day={day}
+                                      defaultValue={newDishes[idx] ?? "something went wrong..."}
                                       handleChange={(newValue: string) => {
                                           const temp = [...newDishes]
                                           temp[idx] = newValue
@@ -105,9 +105,10 @@ export default function ScheduleMenu() {
                                       }}
                                       dishes={dishes}/>))}
 
+
                 <Button variant={"contained"} type={"submit"} sx={{mt: 2, mb: 3}}>Speichern</Button>
                 {submitted && <Fade in={submitted}>
-                    <Alert severity="success">Menü gespeichert</Alert>
+                    <Alert severity="success">Menü aktualisiert</Alert>
                 </Fade>}
                 {error && <Fade in={error}>
                     <Alert severity="error">Fehler beim Speichern</Alert>
@@ -118,16 +119,18 @@ export default function ScheduleMenu() {
 }
 
 
-function WeekdayScheduler({day, handleChange, dishes}: {
+function WeekdayScheduler({day, handleChange, dishes, defaultValue}: {
     day: string,
     handleChange: (value: string) => void
     dishes: string[]
+    defaultValue: string
 }) {
 
     return (
         <Autocomplete onInputChange={(_e, newVal) => handleChange(newVal)}
                       options={dishes}
                       freeSolo
+                      value={defaultValue}
                       renderInput={(params) =>
                           <TextField {...params}
                                      variant="outlined"
