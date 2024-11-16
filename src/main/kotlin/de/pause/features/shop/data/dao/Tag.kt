@@ -8,7 +8,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 
 object TagTable : IntIdTable("shop.tag") {
     val name = varchar("name", 255)
-    val timesUsed = integer("times_used")
+    val timesUsed = integer("times_used").default(0)
 }
 
 class Tag(id: EntityID<Int>) : IntEntity(id) {
