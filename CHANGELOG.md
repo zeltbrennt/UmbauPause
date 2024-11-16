@@ -2,6 +2,10 @@
 
 ## [soft release]
 
+### 0.1.4
+
+- current menu can be edited
+
 ### 0.1.3
 
 - users can view their orders
