@@ -126,7 +126,7 @@ export default function MakeOrder() {
             <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
                     <Autocomplete
-                        options={filterDishesByDay(menu?.dishes)}
+                        options={filterDishesByDay(menu?.dishes, menu.validFrom)}
                         getOptionLabel={(option: MenuItem) => `${week[option.day - 1]}: ${option.name}`}
                         onChange={(event, value) => {
                             setCurrentSelectedMenuItem(value as MenuItem)
@@ -171,10 +171,10 @@ export default function MakeOrder() {
     )
 }
 
-function filterDishesByDay(dishes?: MenuItem[]) {
+function filterDishesByDay(dishes?: MenuItem[], validFrom?: string): MenuItem[] {
     if (!dishes) return []
     console.log("filtering....")
     const day = dayjs().day()
     const cutoff = dayjs().hour(10).minute(30)
-    return dishes.filter(d => d.day > day || (d.day === day && dayjs().isBefore(cutoff)))
+    return dishes.filter(d => dayjs(validFrom) > dayjs() ? true : d.day > day || (d.day === day && dayjs().isBefore(cutoff)))
 }
