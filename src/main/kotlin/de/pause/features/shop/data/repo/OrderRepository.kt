@@ -13,7 +13,7 @@ import java.util.*
 class OrderRepository {
 
     suspend fun addOrderByMenuId(order: SingleOrderDto, user: String, from: String, to: String) = suspendTransaction {
-        Order.new {
+        return@suspendTransaction Order.new {
             menuId = Menu[order.item]
             userId = User[UUID.fromString(user)]
             createdAt = DateTime.now()
@@ -112,6 +112,24 @@ class OrderRepository {
             return@suspendTransaction false
         }
         return@suspendTransaction true
+    }
+
+    suspend fun getTagsForAllOrderes() = suspendTransaction {
+
+        TagTable
+            .innerJoin(DishTagTable)
+            .innerJoin(DishTable)
+            .innerJoin(MenuTable)
+            .innerJoin(OrderTable)
+            .select(TagTable.name, TagTable.name.count())
+            .where { OrderTable.status eq OrderStatus.OPEN.name }
+            .groupBy(TagTable.name)
+            .map {
+                TagStatisticDto(
+                    tag = it[TagTable.name],
+                    count = it[TagTable.name.count()].toInt()
+                )
+            }
     }
 
 }

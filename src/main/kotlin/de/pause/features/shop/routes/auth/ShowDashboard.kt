@@ -27,6 +27,11 @@ fun Route.dashboardRoutes(orderRepository: OrderRepository) {
                     call.respond(overview ?: HttpStatusCode.NotFound)
                 }
             }
+            route("/tags") {
+                get {
+                    call.respond(orderRepository.getTagsForAllOrderes())
+                }
+            }
         }
     }
 }

@@ -66,3 +66,9 @@ data class UserOrderDto(
     val location: String,
     val status: String,
 )
+
+@Serializable
+data class TagStatisticDto(
+    val tag: String,
+    val count: Int,
+)
