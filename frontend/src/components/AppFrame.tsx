@@ -121,6 +121,17 @@ export default function AppFrame({
                                     <ListItemText primary="Bestellübersicht"/>
                                 </ListItemButton>
                             </ListItem>
+                            <ListItem disablePadding key="tags">
+                                <ListItemButton onClick={() => {
+                                    navigate("/statistics/tags")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <TableViewIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tags"/>
+                                </ListItemButton>
+                            </ListItem>
                             <ListItem disablePadding key="dashboard">
                                 <ListItemButton onClick={() => {
                                     navigate("/live")

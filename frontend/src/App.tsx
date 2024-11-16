@@ -18,6 +18,7 @@ import ValidateEmail from "./components/userAdministration/ValidateEmail.tsx";
 import Feedback from "./components/Feedback.tsx";
 import {Container} from "@mui/material";
 import MyOrders from "./components/ordering/MyOrders.tsx";
+import TagStatistics from "./components/dashboard/TagStatistics.tsx";
 
 function App() {
 
@@ -66,6 +67,7 @@ function App() {
                             <Route path="/neworder" element={<MakeOrder/>}/>
                             <Route path="/myorders" element={<MyOrders/>}/>
                             <Route path="/statistics/this-week" element={<OrderOverview/>}/>
+                            <Route path="/statistics/tags" element={<TagStatistics/>}/>
                             <Route path="/live" element={<LiveWebSocket/>}/>
                             <Route path="/user/verify" element={<ValidateEmail/>}/>
                             <Route path="/feedback" element={<Feedback/>}/>

@@ -51,3 +51,8 @@ export interface OrderCount {
     location: string,
     orderCount: number,
 }
+
+export interface TagCount {
+    tag: string,
+    count: number,
+}

@@ -5,6 +5,7 @@ import de.pause.features.shop.data.dao.*
 import de.pause.features.shop.data.dto.*
 import de.pause.features.user.data.dao.User
 import de.pause.util.OrderStatus
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
 import org.joda.time.DateTime
@@ -124,6 +125,7 @@ class OrderRepository {
             .select(TagTable.name, TagTable.name.count())
             .where { OrderTable.status eq OrderStatus.OPEN.name }
             .groupBy(TagTable.name)
+            .orderBy(TagTable.name.count(), order = SortOrder.DESC)
             .map {
                 TagStatisticDto(
                     tag = it[TagTable.name],

@@ -32,8 +32,11 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                             menuRepository.addNewMenu(newMenu.validFrom, newMenu.validTo, it.day, dish.id.value)
                         } catch (e: ExposedSQLException) {
                             call.application.environment.log.info("Menu already exists")
-                            call.respond(HttpStatusCode.BadRequest)
                         }
+                        /*
+                        call tag service with it.name
+                        add tags to dish via dishrepository
+                         */
                     }
                     call.respond(HttpStatusCode.Created)
                 }
