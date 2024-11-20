@@ -2,6 +2,11 @@
 
 ## [soft release]
 
+### 0.2.0
+
+- add tags to dishes via AI
+- implement payment via Stripe
+
 ### 0.1.4
 
 - current menu can be edited
