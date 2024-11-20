@@ -19,6 +19,8 @@ import Feedback from "./components/Feedback.tsx";
 import {Container} from "@mui/material";
 import MyOrders from "./components/ordering/MyOrders.tsx";
 import TagStatistics from "./components/dashboard/TagStatistics.tsx";
+import PaymentSuccess from "./components/ordering/PaymentSuccess.tsx";
+import PaymentCancel from "./components/ordering/PaymentCancel.tsx";
 
 function App() {
 
@@ -71,6 +73,8 @@ function App() {
                             <Route path="/live" element={<LiveWebSocket/>}/>
                             <Route path="/user/verify" element={<ValidateEmail/>}/>
                             <Route path="/feedback" element={<Feedback/>}/>
+                            <Route path="/success" element={<PaymentSuccess/>}/>
+                            <Route path="/cancel" element={<PaymentCancel/>}/>
                         </Routes>
                     </AppFrame>
                 </Container>

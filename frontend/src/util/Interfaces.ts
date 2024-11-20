@@ -37,6 +37,9 @@ export interface Order {
     item: number,
     location: number,
     day: number,
+    itemName?: string,
+    locationName?: string,
+    dayName?: string,
 }
 
 export interface OrderOverviewDta {

@@ -61,11 +61,17 @@ export default function MakeOrder() {
     const [currentSelectedLocation, setCurrentSelectedLocation] = useState<DeliveryLocation>()
 
     const sendOrder = () => {
+
+        orders.forEach(o => {
+            o.itemName = menu.dishes.find(d => d.id === o.item).name
+            o.locationName = locations.find(l => l.id === o.location).name
+            o.dayName = week[o.day - 1]
+        })
         const completeOrder = {validFrom: menu.validFrom, validTo: menu.validTo, orders: orders}
         console.log(
             completeOrder
         )
-        const orderUrl = getUrlFrom("order")
+        const orderUrl = getUrlFrom("create-checkout-session")
         fetch(orderUrl, {
             method: 'POST',
             headers: {
@@ -74,13 +80,14 @@ export default function MakeOrder() {
             },
             body: JSON.stringify(completeOrder)
         })
-            .then(resp => {
-                if (resp.status === 201) {
-                    setSuccess(true)
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.redirectUrl) {
+                    console.log(data.redirectUrl);
+                    window.location.href = data.redirectUrl
                 } else {
                     setSuccess(false)
                 }
-                return resp
             })
             .catch((reason) => console.log(`could not fetch menu items: ${reason}`))
     }
@@ -161,8 +168,6 @@ export default function MakeOrder() {
                     disabled={orders.length === 0}>Bestellung
                 abschicken</Button>
             <Stack spacing={2}>
-                {(hasOrdered && success) ? <Alert severity="success">Bestellung erfolgreich</Alert> : null}
-                {(hasOrdered && !success) ? <Alert severity="error">Bestellung fehlgeschlagen</Alert> : null}
                 {orderInvalid ?
                     <Alert severity={"info"}>Bitte wähle mindestens ein Gericht von der Karte</Alert> : null}
             </Stack>
