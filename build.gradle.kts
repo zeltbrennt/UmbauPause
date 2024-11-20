@@ -66,5 +66,7 @@ dependencies {
     testImplementation("com.h2database:h2:2.2.224")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("com.aallam.openai:openai-client:3.8.2")
+    runtimeOnly("io.ktor:ktor-client-okhttp:$ktor_version")
 }
 

@@ -1,6 +1,7 @@
 package de.pause.features.shop.routes.auth
 
 import de.pause.database.suspendTransaction
+import de.pause.features.shop.TagService
 import de.pause.features.shop.data.dao.DishTagTable
 import de.pause.features.shop.data.dao.Tag
 import de.pause.features.shop.data.dao.TagTable
@@ -36,7 +37,7 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                        call tag service with it.name
                        add tags to dish via dishrepository
                         */
-                        val tags = listOf("vegan", "vegetarian", "gluten-free", "lactose-free")
+                        val tags = TagService.generateTagsForDish(it.name)
                         tags.forEach {
                             val tag = try {
                                 suspendTransaction {
