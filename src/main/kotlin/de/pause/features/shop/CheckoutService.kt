@@ -21,7 +21,7 @@ object CheckoutService {
         val paramsBuilder: SessionCreateParams.Builder = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
             .setSuccessUrl(
-                "http://localhost:5173/success?orders=${
+                "http://localhost:5173/success?orders=${ // TODO: parametrize port
                     Base64.UrlSafe.encode(
                         orderObject.toByteArray()
                     )
