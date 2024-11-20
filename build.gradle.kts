@@ -68,5 +68,6 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("com.aallam.openai:openai-client:3.8.2")
     runtimeOnly("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("com.stripe:stripe-java:28.0.1")
 }
 

@@ -2,6 +2,7 @@ package de.pause.plugins
 
 import de.pause.features.app.data.AppRepository
 import de.pause.features.app.routes.sendAppFeedback
+import de.pause.features.shop.CheckoutService
 import de.pause.features.shop.data.dto.OrderDto
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
@@ -82,11 +83,21 @@ fun Application.configureRouting(
             sendAppFeedback(appRepository)
 
             authenticate("user") {
+                route("/create-checkout-session") {
+                    post {
+                        val orderRequest = call.receive<OrderDto>()
+                        // log to console
+                        val redirectUrl = CheckoutService.createCheckoutLink(orderRequest)
+                        call.application.environment.log.info("orderRequest: $redirectUrl")
+                        call.respond(HttpStatusCode.OK, mapOf("redirectUrl" to redirectUrl))
+                    }
+                }
                 route("/order") {
                     post {
                         val jwt = call.principal<JWTPrincipal>()
                         val user = jwt!!.payload.getClaim("uid").asString()
                         val orderRequest = call.receive<OrderDto>()
+
                         orderRequest.orders.forEach {
                             orderRepository.addOrderByMenuId(
                                 it,
@@ -98,6 +109,9 @@ fun Application.configureRouting(
                         //call.application.environment.log.info("user: $user ordered: $temp")
                         //todo: check if order was successful
                         onOrderUpdated()
+
+
+
                         call.respond(HttpStatusCode.Created)
                     }
                     route("/cancel") {
