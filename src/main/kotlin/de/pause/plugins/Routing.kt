@@ -1,5 +1,8 @@
 package de.pause.plugins
 
+
+import com.stripe.model.checkout.Session
+import com.stripe.net.Webhook
 import de.pause.features.app.data.AppRepository
 import de.pause.features.app.routes.sendAppFeedback
 import de.pause.features.shop.CheckoutService
@@ -14,6 +17,7 @@ import de.pause.features.user.data.repo.UserRepository
 import de.pause.features.user.routes.auth.adminManageUsers
 import de.pause.features.user.routes.auth.userManageUsers
 import de.pause.features.user.routes.userAuthentication
+import de.pause.util.OrderStatus
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -65,8 +69,42 @@ fun Application.configureRouting(
         route("/rest/v1") {
             route("/app-version") {
                 get {
-
                     call.respondText(version.substringAfter("="))
+                }
+            }
+
+            route("/fulfill_checkout") {
+                post {
+                    val payload = call.receiveText()
+                    try {
+                        val event = Webhook.constructEvent(
+                            payload,
+                            call.request.header("Stripe-Signature")!!,
+                            System.getenv("STRIPE_WEBHOOK_SECRET")
+                        )
+                        val serializer = event.dataObjectDeserializer
+                        val stripeObject = serializer.`object`.orElse(null)
+                        when (event.type) {
+                            "checkout.session.completed", "checkout.session.async_payment_succeeded" -> {
+                                val session = stripeObject as Session
+                                call.application.environment.log.info("Session id ${session.id} ")
+                                call.application.environment.log.info("payment status: ${session.paymentStatus}")
+                                orderRepository.updateOrderStatusByPaymentIntent(
+                                    session.id!!,
+                                    OrderStatus.PAYED
+                                )
+                                onOrderUpdated()
+                            }
+
+                            else -> {
+                                call.application.environment.log.info("Unhandled event: ${event.type}")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        call.application.environment.log.error("Failed to construct event: $e")
+                        call.respond(HttpStatusCode.BadRequest)
+                    }
+                    call.respond(HttpStatusCode.OK)
                 }
             }
 
@@ -83,34 +121,26 @@ fun Application.configureRouting(
                 route("/create-checkout-session") {
                     post {
                         val orderRequest = call.receive<OrderDto>()
-                        // log to console
-                        val redirectUrl = CheckoutService.createCheckoutLink(orderRequest)
-                        call.application.environment.log.info("orderRequest: $redirectUrl")
-                        call.respond(HttpStatusCode.OK, mapOf("redirectUrl" to redirectUrl))
-                    }
-                }
-                route("/order") {
-                    post {
                         val jwt = call.principal<JWTPrincipal>()
                         val user = jwt!!.payload.getClaim("uid").asString()
-                        val orderRequest = call.receive<OrderDto>()
+                        // log to console
+                        val paymentSession = CheckoutService.createCheckoutLink(orderRequest)
 
                         orderRequest.orders.forEach {
                             orderRepository.addOrderByMenuId(
                                 it,
                                 user,
                                 orderRequest.validFrom,
-                                orderRequest.validTo
+                                orderRequest.validTo,
+                                paymentSession.id
                             )
                         }
-                        //call.application.environment.log.info("user: $user ordered: $temp")
-                        //todo: check if order was successful
-                        onOrderUpdated()
 
-
-
-                        call.respond(HttpStatusCode.Created)
+                        call.respond(HttpStatusCode.OK, mapOf("redirectUrl" to paymentSession.url))
                     }
+                }
+                route("/order") {
+
                     route("/cancel") {
                         patch("/{id}") {
                             try {
