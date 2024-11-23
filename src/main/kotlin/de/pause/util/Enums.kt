@@ -6,5 +6,5 @@ enum class UserRole {
 }
 
 enum class OrderStatus {
-    OPEN, DELIVERED, CANCELED;
+    OPEN, PAYED, DELIVERED, CANCELED;
 }

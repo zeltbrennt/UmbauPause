@@ -8,23 +8,26 @@ import de.pause.util.OrderStatus
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.count
+import org.jetbrains.exposed.sql.update
 import org.joda.time.DateTime
 import java.util.*
 
 class OrderRepository {
 
-    suspend fun addOrderByMenuId(order: SingleOrderDto, user: String, from: String, to: String) = suspendTransaction {
-        return@suspendTransaction Order.new {
-            menuId = Menu[order.item]
-            userId = User[UUID.fromString(user)]
-            createdAt = DateTime.now()
-            updatedAt = DateTime.now()
-            status = OrderStatus.OPEN.toString()
-            location = Location[order.location]
-            validFrom = DateTime(from)
-            validTo = DateTime(to)
+    suspend fun addOrderByMenuId(order: SingleOrderDto, user: String, from: String, to: String, id: String) =
+        suspendTransaction {
+            return@suspendTransaction Order.new {
+                menuId = Menu[order.item]
+                userId = User[UUID.fromString(user)]
+                createdAt = DateTime.now()
+                updatedAt = DateTime.now()
+                status = OrderStatus.OPEN.toString()
+                paymentSession = id
+                location = Location[order.location]
+                validFrom = DateTime(from)
+                validTo = DateTime(to)
+            }
         }
-    }
 
     suspend fun getAllOrdersByDate(day: DateTime) = suspendTransaction {
         val validFrom: String
@@ -132,6 +135,12 @@ class OrderRepository {
                     count = it[TagTable.name.count()].toInt()
                 )
             }
+    }
+
+    suspend fun updateOrderStatusByPaymentIntent(id: String, payed: OrderStatus) = suspendTransaction {
+        OrderTable.update({ OrderTable.paymentSession eq id }) {
+            it[status] = payed.name
+        }
     }
 
 }
