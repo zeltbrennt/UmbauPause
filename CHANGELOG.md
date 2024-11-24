@@ -2,6 +2,11 @@
 
 ## [soft release]
 
+### 0.2.1
+
+- change Icons
+- handle price settings
+
 ### 0.2.0
 
 - add tags to dishes via AI
