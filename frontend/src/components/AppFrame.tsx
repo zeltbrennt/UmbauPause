@@ -11,7 +11,6 @@ import {
     useTheme
 } from "@mui/material";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
@@ -20,11 +19,13 @@ import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import NotesIcon from '@mui/icons-material/Notes';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import {ReactNode, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 
 const drawerWidth = 240
@@ -88,24 +89,13 @@ export default function AppFrame({
                             </ListItemButton>
                         </ListItem>
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
-                            <ListItem disablePadding key="edit">
-                                <ListItemButton onClick={() => {
-                                    navigate("/edit")
-                                    setDrawerOpen(false)
-                                }}>
-                                    <ListItemIcon>
-                                        <EditNoteIcon/>
-                                    </ListItemIcon>
-                                    <ListItemText primary="Karte bearbeiten"/>
-                                </ListItemButton>
-                            </ListItem>
                             <ListItem disablePadding key="new">
                                 <ListItemButton onClick={() => {
                                     navigate("/schedule")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
-                                        <NotesIcon/>
+                                        <PostAddIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="Neue Wochenkarte"/>
                                 </ListItemButton>
@@ -127,7 +117,7 @@ export default function AppFrame({
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
-                                        <TableViewIcon/>
+                                        <StackedBarChartIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="Tags"/>
                                 </ListItemButton>
@@ -180,6 +170,19 @@ export default function AppFrame({
                     </List>
                     <Box sx={{flexGrow: 1}}></Box>
                     <List>
+                        {currentUser?.roles.includes(UserRole.ADMIN) ? <>
+                            <ListItem disablePadding key="edit">
+                                <ListItemButton onClick={() => {
+                                    navigate("/edit")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <SettingsIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Einstellungen"/>
+                                </ListItemButton>
+                            </ListItem>
+                        </> : <></>}
                         <ListItem disablePadding key="feedback">
                             <ListItemButton onClick={() => {
                                 setDrawerOpen(false)
