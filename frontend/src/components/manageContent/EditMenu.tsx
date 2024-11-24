@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import "dayjs/locale/de";
 import {getUrlFrom} from "../../util/functions.ts";
 import {MenuInfo, MenuItem} from "../../util/Interfaces.ts";
+import PriceSetter from "./PriceSetter.tsx";
 
 
 export default function EditMenu() {
@@ -114,6 +115,7 @@ export default function EditMenu() {
                     <Alert severity="error">Fehler beim Speichern</Alert>
                 </Fade>}
             </Stack>
+            <PriceSetter/>
         </LocalizationProvider>
     );
 }
