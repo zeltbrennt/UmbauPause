@@ -27,3 +27,8 @@ class Dish(id: EntityID<Int>) : IntEntity(id) {
     )
 }
 
+object DishPriceTable : IntIdTable("shop.price") {
+    val type = varchar("type", 255)
+    val price = integer("price")
+
+}

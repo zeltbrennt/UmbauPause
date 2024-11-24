@@ -4,6 +4,7 @@ import com.stripe.Stripe
 import com.stripe.model.checkout.Session
 import com.stripe.param.checkout.SessionCreateParams
 import de.pause.features.shop.data.dto.OrderDto
+import de.pause.features.shop.data.repo.DishPriceSingleton
 
 object CheckoutService {
 
@@ -23,7 +24,7 @@ object CheckoutService {
                     .setPriceData(
                         SessionCreateParams.LineItem.PriceData.builder()
                             .setCurrency("eur")
-                            .setUnitAmount(690) // TODO: parametrisieren
+                            .setUnitAmount(DishPriceSingleton.defaultPrice.toLong())
                             .setProductData(
                                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                     .setDescription("${it.dayName},  ${it.locationName}")

@@ -6,6 +6,7 @@ import de.pause.features.shop.data.dao.DishTagTable
 import de.pause.features.shop.data.dao.Tag
 import de.pause.features.shop.data.dao.TagTable
 import de.pause.features.shop.data.dto.MenuInfo
+import de.pause.features.shop.data.repo.DishPriceSingleton
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
 import io.ktor.http.*
@@ -94,6 +95,17 @@ fun Route.manageShopContent(dishRepository: DishRepository, menuRepository: Menu
                         }
                     }
                     call.respond(HttpStatusCode.Created)
+                }
+            }
+            route("/update-price") {
+                put {
+                    try {
+                        val newPrice = call.request.queryParameters["newPrice"]?.toInt()
+                        DishPriceSingleton.defaultPrice = newPrice!!
+                    } catch (e: Exception) {
+                        call.respond(HttpStatusCode.BadRequest)
+                    }
+                    call.respond(DishPriceSingleton.defaultPrice)
                 }
             }
         }

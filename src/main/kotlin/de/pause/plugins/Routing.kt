@@ -7,6 +7,7 @@ import de.pause.features.app.data.AppRepository
 import de.pause.features.app.routes.sendAppFeedback
 import de.pause.features.shop.CheckoutService
 import de.pause.features.shop.data.dto.OrderDto
+import de.pause.features.shop.data.repo.DishPriceSingleton
 import de.pause.features.shop.data.repo.DishRepository
 import de.pause.features.shop.data.repo.MenuRepository
 import de.pause.features.shop.data.repo.OrderRepository
@@ -67,6 +68,11 @@ fun Application.configureRouting(
 
 
         route("/rest/v1") {
+            route("default-price") {
+                get {
+                    call.respond(DishPriceSingleton.defaultPrice)
+                }
+            }
             route("/app-version") {
                 get {
                     call.respondText(version.substringAfter("="))
