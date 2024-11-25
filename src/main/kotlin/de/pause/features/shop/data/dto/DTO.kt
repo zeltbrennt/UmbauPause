@@ -42,6 +42,7 @@ data class OrderOverview(
 data class LocationDto(
     val id: Int,
     val name: String,
+    val active: Boolean,
 )
 
 @Serializable

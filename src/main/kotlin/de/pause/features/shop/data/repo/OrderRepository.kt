@@ -101,7 +101,7 @@ class OrderRepository {
 
 
     suspend fun getAllLocations() = suspendTransaction {
-        Location.all().map { LocationDto(it.id.value, it.name) }
+        Location.all().map { LocationDto(it.id.value, it.name, it.active) }
     }
 
     suspend fun getCountCurrentOrders() = suspendTransaction {
