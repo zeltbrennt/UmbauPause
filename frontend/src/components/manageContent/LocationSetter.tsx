@@ -19,15 +19,14 @@ export default function LocationSetter() {
     const [newLocation, setNewLocation] = useState('')
     const [change, setChange] = useState(false)
 
-    const locationUrl = getUrlFrom("info", "locations")
     const getLocation = async () => {
-        const location = await fetch(locationUrl)
+        const location = await fetch(getUrlFrom("info", "locations"))
             .then(response => response.json())
         setLocations(location)
     }
 
     const addLocation = () => {
-        fetch(locationUrl, {
+        fetch(getUrlFrom("location", "add"), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/text',
@@ -38,8 +37,9 @@ export default function LocationSetter() {
     }
 
     const setLocationState = (location: DeliveryLocation) => {
-        fetch(getUrlFrom("TODO"), {
-            method: 'POST',
+        console.log(location)
+        fetch(getUrlFrom("location", "modify"), {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
@@ -69,7 +69,7 @@ export default function LocationSetter() {
                         </Typography>
                         <Switch defaultChecked={location.active}
                                 onChange={() => {
-                                    setLocationState({...location, active: false})
+                                    setLocationState({...location, active: !location.active})
                                     setChange(!change)
                                 }}
                         />

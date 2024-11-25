@@ -47,7 +47,7 @@ export default function MakeOrder() {
             .then(response => response.json())
             .catch((reason) => console.log(`could not fetch location: ${reason}`))
         setMenu(menu)
-        setLocations(location)
+        setLocations(location.filter(loc => loc.active))
         setValidFrom(dayjs(menu.validFrom).format("DD.MM.YYYY"))
         setValidTo(dayjs(menu.validTo).format("DD.MM.YYYY"))
     }
