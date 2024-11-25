@@ -7,6 +7,7 @@ import "dayjs/locale/de";
 import {getUrlFrom} from "../../util/functions.ts";
 import {MenuInfo, MenuItem} from "../../util/Interfaces.ts";
 import PriceSetter from "./PriceSetter.tsx";
+import LocationSetter from "./LocationSetter.tsx";
 
 
 export default function EditMenu() {
@@ -116,6 +117,7 @@ export default function EditMenu() {
                 </Fade>}
             </Stack>
             <PriceSetter/>
+            <LocationSetter/>
         </LocalizationProvider>
     );
 }

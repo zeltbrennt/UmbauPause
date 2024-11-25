@@ -31,6 +31,7 @@ export interface UserPrincipal {
 export interface DeliveryLocation {
     id: number,
     name: string,
+    active: boolean,
 }
 
 export interface Order {
