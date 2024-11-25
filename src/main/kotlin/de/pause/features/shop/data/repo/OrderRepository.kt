@@ -104,6 +104,10 @@ class OrderRepository {
         Location.all().map { LocationDto(it.id.value, it.name, it.active) }
     }
 
+    suspend fun addNewLocation(name: String) = suspendTransaction {
+        Location.new { this.name = name }
+    }
+
     suspend fun getCountCurrentOrders() = suspendTransaction {
         Order.count()
     }
@@ -141,6 +145,13 @@ class OrderRepository {
         OrderTable.update({ OrderTable.paymentSession eq id }) {
             it[status] = payed.name
         }
+    }
+
+    suspend fun updateLocation(location: LocationDto) = suspendTransaction {
+        return@suspendTransaction LocationTable.update({ LocationTable.id eq location.id }) {
+            it[active] = location.active
+            it[name] = location.name
+        } != 0
     }
 
 }

@@ -31,6 +31,7 @@ fun Route.shopPublicRoutes(menuRepository: MenuRepository, orderRepository: Orde
                 //TODO: Move this to separate repo
                 call.respond(orderRepository.getAllLocations())
             }
+
         }
     }
 }
