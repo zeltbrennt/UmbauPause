@@ -2,6 +2,11 @@
 
 ## [soft release]
 
+### 0.2.2
+
+- location setter
+-
+
 ### 0.2.1
 
 - change Icons
