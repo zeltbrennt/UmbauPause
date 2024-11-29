@@ -117,6 +117,16 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Caches in Frontend und Backend
 - [ ] Validierung für Bestellungen
 
+- [ ] call auf OpenAI sollte in try Block, damit auch bei fehlenden Tags das Menü eingetragen wird
+- [ ] Es sollte eine Möglichkeit geben, gerichte nachträglich zu taggen
+- [ ] cronjob für Datenbank
+
+### BUGS
+
+- [ ] fehlende Menüs lassen die Order Seite abstürzen
+- [ ] Bestellungen für Tage ohne geplantes Gericht sind möglich
+- [ ] .env file ist unvollständig (OpenAI Key fehlt)
+
 ## 1.2 Ausarbeitung
 
 - [ ] Hintergrund
