@@ -51,19 +51,62 @@ Bildergalerien.
 > wird [privates Latex-Repository](https://github.com/zeltbrennt/Projektarbeit-UmbauPause) versioniert.
 > Nach Abschluss der Arbeit wird das fertige PDF hier hinzugefügt.
 
-# Deployment
+# Projekt starten
+
+## Datenbank
+
+Umgebungsvariablen für Datenbank in `.env` 
+Postgres-Datenbank mittels Dockerfile in `/docker` Ordern erstellen
 
 - erstelle `/docker/.env`
-- vergebe Umgebungsvariablen
-
+- vergebe Umgebungsvariablen:
+  
 ```
-POSTGRES_PASSWORD=<>
-POSTGRES_USER=<>
-POSTGRES_ROOT_PASSWORD=<>
-POSTGRES_DB=<>
-POSTGRES_JDBC_URL=jdbc:postgresql://postgres:5432/<>
-VITE_API_TOKEN=<>
+POSTGRES_PASSWORD=
+POSTGRES_ROOT_PASSWORD=
+POSTGRES_USER=
 ```
 
-- run `docker-compose.yml`
-- website auf `localhost:8080`
+- erstelle Container mit Datenbank via `/docker/docker-compose.yml`
+
+
+## Entwicklungsumgebung
+
+- erstelle `.env` im Wurzelverzeichnis
+- vergebe Umgebungsvariablen:
+
+```
+POSTGRES_DB=webshop
+POSTGRES_JDBC_URL=jdbc:postgresql://localhost:5432/webshop
+POSTGRES_PASSWORD=
+POSTGRES_USER=
+USER_DEFAULT_PASSWORD=
+JWT_SHARED_SECRET=
+JWT_ISSUER=
+JWT_AUDIENCE=
+JWT_REALM=webshop
+EMAIL_HOST=
+EMAIL_USERNAME=
+EMAIL_PASSWORD=
+EMAIL_FROM=
+SERVER_DOMAIN=http://localhost:5173
+COOKIE_SECURE=false
+JWT_EXPIRATION=3600000
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+```
+während der Entwicklung läuft das Frontend auf Port 5173
+
+- erstelle `/frontend/.env`
+- vergebe Umgebungsvariablen:
+
+```
+VITE_BASE_URL=http://localhost:8080/rest/v1/
+VITE_WS_URL=ws://localhost:8080/ws
+```
+
+## App starten
+
+- backend compilieren via `gradle ktor buildFatJar`
+- frontend compilieren und starten via `cd frontend && npm install && npm run dev`
+
