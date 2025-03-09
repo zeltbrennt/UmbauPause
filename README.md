@@ -110,3 +110,9 @@ VITE_WS_URL=ws://localhost:8080/ws
 - backend compilieren via `gradle ktor buildFatJar`
 - frontend compilieren und starten via `cd frontend && npm install && npm run dev`
 
+## User hinzufügen
+- sobald die App das erste mal startet, werden die Datenbank-Migrationen gestartet
+- anschließend einen User in der `user.account` Tabelle erstellen, dabei das Passwort leer lassen, 
+- die gleiche ID verwenden, um dem User mittels der `user.account_role` Tabelle entsprechende Rollen hinzufügen
+
+
