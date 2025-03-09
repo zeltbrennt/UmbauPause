@@ -47,7 +47,7 @@ export default function MakeOrder() {
             .then(response => response.json())
             .catch((reason) => console.log(`could not fetch location: ${reason}`))
         setMenu(menu)
-        setLocations(location)
+        setLocations(location.filter(loc => loc.active))
         setValidFrom(dayjs(menu.validFrom).format("DD.MM.YYYY"))
         setValidTo(dayjs(menu.validTo).format("DD.MM.YYYY"))
     }
@@ -61,25 +61,33 @@ export default function MakeOrder() {
     const [currentSelectedLocation, setCurrentSelectedLocation] = useState<DeliveryLocation>()
 
     const sendOrder = () => {
+
+        orders.forEach(o => {
+            o.itemName = menu.dishes.find(d => d.id === o.item).name
+            o.locationName = locations.find(l => l.id === o.location).name
+            o.dayName = week[o.day - 1]
+        })
+        const completeOrder = {validFrom: menu.validFrom, validTo: menu.validTo, orders: orders}
         console.log(
-            orders
+            completeOrder
         )
-        const orderUrl = getUrlFrom("order")
+        const orderUrl = getUrlFrom("create-checkout-session")
         fetch(orderUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${sessionStorage.getItem("accessToken")}`
             },
-            body: JSON.stringify(orders)
+            body: JSON.stringify(completeOrder)
         })
-            .then(resp => {
-                if (resp.status === 201) {
-                    setSuccess(true)
+            .then(resp => resp.json())
+            .then(data => {
+                if (data.redirectUrl) {
+                    console.log(data.redirectUrl);
+                    window.location.href = data.redirectUrl
                 } else {
                     setSuccess(false)
                 }
-                return resp
             })
             .catch((reason) => console.log(`could not fetch menu items: ${reason}`))
     }
@@ -125,7 +133,7 @@ export default function MakeOrder() {
             <Grid container spacing={2}>
                 <Grid item sm={6} xs={12}>
                     <Autocomplete
-                        options={filterDishesByDay(menu?.dishes)}
+                        options={filterDishesByDay(menu?.dishes, menu.validFrom)}
                         getOptionLabel={(option: MenuItem) => `${week[option.day - 1]}: ${option.name}`}
                         onChange={(event, value) => {
                             setCurrentSelectedMenuItem(value as MenuItem)
@@ -148,7 +156,8 @@ export default function MakeOrder() {
                         if (currentSelectedMenuItem && currentSelectedMenuItem) {
                             setOrders([...orders, {
                                 item: currentSelectedMenuItem.id,
-                                location: currentSelectedLocation?.id ?? 0
+                                location: currentSelectedLocation?.id ?? 0,
+                                day: currentSelectedMenuItem.day
                             }].sort((a, b) => a.item - b.item))
                         }
                     }} variant={"outlined"} size={"medium"}>Hinzufügen</Button>
@@ -159,8 +168,6 @@ export default function MakeOrder() {
                     disabled={orders.length === 0}>Bestellung
                 abschicken</Button>
             <Stack spacing={2}>
-                {(hasOrdered && success) ? <Alert severity="success">Bestellung erfolgreich</Alert> : null}
-                {(hasOrdered && !success) ? <Alert severity="error">Bestellung fehlgeschlagen</Alert> : null}
                 {orderInvalid ?
                     <Alert severity={"info"}>Bitte wähle mindestens ein Gericht von der Karte</Alert> : null}
             </Stack>
@@ -169,10 +176,10 @@ export default function MakeOrder() {
     )
 }
 
-function filterDishesByDay(dishes?: MenuItem[]) {
+function filterDishesByDay(dishes?: MenuItem[], validFrom?: string): MenuItem[] {
     if (!dishes) return []
     console.log("filtering....")
     const day = dayjs().day()
     const cutoff = dayjs().hour(10).minute(30)
-    return dishes.filter(d => d.day > day || (d.day === day && dayjs().isBefore(cutoff)))
+    return dishes.filter(d => dayjs(validFrom) > dayjs() ? true : d.day > day || (d.day === day && dayjs().isBefore(cutoff)))
 }

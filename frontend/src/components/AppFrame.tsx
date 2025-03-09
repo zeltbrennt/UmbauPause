@@ -11,17 +11,21 @@ import {
     useTheme
 } from "@mui/material";
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 import HomeIcon from '@mui/icons-material/Home';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 import TableViewIcon from '@mui/icons-material/TableView';
 import InsightsIcon from '@mui/icons-material/Insights';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import ResponsiveAppBar from "./ResponsiveAppBar.tsx";
 import {UserPrincipal, UserRole} from "../util/Interfaces.ts";
 import {ReactNode, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import StackedBarChartIcon from '@mui/icons-material/StackedBarChart';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 
 const drawerWidth = 240
@@ -59,7 +63,7 @@ export default function AppFrame({
                                  flexShrink: 0,
                              }}>
                 <Toolbar/>
-                <Box sx={{overflow: 'auto'}}>
+                <Box sx={{overflow: 'auto', display: 'flex', flexDirection: 'column', height: '100%'}}>
                     <List>
                         <ListItem disablePadding key="home">
                             <ListItemButton onClick={() => {
@@ -85,15 +89,15 @@ export default function AppFrame({
                             </ListItemButton>
                         </ListItem>
                         {currentUser?.roles.includes(UserRole.ADMIN) ? <>
-                            <ListItem disablePadding key="edit">
+                            <ListItem disablePadding key="new">
                                 <ListItemButton onClick={() => {
                                     navigate("/schedule")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon>
-                                        <EditNoteIcon/>
+                                        <PostAddIcon/>
                                     </ListItemIcon>
-                                    <ListItemText primary="Karte bearbeiten"/>
+                                    <ListItemText primary="Neue Wochenkarte"/>
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding key="overview">
@@ -105,6 +109,17 @@ export default function AppFrame({
                                         <TableViewIcon/>
                                     </ListItemIcon>
                                     <ListItemText primary="Bestellübersicht"/>
+                                </ListItemButton>
+                            </ListItem>
+                            <ListItem disablePadding key="tags">
+                                <ListItemButton onClick={() => {
+                                    navigate("/statistics/tags")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <StackedBarChartIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tags"/>
                                 </ListItemButton>
                             </ListItem>
                             <ListItem disablePadding key="dashboard">
@@ -119,16 +134,27 @@ export default function AppFrame({
                                 </ListItemButton>
                             </ListItem>
                         </> : <></>}
-                        {currentUser?.roles.includes(UserRole.USER) ?
+                        {currentUser?.roles.includes(UserRole.USER) ? <>
                             <ListItem disablePadding key={"order"}>
                                 <ListItemButton onClick={() => {
-                                    navigate("/order")
+                                    navigate("/neworder")
                                     setDrawerOpen(false)
                                 }}>
                                     <ListItemIcon><ShoppingCartIcon/></ListItemIcon>
                                     <ListItemText primary={"Bestellen"}></ListItemText>
                                 </ListItemButton>
-                            </ListItem> : <></>}
+                            </ListItem>
+                            <ListItem disablePadding key="orders">
+                                <ListItemButton onClick={() => {
+                                    navigate("/myorders")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <ReceiptLongIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Meine Bestellungen"/>
+                                </ListItemButton>
+                            </ListItem> </> : <></>}
                         <ListItem disablePadding key="login">
                             <ListItemButton onClick={() => {
                                 currentUser ? logout() : openLoginDialog()
@@ -139,6 +165,33 @@ export default function AppFrame({
                                     {currentUser ? <LogoutIcon/> : <LoginIcon/>}
                                 </ListItemIcon>
                                 <ListItemText primary={currentUser ? "Logout" : "Login"}/>
+                            </ListItemButton>
+                        </ListItem>
+                    </List>
+                    <Box sx={{flexGrow: 1}}></Box>
+                    <List>
+                        {currentUser?.roles.includes(UserRole.ADMIN) ? <>
+                            <ListItem disablePadding key="edit">
+                                <ListItemButton onClick={() => {
+                                    navigate("/edit")
+                                    setDrawerOpen(false)
+                                }}>
+                                    <ListItemIcon>
+                                        <SettingsIcon/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Einstellungen"/>
+                                </ListItemButton>
+                            </ListItem>
+                        </> : <></>}
+                        <ListItem disablePadding key="feedback">
+                            <ListItemButton onClick={() => {
+                                setDrawerOpen(false)
+                                navigate("/feedback")
+                            }}>
+                                <ListItemIcon>
+                                    <FeedbackIcon/>
+                                </ListItemIcon>
+                                <ListItemText primary={"Feedback"}/>
                             </ListItemButton>
                         </ListItem>
                     </List>

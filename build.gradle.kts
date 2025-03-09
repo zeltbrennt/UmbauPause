@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "de.pause"
-version = "0.1.0"
+version = "alpha-0.2.1"
 
 application {
     mainClass.set("de.pause.ApplicationKt")
@@ -25,6 +25,17 @@ repositories {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register("generateVersionProperties") {
+    doLast {
+        val versionProperties = file("src/main/resources/version.properties")
+        versionProperties.writeText("backend=${project.version}")
+    }
+}
+
+tasks.getByName("processResources") {
+    dependsOn("generateVersionProperties")
 }
 
 dependencies {
@@ -46,14 +57,17 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jodatime:$exposed_version")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("com.zaxxer:HikariCP:5.1.0")
-    implementation("org.flywaydb:flyway-core:9.2.0")
+    implementation("org.flywaydb:flyway-database-postgresql:10.17.1")
+    implementation("org.apache.commons:commons-email:1.5")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
-    // testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     testImplementation(kotlin("test"))
     testImplementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
     testImplementation("com.h2database:h2:2.2.224")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("com.aallam.openai:openai-client:3.8.2")
+    runtimeOnly("io.ktor:ktor-client-okhttp:$ktor_version")
+    implementation("com.stripe:stripe-java:28.0.1")
 }
 

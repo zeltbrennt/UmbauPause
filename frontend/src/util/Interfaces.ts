@@ -10,21 +10,6 @@ export interface MenuItem {
     day: number,
 }
 
-export enum Site {
-    Landingpage,
-    Register,
-    Menu,
-    Schedule,
-    Order,
-    OrderOverview,
-}
-
-export enum MenuItemState {
-    AVAILABLE,
-    UNAVAILABLE,
-    SELECTED
-}
-
 export interface JWTToken {
     aud: string,
     iss: string,
@@ -46,12 +31,16 @@ export interface UserPrincipal {
 export interface DeliveryLocation {
     id: number,
     name: string,
+    active: boolean,
 }
 
 export interface Order {
     item: number,
     location: number,
-    orders?: number,
+    day: number,
+    itemName?: string,
+    locationName?: string,
+    dayName?: string,
 }
 
 export interface OrderOverviewDta {
@@ -65,4 +54,9 @@ export interface OrderCount {
     day: number,
     location: string,
     orderCount: number,
+}
+
+export interface TagCount {
+    tag: string,
+    count: number,
 }

@@ -9,6 +9,7 @@ import de.pause.features.user.data.dto.UserPrincipal
 import org.jetbrains.exposed.sql.Op
 import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
@@ -27,7 +28,7 @@ class UserRepository {
 
     suspend fun login(req: LoginRequest): UserPrincipal? = suspendTransaction {
         val user = User
-            .find { UserTable.email eq req.email }
+            .find { (UserTable.email eq req.email) and (UserTable.emailVerified eq true) }
             .firstOrNull()
         when {
             user != null && BCrypt.checkpw(req.password, user.passwordHash) ->
@@ -46,7 +47,7 @@ class UserRepository {
         }
     }
 
-    suspend fun register(loginRequest: RegisterRequest): Boolean = suspendTransaction {
+    suspend fun register(loginRequest: RegisterRequest): User? = suspendTransaction {
         val hashedPassword = BCrypt.hashpw(loginRequest.password, BCrypt.gensalt())
         try {
             val user = User.new {
@@ -57,9 +58,9 @@ class UserRepository {
             }
             val roles = Role.find { RoleTable.role eq "USER" }.toList()
             user.roles = SizedCollection(roles)
-            return@suspendTransaction user.id.value.toString().isNotBlank()
+            return@suspendTransaction user
         } catch (e: Exception) {
-            return@suspendTransaction false
+            return@suspendTransaction null
         }
     }
 
@@ -123,6 +124,22 @@ class UserRepository {
         val user = User.find { UserTable.email eq userDto.email }.firstOrNull()
         if (user != null) {
             user.email = userDto.email
+            return@suspendTransaction true
+        } else {
+            return@suspendTransaction false
+        }
+    }
+
+    suspend fun validateEmail(id: String): Boolean = suspendTransaction {
+        val uuid: UUID
+        try {
+            uuid = UUID.fromString(id)
+        } catch (e: IllegalArgumentException) {
+            return@suspendTransaction false
+        }
+        val user = User.find { UserTable.id eq uuid }.firstOrNull()
+        if (user != null) {
+            user.emailVerified = true
             return@suspendTransaction true
         } else {
             return@suspendTransaction false

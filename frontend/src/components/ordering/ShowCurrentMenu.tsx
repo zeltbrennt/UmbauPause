@@ -4,6 +4,7 @@ import {Stack, Typography} from "@mui/material";
 import MenuItemCard from "./MenuItemCard.tsx";
 import dayjs from "dayjs";
 import {getUrlFrom} from "../../util/functions.ts";
+import PriceDisplay from "./PriceDisplay.tsx";
 
 
 function ShowCurrentMenu() {
@@ -40,13 +41,14 @@ function ShowCurrentMenu() {
             <Typography variant={"h3"} textAlign={"center"}>Wochenkarte</Typography>
             <Typography
                 textAlign={"center"}>vom {validFrom} bis {validTo}</Typography>
+            <PriceDisplay/>
             <Stack spacing={1.5} marginTop={2}>
                 {week.map((day, id) => {
                     const dish = menu?.dishes[id].name ?? ""
                     return (
 
                         <MenuItemCard key={day} day={day} dish={dish}
-                                      available={dayjs().day() <= id + 1}/>
+                                      available={dayjs().day() <= id + 1 && dayjs().day() > 0}/>
 
                     )
                 })}

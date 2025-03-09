@@ -53,10 +53,10 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Manager kann Liste aller Gerichte sehen
     - [ ] Endpunkt Backend
     - [ ] View im Frontend
-- [ ] Manager kann Gerichte 
-	- [x] hinzufügen
-	- [ ] bearbeiten
-	- [ ] löschen
+- [ ] Manager kann Gerichte
+    - [x] hinzufügen
+    - [x] bearbeiten
+    - [ ] löschen
 - [x] Auf der Datenbank existiert eine Tabelle mit Wochenkarten (Auswahl aus maximal fünf Gerichten auf Wochentage
   verteilt)
 - [x] Manager kann Wochenkarte aus Gerichten erstellen
@@ -76,12 +76,13 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 ### 1.1.5 Bestellungen
 
-- [x] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in Verbindung bringt
+- [x] Auf der Datenbank existiert eine Tabelle mit Bestellungen, welche Nutzer, Gerichte und Zeitpunkt miteinander in
+  Verbindung bringt
 - [ ] Bestellungen haben einen Status
     - [x] Bestellt
-    - [ ] Storniert
+    - [x] Storniert
     - [ ] Ausgeliefert
-    - [ ] Bezahlt
+    - [x] Bezahlt
 - [x] Das Backend stellt Endpunkte bereit, um neue Bestellungen zu hinterlegen
 - [ ] Im Frontend wird für jedes Gericht angezeigt, ob es bestellt wurde (Kunde)
 - [ ] Backend Tests
@@ -89,10 +90,10 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 **Nicht-Ziele**
 
-- [ ] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
-- [ ] Es können keine Bestellungen für andere Nutzer abgegeben werden
+- [x] Es können keine Bestellungen abgegeben werden, für Gerichte, die nicht auf der aktuellen Wochenkarte stehen
+- [x] Es können keine Bestellungen für andere Nutzer abgegeben werden
 - [x] Es kann das gleiche Gericht nicht zu unterschiedlichen Zeitpunkten zweimal bestellt werden
-- [ ] es können keine Gerichte bestellt werden, die abgelaufen sind
+- [x] es können keine Gerichte bestellt werden, die abgelaufen sind
 
 ### 1.1.6 Bestellübersicht
 
@@ -105,6 +106,16 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Verlauf der Bestellungen über den Tag
 - [ ] Backend Tests
 - [ ] Frontend Tests
+
+### TODOs
+
+- [ ] Requests mit abgelaufenem Token führen zu logout
+- [ ] alternativ refresh token
+- [ ] passwort reset link
+- [x] Email Bestätigung bei Bestellung
+- [x] Feedback Feld
+- [ ] Caches in Frontend und Backend
+- [ ] Validierung für Bestellungen
 
 ## 1.2 Ausarbeitung
 
@@ -124,12 +135,12 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 ### 2.1.1 ChatGPT
 
-- [ ] Auf der Datenbank existiert eine Tabelle mit Zutaten, die Bezug auf Gerichte nimmt
-- [ ] OpenAI-API ist in WebApp hinterlegt
-- [ ] Client kann API aufrufen
-- [ ] Es existiert ein Prompt, der die Menübeschreibungen in Zutaten zerlegt
-- [ ] Bei Eingabe von neuen Gerichten wird das Tagging aktiviert
-- [ ] Zutaten werden automatisch gespeichert
+- [x] Auf der Datenbank existiert eine Tabelle mit Zutaten, die Bezug auf Gerichte nimmt
+- [x] OpenAI-API ist in WebApp hinterlegt
+- [x] Client kann API aufrufen
+- [x] Es existiert ein Prompt, der die Menübeschreibungen in Zutaten zerlegt
+- [x] Bei Eingabe von neuen Gerichten wird das Tagging aktiviert
+- [x] Zutaten werden automatisch gespeichert
 - [ ] Es gibt die Möglichkeit Tags zu bearbeiten
 - [ ] Backend Tests
 - [ ] Frontend Tests
@@ -139,19 +150,18 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 - [ ] Es werden Kennzahlen dargestellt:
     - [ ] Wie viele Gerichte verkauft wurden
 - [ ] Grafik über zeitlichen Verlauf der Bestellungen
-- [ ] Matrix von Zutaten über Häufigkeit
+- [x] Matrix von Zutaten über Häufigkeit
 - [ ] Aufteilung in Wochentag, Standort und Kunde
 
 ### 2.1.3 Kontaktformular
 
-- [ ] Es gibt ein Kontaktformular mit Anfragen
+- [x] Es gibt ein Kontaktformular mit Anfragen
 - [ ] Anfragetext wird per Mail verschickt
 
 ### 2.1.4 Zahlungsdienstleister
 
-- [ ] API Anbindung von Stripe
-- [ ] API Anbindung von Paypal
-- [ ] Eingabemaske für Zahlungen in Bestellprozess
+- [x] API Anbindung von Stripe
+- [x] Eingabemaske für Zahlungen in Bestellprozess
 
 ### 2.1.5 Bilder upload
 
@@ -185,7 +195,7 @@ Der Ablauf ist nicht in Stein gemeißelt, sondern soll auch als Todo-Liste im we
 
 ### 3.1.1 Zugangskontrolle
 
-- [ ] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
+- [x] Es können sich nur Nutzer mit einer bestimmten Email-Adresse anmelden
 - [ ] Admin kann neuen Manager hinzufügen
 - [ ] rateLimit für Zugriffe auf die Login-Ressource
 - [ ] Benutzer werden nach 5 fehlerhaften Loginversuchen für eine exponentiell steigende Zeit an einem weiteren

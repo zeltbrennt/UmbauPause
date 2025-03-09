@@ -2,6 +2,39 @@
 
 ## [soft release]
 
+### 0.2.2
+
+- location setter
+-
+
+### 0.2.1
+
+- change Icons
+- handle price settings
+
+### 0.2.0
+
+- add tags to dishes via AI
+- implement payment via Stripe
+
+### 0.1.4
+
+- current menu can be edited
+
+### 0.1.3
+
+- users can view their orders
+- users can cancel their orders
+
+### 0.1.2
+
+- add Feedback form and donation link
+- update Flyway
+
+### 0.1.1
+
+- add mail verification for user registration
+
 ### 0.1.0
 
 - deploy to uberspace

@@ -42,10 +42,37 @@ data class OrderOverview(
 data class LocationDto(
     val id: Int,
     val name: String,
+    val active: Boolean,
+)
+
+@Serializable
+data class SingleOrderDto(
+    val item: Int,
+    val location: Int,
+    val day: Int,
+    val itemName: String?,
+    val locationName: String?,
+    val dayName: String?,
 )
 
 @Serializable
 data class OrderDto(
-    val item: Int,
-    val location: Int,
+    val validFrom: String,
+    val validTo: String,
+    val orders: List<SingleOrderDto>
+)
+
+@Serializable
+data class UserOrderDto(
+    val id: String,
+    val date: String,
+    val dish: String,
+    val location: String,
+    val status: String,
+)
+
+@Serializable
+data class TagStatisticDto(
+    val tag: String,
+    val count: Int,
 )

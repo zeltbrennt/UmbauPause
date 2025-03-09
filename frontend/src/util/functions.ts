@@ -24,3 +24,13 @@ export function mapDayOfWeek(day: number): string {
 export function getUrlFrom(...path: string[]): string {
     return BASE_URL + path.join("/")
 }
+
+
+export const formatNumberToCurrency = (value: number) => {
+    return new Intl.NumberFormat('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(value / 100)
+}
+
+export const parseNumber = (formattedValue: string) => {
+    const numericValue = formattedValue.replace(/[^0-9,-]+/g, '').replace(',', '.');
+    return numericValue ? parseFloat(numericValue) : 0;
+};
